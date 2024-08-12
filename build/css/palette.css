@@ -1,0 +1,56 @@
+:root {
+  --federal: #090f4d;
+  --polynesian: #0E4483;
+  --celestial: #3b7da3;
+  --seasalt: #F7FAFC;
+  --ashblack: rgb(42, 42, 42);
+  --sunrise: #FFB000;
+}
+
+.home {
+  background-image: url(../img/bg-1.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+@media (max-width: 767px) {
+  .home {
+    background-image: url(../img/sm-home-bg.png);
+  }
+}
+
+.gradient {
+  background: linear-gradient(45deg, var(--celestial), var(--federal)); /* Gradient colors */
+  background-clip: text; /* For other modern browsers */
+  color: transparent; /* Hide the actual text color */
+}
+
+.contact-left {
+  background-image: url(../img/contact-bg.png);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Add this CSS to your stylesheet */
+#mobile-menu {
+  position: fixed; /* Fix position to the right side of the viewport */
+  top: 0;
+  right: 0;
+  width: 50%;
+  max-width: 300px; /* Adjust based on your design */
+  height: 100vh; /* Full height of the viewport */
+  background-color: #333; /* Background color */
+  color: #fff; /* Text color */
+  transform: translateX(100%); /* Initially positioned off-screen */
+  opacity: 0; /* Hidden */
+  transition: transform 0.3s ease, opacity 0.3s ease; /* Smooth transition */
+  z-index: 1000; /* Ensure it sits above other content */
+}
+
+#mobile-menu.show {
+  transform: translateX(0); /* Move into view */
+  opacity: 1; /* Visible */
+}
+

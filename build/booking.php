@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Forgot Password - WashUp Laundry</title>
+  <title>Booking - WashUp Laundry</title>
   <link rel="icon" href="./img/logo-white.png">
 
   <!-- CSS -->
@@ -14,6 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 </head>
 
@@ -37,14 +38,14 @@
     <section class="flex flex-col items-center justify-center my-4 border border-solid bg-white shadow-lg mx-2 sm:mx-0 w-96 sm:w-3/4">
 
       <div class="flex justify-evenly w-full mt-4 mb-2">
-        <div id="step1" class="step w-12 h-12  sm:w-16 sm:h-16 flex items-center justify-center rounded-full bg-gray-300 font-bold">
-          <img class="h-[20px] sm:h-[25px]" src="./img/icons/shirt.svg" alt="">
+        <div id="step1" class="step w-12 h-12  sm:w-16 sm:h-16 flex items-center justify-center rounded-full bg-gray-500 font-bold">
+          <img class="h-[20px] sm:h-[25px]" src="./img/icons/shirt-white.svg" alt="">
         </div>
-        <div id="step2" class="step w-12 h-12  sm:w-16 sm:h-16 flex items-center justify-center rounded-full bg-gray-300 font-bold">
-          <img class="h-[20px] sm:h-[25px]" src="./img/icons/map-location.svg" alt="">
+        <div id="step2" class="step w-12 h-12  sm:w-16 sm:h-16 flex items-center justify-center rounded-full bg-gray-500 font-bold">
+          <img class="h-[20px] sm:h-[25px]" src="./img/icons/map-location-white.svg" alt="">
         </div>
-        <div id="step3" class="step w-12 h-12  sm:w-16 sm:h-16 flex items-center justify-center rounded-full bg-gray-300 font-bold">
-          <img class="h-[20px] sm:h-[25px]" src="./img/icons/clipboard-list.svg" alt="">
+        <div id="step3" class="step w-12 h-12  sm:w-16 sm:h-16 flex items-center justify-center rounded-full bg-gray-500 font-bold">
+          <img class="h-[20px] sm:h-[25px]" src="./img/icons/clipboard-white.svg" alt="">
         </div>
       </div>
 
@@ -81,56 +82,147 @@
           </div>
 
           <div class="grid grid-cols-2 gap-2">
-            <input type="Date" class="w-full border border-solid border-federal rounded-lg mb-2 p-2">
-            <input type="Time" class="w-full border border-solid border-federal rounded-lg mb-2 p-2">
+            <input type="Date" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-date">
+            <input type="Time" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2
+            js-time">
           </div>
 
-          <hr class="w-full my-2">
+          <div class="h-12 sm:h-8 w-full px-2 bg-red-100 border-red-500 border border-solid text-red-800 flex items-center rounded-full text-sm">
+            <img class="h-4 w-4" src="./img/icons/danger-icon.svg" alt="">
+            <p class="ml-2">Pick-up hours are only available until 6pm</p>
+          </div>
+
+          <hr class="w-full mb-2 mt-4">
 
           <h2 class="text-lg sm:text-2xl font-bold mb-4">Customize your desired service</h2>
           <p class="text-md">Services:</p>
           <div class="flex flex-col lg:flex-row items-center justify-between lg:w-3/5">
             <label class="flex items-center bg-seasalt border border-solid border-gray-300 rounded-lg p-4 mb-4 cursor-pointer hover:bg-gray-200 w-full lg:w-auto">
-              <input type="radio" name="service" value="wash-dry-fold" class="form-radio w-5 h-5 mr-4">
+              <input type="radio" name="service" value="Wash, Dry, Fold" class="form-radio w-5 h-5 mr-4">
               <span class="text-sm">Wash, Dry, Fold</span>
             </label>
             <label class="flex items-center bg-seasalt border border-solid border-gray-300 rounded-lg p-4 mb-4 cursor-pointer hover:bg-gray-200 w-full lg:w-auto">
-              <input type="radio" name="service" value="wash-dry-press" class="form-radio w-5 h-5 mr-4">
+              <input type="radio" name="service" value="Wash, Dry, Press" class="form-radio w-5 h-5 mr-4">
               <span class="text-sm">Wash, Dry, Press</span>
             </label>
             <label class="flex items-center bg-seasalt border border-solid border-gray-300 rounded-lg p-4 mb-4 cursor-pointer hover:bg-gray-200 w-full lg:w-auto">
-              <input type="radio" name="service" value="dry-clean" class="form-radio w-5 h-5 mr-4">
+              <input type="radio" name="service" value="Dry Clean" class="form-radio w-5 h-5 mr-4">
               <span class="text-sm">Dry Clean</span>
             </label>
           </div>
 
           <p class="text-md">Other suggestions for my laundry:</p>
-          <textarea class="bg-seasalt border border-solid border-gray-300 w-full h-32 p-2 rounded-md" placeholder="Enter your text here">
+          <textarea class="mb-2 bg-seasalt border border-solid border-gray-300 w-full h-32 rounded-md p-2 js-suggestion" placeholder="Enter your text here">
           </textarea>
 
 
           <div class="flex justify-end">
-            <button id="nextToStep2" type="button" class="px-6 py-2 bg-federal text-seasalt rounded-lg hover:opacity-90 transition">Next</button>
+            <button id="nextToStep2" type="button" class="px-6 py-2 bg-federal text-seasalt rounded-lg hover:opacity-90 transition text-lg font-bold">&#8594;</button>
           </div>
         </div>
 
         <!-- Step 2 -->
         <div id="step2Content" class="step-content hidden">
-          <h2 class="text-2xl font-bold mb-4">Step 2</h2>
-          <input type="email" placeholder="Enter your email" class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring focus:border-blue-500" />
+
+          <h2 class="text-lg sm:text-2xl font-bold">Checkout Details</h2>
+          <p class="text-md mb-2">Personal Details:</p>
+          <div class="grid grid-cols-2 gap-2">
+            <label class="text-sm" for="">First Name</label>
+            <label class="text-sm" for="">Last Name</label>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <input type="text" name="fname" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-fname-input" placeholder="First Name: ">
+            <input type="text" name="lname" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-lname-input" placeholder="Last Name: ">
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <label class="text-sm" for="">Phone Number</label>
+            <label class="text-sm" for="">Email</label>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 mb-2">
+            <input type="text" name="phone_number" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-phone-number" placeholder="Phone Number: ">
+            <input type="email" name="email" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-email-input" placeholder="Email: ">
+          </div>
+
+          <hr class="w-full my-2">
+
+          <p class="text-md mb-2">Pickup & Delivery Details:</p>
+
+          <label class="text-sm" for="">Address</label>
+          <input type="text" name="address" class="mb-4 w-full border border-solid border-ashblack rounded-lg p-2 js-address-input" placeholder="Street Name. Building. House No.* ">
+
+          <label class="text-sm" for="">Shipping method</label>
+          <div class="flex flex-col lg:flex-row items-center justify-between lg:w-1/3">
+            <label class="flex items-center bg-seasalt border border-solid border-gray-300 rounded-lg p-4 mb-4 cursor-pointer hover:bg-gray-200 w-full lg:w-auto">
+              <input type="radio" name="shipping_method" value="2-day Standard" class="form-radio w-5 h-5 mr-4">
+              <span class="text-sm">2-day Standard</span>
+            </label>
+            <label class="flex items-center bg-seasalt border border-solid border-gray-300 rounded-lg p-4 mb-4 cursor-pointer hover:bg-gray-200 w-full lg:w-auto">
+              <input type="radio" name="shipping_method" value="Rush" class="form-radio w-5 h-5 mr-4">
+              <span class="text-sm">Rush</span>
+            </label>
+          </div>
+
           <div class="flex justify-between">
-            <button id="backToStep1" type="button" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition">Back</button>
-            <button id="nextToStep3" type="button" class="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition">Next</button>
+            <button id="backToStep1" type="button" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:opacity-90 transition text-lg font-bold">&#8592;</button>
+            <button id="nextToStep3" type="button" class="px-6 py-2 bg-federal text-seasalt rounded-lg hover:opacity-90 transition text-lg font-bold">&#8594;</button>
           </div>
         </div>
 
         <!-- Step 3 -->
         <div id="step3Content" class="step-content hidden">
-          <h2 class="text-2xl font-bold mb-4">Step 3</h2>
-          <input type="password" placeholder="Enter your password" class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring focus:border-blue-500" />
-          <div class="flex justify-between">
-            <button id="backToStep2" type="button" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition">Back</button>
-            <button type="submit" class="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 transition">Submit</button>
+          <h2 class="text-2xl font-bold mb-4">Order Summary</h2>
+
+          <div class="grid grid-cols-2 text-sm sm:text-md">
+            <div class="space-y-4">
+              <div>
+                <p>First Name:</p>
+                <p>Last Name:</p>
+                <p>Phone Number:</p>
+                <p>Email Address:</p>
+              </div>
+              <div>
+                <p>Date: </p>
+                <p>Time: </p>
+                <p>Address: </p>
+                <p>Shipping Method: </p>
+              </div>
+              <div>
+                <p>Pick-up Date:</p>
+                <p>Pick-up Time:</p>
+                <p>Services:</p>
+                <p>Other Suggestions:</p>
+              </div>
+            </div>
+
+            <div class="space-y-4">
+              <div>
+                <p class="js-fname"></p>
+                <p class="js-lname"></p>
+                <p class="js-phone_number"></p>
+                <p class="js-email"></p>
+              </div>
+
+              <div>
+                <p class="js-current-date"></p>
+                <p class="js-current-time"></p>
+                <p class="js-address"></p>
+                <p class="js-shipping-method"></p>
+              </div>
+              <div>
+                <p class="js-preffered-date"></p>
+                <p class="js-preffered-time"></p>
+                <p class="js-service"></p>
+                <p class="js-other-suggestions"></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-between mt-2">
+            <button id="backToStep2" type="button" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition text-lg font-bold">&#8592;</button>
+            <button type="submit" class="px-6 py-2 bg-green-700 text-white rounded-lg hover:opacity-90 transition">Submit</button>
           </div>
         </div>
       </form>

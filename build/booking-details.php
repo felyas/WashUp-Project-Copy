@@ -21,7 +21,7 @@
 <body class="bg-seasalt min-h-screen font-poppins">
   <div class="flex min-h-screen">
     <!-- Sidebar -->
-    <div id="sidebar" class="w-64 bg-gray-800 text-white flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full">
+    <div id="sidebar" class="w-64 bg-gray-800 text-white flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full z-10">
       <div class="p-4 text-lg font-bold border-b border-gray-700">
         <div class="flex justify-center items-center w-[180px]">
           <img src="./img/logo-white.png" alt="" class="w-12 h-10 mr-1">
@@ -39,11 +39,7 @@
           <img class="h-4 w-4 mr-4" src="./img/icons/table.svg" alt="">
           <p>Booking Details</p>
         </a>
-        <a href="#" class="flex items-center p-2 rounded hover:bg-gray-700">
-          <img class="h-4 w-4 mr-4" src="./img/icons/send.svg" alt="">
-          <p>Upload Price</p>
-        </a>
-        <a href="#" class="flex items-center p-2 rounded hover:bg-gray-700">
+        <a href="./inventory.php" class="flex items-center p-2 rounded hover:bg-gray-700">
           <img class="h-4 w-4 mr-4" src="./img/icons/warehouse.svg" alt="">
           <p>Inventory</p>
         </a>
@@ -57,7 +53,7 @@
     </div>
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col">
+    <div class="flex-1 flex flex-col min-h-screen">
       <!-- Header -->
       <header class="bg-federal shadow p-4">
         <div class="flex justify-between items-center">
@@ -68,33 +64,53 @@
             </svg>
           </button>
 
-          <h1 class="text-2xl font-bold text-seasalt">Admin Dashboard</h1>
+          <h1 class="text-2xl font-bold text-seasalt hidden lg:block">Admin Dashboard</h1>
           <div class="flex items-center justify-between lg:space-x-4 text-sm">
-            <p class="js-current-time text-seasalt hidden md:block"></p>
-            <button class="flex items-center justify-center px-4 py-2">
-              <img src="./img/icons/logout.svg" alt="Logout Icon" class="w-5 h-5">
-            </button>
+            <p class="js-current-time text-seasalt"></p>
+            <div class="flex items-center justify-between">
+              <div class="relative">
+                <button class="js-notification-button flex items-center justify-center px-4 py-2">
+                  <img src="./img/icons/notification-bell.svg" alt="Logout Icon" class="w-5 h-5">
+                </button>
+                <div class="js-notification hidden h-auto w-auto bg-seasalt z-10 absolute right-0 text-nowrap p-4 rounded-lg">
+                  <h1 class="text-center mb-4 text-lg font-bold">Notifications</h1>
+                    <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
+                    <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
+                    <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
+                </div>
+              </div>
+              <button class="flex items-center justify-center px-4 py-2">
+                <img src="./img/icons/logout.svg" alt="Logout Icon" class="w-5 h-5">
+              </button>
+            </div>
           </div>
         </div>
       </header>
 
       <!-- Main Content Area -->
       <main class="flex-1 p-6">
-        <!-- Grid for Booking Summaries -->
-        <div class="gap-4 mb-4">
+        <div class="flex items-center justify-between mb-4 w-full relative">
+          <div class="relative w-1/2">
+            <input type="text" class="w-full py-2 rounded-lg pl-14 outline-none" placeholder="Search">
+            <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
+              <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
+            </button>
+          </div>
+          <button class="py-2 px-4 bg-federal rounded-lg text-seasalt ">
+            Add Booking
+          </button>
+        </div>
 
-
-          <!-- Grid for Chart and Pending Booking List -->
-          <div class="w-full  mb-4 text-sm">
-
-
-            <!-- List of Pending Booking -->
-            <div class="h-full w-full rounded-sm bg-white shadow-lg lg:col-span-3 overflow-x-auto">
-              <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
-                <p class="text-md font-semibold text-ashblack">List of Pending Booking</p>
-              </div>
+        <!--List-->
+        <div class="h-auto grid grid-cols-1 text-sm">
+          <!-- List of On Pick-up Booking -->
+          <div class="h-auto w-full rounded-sm bg-white shadow-lg">
+            <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
+              <p class="text-md font-semibold text-ashblack">List of On Pick-up Booking</p>
+            </div>
+            <div class="overflow-x-auto">
               <table class="text-nowrap w-full text-left text-ashblack">
-                <thead class="bg-celestial border-b">
+                <thead class="bg-celestial">
                   <tr>
                     <th class="px-4 py-2 font-medium text-seasalt">#</th>
                     <th class="px-4 py-2 font-medium text-seasalt">Customer Name</th>
@@ -105,183 +121,138 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr class="border-b border-gray-400">
+                  <tr class="">
                     <td class="px-4 py-2">1</td>
                     <td class="px-4 py-2">John Doe</td>
                     <td class="px-4 py-2">2024-08-16</td>
                     <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
                     <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
                       <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
                       </button>
                       <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
-                      <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
                       </button>
                     </td>
                   </tr>
-                  <tr class="border-b border-gray-400">
+                  <tr class="">
                     <td class="px-4 py-2">1</td>
                     <td class="px-4 py-2">John Doe</td>
                     <td class="px-4 py-2">2024-08-16</td>
                     <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
                     <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
                       <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
                       </button>
                       <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
-                      <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
                       </button>
                     </td>
                   </tr>
-                  <tr class="border-b border-gray-400">
+                  <tr class="">
                     <td class="px-4 py-2">1</td>
                     <td class="px-4 py-2">John Doe</td>
                     <td class="px-4 py-2">2024-08-16</td>
                     <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
                     <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
                       <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
                       </button>
                       <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
-                      <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
                       </button>
                     </td>
                   </tr>
-                  <tr class="border-b border-gray-400">
+                  <tr class="">
                     <td class="px-4 py-2">1</td>
                     <td class="px-4 py-2">John Doe</td>
                     <td class="px-4 py-2">2024-08-16</td>
                     <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
                     <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
                       <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
                       </button>
                       <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
-                      <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
                       </button>
                     </td>
                   </tr>
-                  <tr class="border-b border-gray-400">
+                  <tr class="">
                     <td class="px-4 py-2">1</td>
                     <td class="px-4 py-2">John Doe</td>
                     <td class="px-4 py-2">2024-08-16</td>
                     <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
                     <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
                       <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
                       </button>
                       <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
-                      <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
                       </button>
                     </td>
                   </tr>
-                  <tr class="border-b border-gray-400">
+                  <tr class="">
                     <td class="px-4 py-2">1</td>
                     <td class="px-4 py-2">John Doe</td>
                     <td class="px-4 py-2">2024-08-16</td>
                     <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
                     <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
                       <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
                       </button>
                       <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
-                      <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
                       </button>
                     </td>
                   </tr>
-                  <tr class="border-b border-gray-400">
+                  <tr class="">
                     <td class="px-4 py-2">1</td>
                     <td class="px-4 py-2">John Doe</td>
                     <td class="px-4 py-2">2024-08-16</td>
                     <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
                     <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
                       <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
                       </button>
                       <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
-                      <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
                       </button>
                     </td>
                   </tr>
-                  <tr class="border-b border-gray-400">
+                  <tr class="">
                     <td class="px-4 py-2">1</td>
                     <td class="px-4 py-2">John Doe</td>
                     <td class="px-4 py-2">2024-08-16</td>
                     <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
                     <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
                       <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
                       </button>
                       <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
-                      <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
                       </button>
                     </td>
                   </tr>
-                  <tr class="border-b border-gray-400">
+                  <tr class="">
                     <td class="px-4 py-2">1</td>
                     <td class="px-4 py-2">John Doe</td>
                     <td class="px-4 py-2">2024-08-16</td>
                     <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
                     <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
                       <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
                       </button>
                       <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
-                      <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
-                      </button>
-                    </td>
-                  </tr>
-                  <tr class="border-b border-gray-400">
-                    <td class="px-4 py-2">1</td>
-                    <td class="px-4 py-2">John Doe</td>
-                    <td class="px-4 py-2">2024-08-16</td>
-                    <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
-                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                      <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                      </button>
-                      <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
-                      <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
                       </button>
                     </td>
                   </tr>
@@ -289,12 +260,23 @@
               </table>
             </div>
           </div>
-      </main>
+        </div>
 
+
+        <div class="flex items-center justify-center mt-4 w-full space-x-2">
+          <button class="py-2 px-4 bg-federal rounded-lg text-seasalt">
+            Prev
+          </button>
+          <button class="py-2 px-4 bg-federal rounded-lg text-seasalt">
+            Next
+          </button>
+        </div>
+      </main>
     </div>
+
   </div>
 
-  <script type="module" src="./js/admin-dashboard.js"></script>
+  <script type="module" src="./js/booking-details.js"></script>
 </body>
 
 

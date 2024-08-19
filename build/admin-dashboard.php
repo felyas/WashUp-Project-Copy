@@ -39,11 +39,7 @@
           <img class="h-4 w-4 mr-4" src="./img/icons/table.svg" alt="">
           <p>Booking Details</p>
         </a>
-        <a href="#" class="flex items-center p-2 rounded hover:bg-gray-700">
-          <img class="h-4 w-4 mr-4" src="./img/icons/send.svg" alt="">
-          <p>Upload Price</p>
-        </a>
-        <a href="#" class="flex items-center p-2 rounded hover:bg-gray-700">
+        <a href="./inventory.php" class="flex items-center p-2 rounded hover:bg-gray-700">
           <img class="h-4 w-4 mr-4" src="./img/icons/warehouse.svg" alt="">
           <p>Inventory</p>
         </a>
@@ -68,12 +64,25 @@
             </svg>
           </button>
 
-          <h1 class="text-2xl font-bold text-seasalt">Admin Dashboard</h1>
+          <h1 class="text-2xl font-bold text-seasalt hidden lg:block">Admin Dashboard</h1>
           <div class="flex items-center justify-between lg:space-x-4 text-sm">
-            <p class="js-current-time text-seasalt hidden md:block"></p>
-            <button class="flex items-center justify-center px-4 py-2">
-              <img src="./img/icons/logout.svg" alt="Logout Icon" class="w-5 h-5">
-            </button>
+            <p class="js-current-time text-seasalt"></p>
+            <div class="flex items-center justify-between">
+              <div class="relative">
+                <button class="js-notification-button flex items-center justify-center px-4 py-2">
+                  <img src="./img/icons/notification-bell.svg" alt="Logout Icon" class="w-5 h-5">
+                </button>
+                <div class="js-notification hidden h-auto w-auto bg-seasalt z-10 absolute right-0 text-nowrap p-4 rounded-lg">
+                  <h1 class="text-center mb-4 text-lg font-bold">Notifications</h1>
+                  <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
+                  <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
+                  <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
+                </div>
+              </div>
+              <button class="flex items-center justify-center px-4 py-2">
+                <img src="./img/icons/logout.svg" alt="Logout Icon" class="w-5 h-5">
+              </button>
+            </div>
           </div>
         </div>
       </header>
@@ -124,204 +133,259 @@
               <p class="text-md font-semibold text-ashblack">Total Booking this Month</p>
             </div>
             <div class="p-4 flex items-center justify-center">
-              <canvas id="bookingChart"></canvas>
             </div>
           </div>
 
           <!-- List of Pending Booking -->
-          <div class="h-full w-full rounded-sm bg-white shadow-lg lg:col-span-3 overflow-x-auto">
+          <div class="h-full w-full rounded-sm bg-white shadow-lg lg:col-span-3">
             <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
               <p class="text-md font-semibold text-ashblack">List of Pending Booking</p>
             </div>
-            <table class="text-nowrap w-full text-left text-ashblack">
-              <thead class="bg-celestial border-b">
-                <tr>
-                  <th class="px-4 py-2 font-medium text-seasalt">#</th>
-                  <th class="px-4 py-2 font-medium text-seasalt">Customer Name</th>
-                  <th class="px-4 py-2 font-medium text-seasalt">Date</th>
-                  <th class="px-4 py-2 font-medium text-seasalt">Time</th>
-                  <th class="px-4 py-2 font-medium text-seasalt">Status</th>
-                  <th class="px-4 py-2 font-medium text-seasalt">Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="border-b border-gray-400">
-                  <td class="px-4 py-2">1</td>
-                  <td class="px-4 py-2">John Doe</td>
-                  <td class="px-4 py-2">2024-08-16</td>
-                  <td class="px-4 py-2">10:00 AM</td>
-                  <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
-                  <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                    <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
-                      <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                    </button>
-                    <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
-                      <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                    </button>
-                    <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
-                      <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
-                    </button>
-                  </td>
-                </tr>
-                <tr class="border-b border-gray-400">
-                  <td class="px-4 py-2">1</td>
-                  <td class="px-4 py-2">John Doe</td>
-                  <td class="px-4 py-2">2024-08-16</td>
-                  <td class="px-4 py-2">10:00 AM</td>
-                  <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
-                  <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                    <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
-                      <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                    </button>
-                    <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
-                      <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                    </button>
-                    <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
-                      <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
-                    </button>
-                  </td>
-                </tr>
-                <tr class="border-b border-gray-400">
-                  <td class="px-4 py-2">1</td>
-                  <td class="px-4 py-2">John Doe</td>
-                  <td class="px-4 py-2">2024-08-16</td>
-                  <td class="px-4 py-2">10:00 AM</td>
-                  <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
-                  <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                    <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
-                      <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                    </button>
-                    <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
-                      <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                    </button>
-                    <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
-                      <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
-                    </button>
-                  </td>
-                </tr>
-                <tr class="border-b border-gray-400">
-                  <td class="px-4 py-2">1</td>
-                  <td class="px-4 py-2">John Doe</td>
-                  <td class="px-4 py-2">2024-08-16</td>
-                  <td class="px-4 py-2">10:00 AM</td>
-                  <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
-                  <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                    <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
-                      <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                    </button>
-                    <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
-                      <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                    </button>
-                    <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
-                      <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
-                    </button>
-                  </td>
-                </tr>
-                <tr class="border-b border-gray-400">
-                  <td class="px-4 py-2">1</td>
-                  <td class="px-4 py-2">John Doe</td>
-                  <td class="px-4 py-2">2024-08-16</td>
-                  <td class="px-4 py-2">10:00 AM</td>
-                  <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
-                  <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                    <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
-                      <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                    </button>
-                    <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
-                      <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                    </button>
-                    <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
-                      <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="overflow-x-auto">
+              <table class="text-nowrap w-full text-left text-ashblack">
+                <thead class="bg-celestial border-b">
+                  <tr>
+                    <th class="px-4 py-2 font-medium text-seasalt">#</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">Customer Name</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">Date</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">Time</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">Status</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="border-b border-gray-400">
+                    <td class="px-4 py-2">1</td>
+                    <td class="px-4 py-2">John Doe</td>
+                    <td class="px-4 py-2">2024-08-16</td>
+                    <td class="px-4 py-2">10:00 AM</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
+                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
+                      <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0" aria-label="View Booking" title="View">
+                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="View">
+                      </button>
+                      <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0" aria-label="Admit Booking" title="Admit">
+                        <img class="w-4 h-4" src="./img/icons/admit.svg" alt="Admit">
+                      </button>
+                      <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0" aria-label="Cancel Booking" title="Cancel">
+                        <img class="w-4 h-4" src="./img/icons/cancel.svg" alt="Cancel">
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="border-b border-gray-400">
+                    <td class="px-4 py-2">1</td>
+                    <td class="px-4 py-2">John Doe</td>
+                    <td class="px-4 py-2">2024-08-16</td>
+                    <td class="px-4 py-2">10:00 AM</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
+                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
+                      <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
+                      </button>
+                      <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/admit.svg" alt="view">
+                      </button>
+                      <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/cancel.svg" alt="delete">
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="border-b border-gray-400">
+                    <td class="px-4 py-2">1</td>
+                    <td class="px-4 py-2">John Doe</td>
+                    <td class="px-4 py-2">2024-08-16</td>
+                    <td class="px-4 py-2">10:00 AM</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
+                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
+                      <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
+                      </button>
+                      <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/admit.svg" alt="view">
+                      </button>
+                      <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/cancel.svg" alt="delete">
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="border-b border-gray-400">
+                    <td class="px-4 py-2">1</td>
+                    <td class="px-4 py-2">John Doe</td>
+                    <td class="px-4 py-2">2024-08-16</td>
+                    <td class="px-4 py-2">10:00 AM</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
+                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
+                      <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
+                      </button>
+                      <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/admit.svg" alt="view">
+                      </button>
+                      <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/cancel.svg" alt="delete">
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="border-b border-gray-400">
+                    <td class="px-4 py-2">1</td>
+                    <td class="px-4 py-2">John Doe</td>
+                    <td class="px-4 py-2">2024-08-16</td>
+                    <td class="px-4 py-2">10:00 AM</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
+                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
+                      <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
+                      </button>
+                      <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/admit.svg" alt="view">
+                      </button>
+                      <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/cancel.svg" alt="delete">
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
 
         <!-- Grid for On Pick-up and On Delivery Booking List -->
         <div class="h-auto grid grid-cols-1 lg:grid-cols-2 gap-4 text-sm">
           <!-- List of On Pick-up Booking -->
-          <div class="h-auto w-full rounded-sm bg-white shadow-lg overflow-x-auto">
-            <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack border-b">
+          <div class="h-auto w-full rounded-sm bg-white shadow-lg">
+            <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
               <p class="text-md font-semibold text-ashblack">List of On Pick-up Booking</p>
             </div>
-            <table class="text-nowrap w-full text-left text-ashblack">
-              <thead class="bg-celestial border-b">
-                <tr>
-                  <th class="px-4 py-2 font-medium text-seasalt">#</th>
-                  <th class="px-4 py-2 font-medium text-seasalt">Customer Name</th>
-                  <th class="px-4 py-2 font-medium text-seasalt">Date</th>
-                  <th class="px-4 py-2 font-medium text-seasalt">Time</th>
-                  <th class="px-4 py-2 font-medium text-seasalt">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="">
-                  <td class="px-4 py-2">1</td>
-                  <td class="px-4 py-2">John Doe</td>
-                  <td class="px-4 py-2">2024-08-16</td>
-                  <td class="px-4 py-2">10:00 AM</td>
-                  <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
-                </tr>
-                <tr class="">
-                  <td class="px-4 py-2">2</td>
-                  <td class="px-4 py-2">Jane Smith</td>
-                  <td class="px-4 py-2">2024-08-17</td>
-                  <td class="px-4 py-2">11:30 AM</td>
-                  <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
-                </tr>
-                <tr class="">
-                  <td class="px-4 py-2">3</td>
-                  <td class="px-4 py-2">Alice Johnson</td>
-                  <td class="px-4 py-2">2024-08-18</td>
-                  <td class="px-4 py-2">02:00 PM</td>
-                  <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="overflow-x-auto">
+              <table class="text-nowrap w-full text-left text-ashblack">
+                <thead class="bg-celestial">
+                  <tr>
+                    <th class="px-4 py-2 font-medium text-seasalt">#</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">Customer Name</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">Date</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">Time</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">Status</th>
+                    <th class="px-4 py-2 font-medium text-seasalt text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="">
+                    <td class="px-4 py-2">1</td>
+                    <td class="px-4 py-2">John Doe</td>
+                    <td class="px-4 py-2">2024-08-16</td>
+                    <td class="px-4 py-2">10:00 AM</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
+                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
+                      <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
+                      </button>
+                      <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="">
+                    <td class="px-4 py-2">1</td>
+                    <td class="px-4 py-2">John Doe</td>
+                    <td class="px-4 py-2">2024-08-16</td>
+                    <td class="px-4 py-2">10:00 AM</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
+                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
+                      <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
+                      </button>
+                      <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="">
+                    <td class="px-4 py-2">1</td>
+                    <td class="px-4 py-2">John Doe</td>
+                    <td class="px-4 py-2">2024-08-16</td>
+                    <td class="px-4 py-2">10:00 AM</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
+                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
+                      <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
+                      </button>
+                      <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
 
           <!-- List of On Delivery Booking -->
-          <div class="h-auto w-full rounded-sm bg-white shadow-lg overflow-x-auto">
-            <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack border-b">
+          <div class="h-auto w-full rounded-sm bg-white shadow-lg">
+            <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
               <p class="text-md font-semibold text-ashblack">List of On Delivery Booking</p>
             </div>
-            <table class="text-nowrap w-full text-left text-ashblack">
-              <thead class="bg-celestial border-b">
-                <tr>
-                  <th class="px-4 py-2 font-medium text-seasalt">#</th>
-                  <th class="px-4 py-2 font-medium text-seasalt">Customer Name</th>
-                  <th class="px-4 py-2 font-medium text-seasalt">Date</th>
-                  <th class="px-4 py-2 font-medium text-seasalt">Time</th>
-                  <th class="px-4 py-2 font-medium text-seasalt">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr class="">
-                  <td class="px-4 py-2">1</td>
-                  <td class="px-4 py-2">John Doe</td>
-                  <td class="px-4 py-2">2024-08-16</td>
-                  <td class="px-4 py-2">10:00 AM</td>
-                  <td class="px-4 py-2 text-yellow-600 font-semibold">Delivery</td>
-                </tr>
-                <tr class="">
-                  <td class="px-4 py-2">2</td>
-                  <td class="px-4 py-2">Jane Smith</td>
-                  <td class="px-4 py-2">2024-08-17</td>
-                  <td class="px-4 py-2">11:30 AM</td>
-                  <td class="px-4 py-2 text-yellow-600 font-semibold">Delivery</td>
-                </tr>
-                <tr class="">
-                  <td class="px-4 py-2">3</td>
-                  <td class="px-4 py-2">Alice Johnson</td>
-                  <td class="px-4 py-2">2024-08-18</td>
-                  <td class="px-4 py-2">02:00 PM</td>
-                  <td class="px-4 py-2 text-yellow-600 font-semibold">Delivery</td>
-                </tr>
-              </tbody>
-            </table>
+            <div class="overflow-x-auto">
+              <table class="text-nowrap w-full text-left text-ashblack">
+                <thead class="bg-celestial">
+                  <tr>
+                    <th class="px-4 py-2 font-medium text-seasalt">#</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">Customer Name</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">Date</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">Time</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">Status</th>
+                    <th class="px-4 py-2 font-medium text-seasalt text-center">Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="">
+                    <td class="px-4 py-2">1</td>
+                    <td class="px-4 py-2">John Doe</td>
+                    <td class="px-4 py-2">2024-08-16</td>
+                    <td class="px-4 py-2">10:00 AM</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Delivery</td>
+                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
+                      <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
+                      </button>
+                      <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="">
+                    <td class="px-4 py-2">1</td>
+                    <td class="px-4 py-2">John Doe</td>
+                    <td class="px-4 py-2">2024-08-16</td>
+                    <td class="px-4 py-2">10:00 AM</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Delivery</td>
+                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
+                      <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
+                      </button>
+                      <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+                      </button>
+                    </td>
+                  </tr>
+                  <tr class="">
+                    <td class="px-4 py-2">1</td>
+                    <td class="px-4 py-2">John Doe</td>
+                    <td class="px-4 py-2">2024-08-16</td>
+                    <td class="px-4 py-2">10:00 AM</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Delivery</td>
+                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
+                      <button class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
+                      </button>
+                      <button class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
+                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+                      </button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </main>

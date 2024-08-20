@@ -1,14 +1,13 @@
-import { handleSidebar, handleDisplayCurrentTime, handleNotification, handleTdColor } from "./dashboards-main.js";
+import { handleSidebar, handleDisplayCurrentTime, handleNotification } from "./dashboards-main.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  handleTdColor();
   handleSidebar();
   handleDisplayCurrentTime();
   handleNotification();
 });
 
 //Function to open modal, should be edit according to logic.
-function openModal(openModal, modalName, closeModal, closeModal2) {
+function openModal(openModal, modalName, closeModal,closeModal2) {
   document.getElementById(openModal).addEventListener('click', function () {
     document.getElementById(modalName).classList.remove('hidden');
   });
@@ -28,4 +27,11 @@ function openModal(openModal, modalName, closeModal, closeModal2) {
   });
 }
 
-openModal('openViewBookingModal', 'toViewBookingModal', 'closeViewBookingModal', 'closeViewBookingModal2');
+openModal('openEditItemModal', 'toEditModal', 'closeEditModal', 'closeEditModal2');
+openModal('openAddItemModal', 'toAddItemModal', 'closeAddItemModal', 'closeAddItemModal2');
+
+
+
+
+
+

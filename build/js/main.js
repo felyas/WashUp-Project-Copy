@@ -1,3 +1,15 @@
+
+// JavaScript function to redirect to login.php
+function directToLoginPage (buttonId) {
+  document.getElementById(buttonId).addEventListener('click', function () {
+    window.location.href = './login.php';
+  });
+}
+
+directToLoginPage('signInButton1');
+directToLoginPage('signInButton2');
+directToLoginPage('signInButton3');
+
 export function updateCopyRightYear() {
   const currentYear = new Date().getFullYear();
   const yearElement = document.getElementById('year');

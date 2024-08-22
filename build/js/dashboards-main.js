@@ -10,6 +10,8 @@ function handleTdColor() {
     } else if (cell.innerText.trim() === 'Pick-up') {
       cell.style.color = "#3b7da3";
     } else if (cell.innerText.trim() === 'Delivery') {
+      cell.style.color = "#B91C1C";
+    } else if (cell.innerText.trim() === 'Completed') {
       cell.style.color = "#15803d";
     }
   });

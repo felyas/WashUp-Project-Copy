@@ -99,7 +99,7 @@
           <div class="lg:h-36 w-full rounded-lg bg-white shadow-lg">
             <div class="bg-celestial rounded-t-lg h-12 p-2 flex items-center">
               <img class="h-6 w-6 mr-2" src="./img/icons/pending.svg" alt="">
-              <p class="text-md lg:text-lg font-semibold text-seasalt flex items-center">Pending <span class="hidden md:block ml-2">Booking</span></p>
+              <p class="text-md lg:text-lg font-semibold text-seasalt flex items-center">Pending <span class="hidden md:block ml-2">booking</span></p>
             </div>
             <div class="p-4 flex items-center justify-center w-full pt-8">
               <div class="flex items-center justify-center text-3xl font-bold">2</div>
@@ -110,7 +110,7 @@
           <div class="h-36 w-full rounded-lg bg-white shadow-lg">
             <div class="bg-sunrise rounded-t-lg h-12 p-2 flex items-center">
               <img class="h-6 w-6 mr-2" src="./img/icons/pickup.svg" alt="">
-              <p class="text-md lg:text-lg font-semibold text-seasalt">On Pick-up</p>
+              <p class="text-md lg:text-lg font-semibold text-seasalt">On pick-up</p>
             </div>
             <div class="p-4 flex items-center justify-center w-full pt-8">
               <div class="flex items-center justify-center text-3xl font-bold">13</div>
@@ -118,10 +118,10 @@
           </div>
 
           <!-- On Delivery Booking Card -->
-          <div class="h-36 w-full rounded-lg bg-white shadow-lg">
+          <div class="h-36 w-full rounded-lg bg-white shadow-lg col-span-2 sm:col-span-1">
             <div class="bg-green-700 rounded-t-lg h-12 p-2 flex items-center">
               <img class="h-6 w-6 mr-2" src="./img/icons/delivery.svg" alt="">
-              <p class="text-md lg:text-lg font-semibold text-seasalt">On Delivery</p>
+              <p class="text-md lg:text-lg font-semibold text-seasalt">On delivery</p>
             </div>
             <div class="p-4 flex items-center justify-center w-full pt-8">
               <div class="flex items-center justify-center text-3xl font-bold">7</div>
@@ -134,7 +134,7 @@
           <!-- Total Booking This Month Chart -->
           <div class="h-auto lg:h-48 w-full rounded-sm bg-white shadow-lg lg:col-span-1">
             <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack border-b">
-              <p class="text-md font-semibold text-ashblack">Total Booking this Month</p>
+              <p class="text-md font-semibold text-ashblack">TOTAL BOOKING THIS MONTH</p>
             </div>
             <div class="p-4 flex items-center justify-center">
             </div>
@@ -143,7 +143,7 @@
           <!-- List of Pending Booking -->
           <div class="h-full w-full rounded-sm bg-white shadow-lg lg:col-span-3">
             <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack">List of Pending Booking</p>
+              <p class="text-md font-semibold text-ashblack">LIST OF PENDING BOOKING</p>
             </div>
             <div class="overflow-x-auto">
               <table class="text-nowrap w-full text-left text-ashblack">
@@ -187,7 +187,7 @@
           <!-- List of On Pick-up Booking -->
           <div class="h-auto w-full rounded-sm bg-white shadow-lg">
             <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack">List of On Pick-up Booking</p>
+              <p class="text-md font-semibold text-ashblack">LIST OF ON PICK-UP BOOKING</p>
             </div>
             <div class="overflow-x-auto">
               <table class="text-nowrap w-full text-left text-ashblack">
@@ -255,7 +255,7 @@
           <!-- List of On Delivery Booking -->
           <div class="h-auto w-full rounded-sm bg-white shadow-lg">
             <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack">List of On Delivery Booking</p>
+              <p class="text-md font-semibold text-ashblack">LIST OF ON-DELIVERY BOOKING</p>
             </div>
             <div class="overflow-x-auto">
               <table class="text-nowrap w-full text-left text-ashblack">

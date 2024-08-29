@@ -74,7 +74,7 @@
       <!-- Step Forms -->
       <form id="wizardForm" class="w-full bg-white p-6">
         <!-- Step 1 -->
-        <div id="step1Content" class="step-content box-border">
+        <div id="step1Content" class="step-content box-border hidden">
           <h2 class="text-lg sm:text-2xl font-bold mb-4">Choose you prefered pickup hours</h2>
           <div class="grid grid-cols-2 gap-2">
             <label class="text-sm" for="">Date</label>
@@ -112,17 +112,16 @@
           </div>
 
           <p class="text-md">Other suggestions for my laundry:</p>
-          <textarea class="mb-2 bg-seasalt border border-solid border-gray-300 w-full h-32 rounded-md p-2 js-suggestion" placeholder="Enter your text here">
-          </textarea>
+          <textarea class="mb-2 bg-seasalt border border-solid border-gray-300 w-full h-32 rounded-md p-2 js-suggestion" placeholder="Enter your text here">          </textarea>
 
 
           <div class="flex justify-end">
-            <button id="nextToStep2" type="button" class="px-6 py-2 bg-federal text-seasalt rounded-lg hover:opacity-90 transition text-lg font-bold">&#8594;</button>
+            <button id="nextToStep2" type="button" class="px-6 py-2 bg-federal text-seasalt rounded-lg hover:opacity-90 transition text-lg font-bold">→</button>
           </div>
         </div>
 
         <!-- Step 2 -->
-        <div id="step2Content" class="step-content hidden">
+        <div id="step2Content" class="step-content">
 
           <h2 class="text-lg sm:text-2xl font-bold">Checkout Details</h2>
           <p class="text-md mb-2">Personal Details:</p>
@@ -148,7 +147,7 @@
 
           <hr class="w-full my-2">
 
-          <p class="text-md mb-2">Pickup & Delivery Details:</p>
+          <p class="text-md mb-2">Pickup &amp; Delivery Details:</p>
 
           <label class="text-sm" for="">Address</label>
           <input type="text" name="address" class="mb-4 w-full border border-solid border-ashblack rounded-lg p-2 js-address-input" placeholder="Street Name. Building. House No.* ">
@@ -166,8 +165,8 @@
           </div>
 
           <div class="flex justify-between">
-            <button id="backToStep1" type="button" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:opacity-90 transition text-lg font-bold">&#8592;</button>
-            <button id="nextToStep3" type="button" class="px-6 py-2 bg-federal text-seasalt rounded-lg hover:opacity-90 transition text-lg font-bold">&#8594;</button>
+            <button id="backToStep1" type="button" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:opacity-90 transition text-lg font-bold">←</button>
+            <button id="nextToStep3" type="button" class="px-6 py-2 bg-federal text-seasalt rounded-lg hover:opacity-90 transition text-lg font-bold">→</button>
           </div>
         </div>
 
@@ -206,22 +205,22 @@
               </div>
 
               <div>
-                <p class="js-current-date"></p>
-                <p class="js-current-time"></p>
+                <p class="js-current-date">2024-08-28</p>
+                <p class="js-current-time">18:01</p>
                 <p class="js-address"></p>
-                <p class="js-shipping-method"></p>
+                <p class="js-shipping-method">2-day Standard</p>
               </div>
               <div>
-                <p class="js-preffered-date"></p>
-                <p class="js-preffered-time"></p>
-                <p class="js-service"></p>
-                <p class="js-other-suggestions"></p>
+                <p class="js-preffered-date">2024-08-28</p>
+                <p class="js-preffered-time">18:01</p>
+                <p class="js-service">Wash, Dry, Fold</p>
+                <p class="js-other-suggestions">None</p>
               </div>
             </div>
           </div>
 
           <div class="flex justify-between mt-2">
-            <button id="backToStep2" type="button" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition text-lg font-bold">&#8592;</button>
+            <button id="backToStep2" type="button" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition text-lg font-bold">←</button>
             <button type="submit" class="px-6 py-2 bg-green-700 text-white rounded-lg hover:opacity-90 transition">Submit</button>
           </div>
         </div>

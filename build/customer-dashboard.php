@@ -1,3 +1,18 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+  header("Location: login.php");
+  exit();
+}
+
+// Display user data
+echo "Welcome, " . $_SESSION['first_name'] . " " . $_SESSION['last_name'];
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en" class="sm:scroll-smooth">
 
@@ -38,7 +53,7 @@
             <div class="flex items-center justify-between">
               <div class="relative">
                 <button class="js-notification-button flex items-center justify-center px-4 py-2">
-                  <img src="./img/icons/notification-bell.svg" alt="Logout Icon" class="w-5 h-5">
+                  <img src="./img/icons/notification-bell.svg" alt="" class="w-5 h-5">
                 </button>
                 <div class="js-notification hidden h-auto w-auto bg-seasalt z-10 absolute right-0 text-nowrap p-4 rounded-lg">
                   <h1 class="text-center mb-4 text-lg font-bold">Notifications</h1>
@@ -47,9 +62,12 @@
                   <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
                 </div>
               </div>
-              <button class="flex items-center justify-center px-4 py-2">
-                <img src="./img/icons/logout.svg" alt="Logout Icon" class="w-5 h-5">
-              </button>
+              <form action="./backend/handle_logout.php" method="POST" class="p-0 m-0">
+                <button type="submit" class="flex items-center justify-center px-4 py-2">
+                  <img src="./img/icons/logout.svg" alt="Logout Icon" class="w-5 h-5">
+                </button>
+              </form>
+
             </div>
           </div>
         </div>

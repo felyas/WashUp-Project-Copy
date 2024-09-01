@@ -1,12 +1,13 @@
 <?php
-$servername = 'localhost';
-$username = 'root';
-$password = '';
-$db_name = 'washup_db';
+$servername = "localhost";
+$username = "root";
+$password = "";
+$dbname = "washup_db";
 
-//Create connection
-$conn = new mysqli($servername, $username, $password, $db_name);
-
-if(!$conn){
-  die("Connection failed: " . $conn->connect_error);
+try {
+    $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch (PDOException $e) {
+    die("Connection failed: " . $e->getMessage());
 }
+?>

@@ -1,3 +1,10 @@
+<?php
+session_start();
+?>
+
+
+
+
 <!DOCTYPE html>
 <html lang="en" class="sm:scroll-smooth">
 
@@ -38,14 +45,29 @@
       <div class="flex flex-col w-[300px] box-border text-ashblack h-[350px] sm:h-full items-center justify-center">
         <p class="text-3xl mb-2 font-semibold">Sign In</p>
 
-        <form action="#" method="" class="flex flex-col my-4 w-3/4">
-          <input type="email" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" placeholder="Email: " require>
-          <input type="password" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" placeholder="Password: " require>
+        <!-- Div to display success and errors. -->
+        <?php if (isset($_SESSION['status'])): ?>
+          <div class="w-3/4 text-sm flex justify-center p-2 border bg-green-100 border-green-500 border-solid text-green-800 rounded-lg">
+            <?php echo htmlspecialchars($_SESSION['status']); ?>
+          </div>
+          <?php unset($_SESSION['status']); ?>
+        <?php endif; ?>
+
+        <?php if (isset($_SESSION['error'])): ?>
+          <div class="w-3/4 text-sm flex justify-center p-2 border bg-red-100 border-red-500 border-solid text-red-800 rounded-lg">
+            <?php echo htmlspecialchars($_SESSION['error']); ?>
+          </div>
+          <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+
+        <form action="./backend/handle_login.php" method="POST" class="flex flex-col my-4 w-3/4">
+          <input type="email" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="email" placeholder="Email: ">
+          <input type="password" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="password" placeholder="Password: ">
           <input type="submit" class="w-full bg-federal text-seasalt font-semibold hover:opacity-90 rounded-lg mb-2 p-2 cursor-pointer" value="Login">
         </form>
 
         <p class="text-ashblack text-sm">Don't have an account? <a class="text-federal font-medium hover:underline" href="./signup.php">Sign up</a></p>
-        <p class="text-federal text-sm font-medium hover:underline"><a href="./forgot-password.php">forgot your password?</a></p>
+        <p class="text-federal text-sm font-medium hover:underline"><a href="./forgot-password.php">Forgot your password?</a></p>
       </div>
 
       <div class="hidden sm:block">
@@ -71,6 +93,5 @@
 
   <script type="module" src="./js/login.js"></script>
 </body>
-
 
 </html>

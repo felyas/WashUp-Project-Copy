@@ -1,3 +1,14 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['email'])) {
+  header("Location: ./login.php");
+  exit();
+}
+?>
+
+
+
 <!DOCTYPE html>
 <html lang="en" class="sm:scroll-smooth">
 
@@ -43,29 +54,38 @@
           An OTP has been sent to your email. Please check your inbox and enter the code to proceed.
         </p>
 
-        <form action="" autocomplete="off" class="text-center">
+        <!-- Div to display errors. -->
+        <?php if (isset($_SESSION['error'])): ?>
+          <div class="w-3/4 text-sm flex justify-center p-2 border bg-red-100 border-red-500 border-solid text-red-800 rounded-lg">
+            <?php echo htmlspecialchars($_SESSION['error']); ?>
+          </div>
+          <?php unset($_SESSION['error']); ?>
+        <?php endif; ?>
+
+        <form action="./backend/handle_verify.php" method="POST" autocomplete="off" class="text-center">
           <div class="flex justify-center items-center my-4">
             <input type="number"
               class="js-otp-field rounded-lg text-3xl sm:text-5xl h-[4rem] w-[4rem] sm:h-24 sm:w-24 border-3 border-gray-100 m-1 text-center font-semibold outline-none focus:border-darkblue focus:shadow-md appearance-none"
-              name="otp1" placeholder="0" min="0" max="9" required onpaste="false">
-
-              <input type="number"
-              class="js-otp-field rounded-lg text-3xl sm:text-5xl  h-[4rem] w-[4rem] sm:h-24 sm:w-24 border-3 border-gray-100 m-1 text-center font-semibold outline-none focus:border-darkblue focus:shadow-md appearance-none"
-              name="otp2" placeholder="0" min="0" max="9" required onpaste="false">
+              name="otp1" placeholder="0" min="0" max="9" onpaste="false">
 
             <input type="number"
               class="js-otp-field rounded-lg text-3xl sm:text-5xl  h-[4rem] w-[4rem] sm:h-24 sm:w-24 border-3 border-gray-100 m-1 text-center font-semibold outline-none focus:border-darkblue focus:shadow-md appearance-none"
-              name="otp3" placeholder="0" min="0" max="9" required onpaste="false">
+              name="otp2" placeholder="0" min="0" max="9" onpaste="false">
 
             <input type="number"
               class="js-otp-field rounded-lg text-3xl sm:text-5xl  h-[4rem] w-[4rem] sm:h-24 sm:w-24 border-3 border-gray-100 m-1 text-center font-semibold outline-none focus:border-darkblue focus:shadow-md appearance-none"
-              name="otp4" placeholder="0" min="0" max="9" required onpaste="false">
+              name="otp3" placeholder="0" min="0" max="9" onpaste="false">
+
+            <input type="number"
+              class="js-otp-field rounded-lg text-3xl sm:text-5xl  h-[4rem] w-[4rem] sm:h-24 sm:w-24 border-3 border-gray-100 m-1 text-center font-semibold outline-none focus:border-darkblue focus:shadow-md appearance-none"
+              name="otp4" placeholder="0" min="0" max="9" onpaste="false">
           </div>
 
           <input type="submit"
             class="w-full bg-federal text-seasalt font-semibold hover:opacity-90 rounded-lg mb-2 p-2 cursor-pointer"
             value="Send">
         </form>
+
       </div>
     </section>
 

@@ -1,14 +1,10 @@
 
 // JavaScript function to redirect to login.php
-function directToLoginPage (buttonId) {
-  document.getElementById(buttonId).addEventListener('click', function () {
+export function directToLoginPage (buttonId) {
+  document.getElementById(buttonId).addEventListener('click', () => {
     window.location.href = './login.php';
   });
 }
-
-directToLoginPage('signInButton1');
-directToLoginPage('signInButton2');
-directToLoginPage('signInButton3');
 
 export function updateCopyRightYear() {
   const currentYear = new Date().getFullYear();
@@ -17,7 +13,7 @@ export function updateCopyRightYear() {
   yearElement.textContent = currentYear;
 }
 
-const initApp = () => {
+export const initApp = () => {
   const hamburgerBtn = document.getElementById('hamburger-button');
   const mobileMenu = document.getElementById('mobile-menu');
   const closeButton = document.getElementById('close-button');
@@ -46,6 +42,3 @@ const initApp = () => {
     }
   });
 }
-
-document.addEventListener('DOMContentLoaded', updateCopyRightYear);
-document.addEventListener('DOMContentLoaded', initApp);

@@ -5,9 +5,6 @@ if (!isset($_SESSION['user_id'])) {
   header("Location: login.php");
   exit();
 }
-
-// Display user data
-echo "Welcome, " . $_SESSION['first_name'] . " " . $_SESSION['last_name'];
 ?>
 
 
@@ -42,11 +39,10 @@ echo "Welcome, " . $_SESSION['first_name'] . " " . $_SESSION['last_name'];
       <header class="bg-federal shadow p-4">
         <div class="flex justify-between items-center">
           <!-- Hamburger Menu -->
-          <div id="logo" class="lg:hidden text-seasalt">
+          <div id="logo" class="text-seasalt">
             <img class="w-10 h-8" src="./img/logo-white.png" alt="LOGO">
           </div>
 
-          <h1 class="text-2xl font-bold text-seasalt hidden lg:block">Customer Dashboard</h1>
           <!--Notifications-->
           <div class="flex items-center justify-between lg:space-x-4 text-sm">
             <p class="js-current-time text-seasalt"></p>
@@ -74,7 +70,15 @@ echo "Welcome, " . $_SESSION['first_name'] . " " . $_SESSION['last_name'];
       </header>
 
       <!-- Main Content Area -->
-      <main class="flex-1 p-6">
+      <main class="flex-1 px-6">
+        <div class="w-full h-auto flex justify-between items-center py-2">
+          <h1 class="text-md font-semibold">
+            Welcome back, <?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name']; ?>
+          </h1>
+          <div class="flex justify-center items-center">
+            <button class="js-book-now border py-2 px-4 rounded-md bg-federal text-seasalt font-semibold hover:bg-fedHover active:bg-fedActive">BOOK NOW</button>
+          </div>
+        </div>
         <!-- Grid for Booking Summaries -->
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
           <!-- Pending Booking Card -->
@@ -90,7 +94,7 @@ echo "Welcome, " . $_SESSION['first_name'] . " " . $_SESSION['last_name'];
 
           <!-- On Pick-up Booking Card -->
           <div class="h-36 w-full rounded-lg bg-white shadow-lg">
-            <div class="bg-sunrise rounded-t-lg h-12 p-2 flex items-center">
+            <div class="bg-celestial rounded-t-lg h-12 p-2 flex items-center">
               <img class="h-6 w-6 mr-2" src="./img/icons/pickup.svg" alt="">
               <p class="text-md lg:text-lg font-semibold text-seasalt">For Delivery</p>
             </div>
@@ -101,7 +105,7 @@ echo "Welcome, " . $_SESSION['first_name'] . " " . $_SESSION['last_name'];
 
           <!-- On Delivery Booking Card -->
           <div class="h-36 w-full rounded-lg bg-white shadow-lg col-span-2 sm:col-span-1">
-            <div class="bg-green-700 rounded-t-lg h-12 p-2 flex items-center">
+            <div class="bg-celestial rounded-t-lg h-12 p-2 flex items-center">
               <img class="h-6 w-6 mr-2" src="./img/icons/check.svg" alt="">
               <p class="text-md lg:text-lg font-semibold text-seasalt">Total Booking</p>
             </div>
@@ -199,10 +203,10 @@ echo "Welcome, " . $_SESSION['first_name'] . " " . $_SESSION['last_name'];
 
         <!--Prev & Next button-->
         <div class="flex items-center justify-center mt-4 w-full space-x-2">
-          <button class="py-2 px-4 bg-federal rounded-lg text-seasalt">
+          <button class="py-2 px-4 bg-federal rounded-md text-sm text-seasalt hover:bg-fedHover">
             Prev
           </button>
-          <button class="py-2 px-4 bg-federal rounded-lg text-seasalt">
+          <button class="py-2 px-4 bg-federal rounded-md text-sm text-seasalt hover:bg-fedHover">
             Next
           </button>
         </div>

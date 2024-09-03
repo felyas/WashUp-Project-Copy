@@ -1,4 +1,8 @@
+import { updateCopyRightYear } from "./main.js";
+
 document.addEventListener('DOMContentLoaded', function () {
+
+    updateCopyRightYear();
     // Buttons
     const nextToStep2 = document.getElementById('nextToStep2');
     const backToStep1 = document.getElementById('backToStep1');
@@ -17,6 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     nextToStep3.addEventListener('click', function () {
         showStep(3);
+        updateDisplay(); // Update display when moving to Step 3
     });
 
     backToStep2.addEventListener('click', function () {
@@ -98,7 +103,7 @@ document.addEventListener('DOMContentLoaded', function () {
     document.querySelector('input[type="date"]').value = currentDate;
     document.querySelector('input[type="time"]').value = currentTime;
 
-    // Getting the inputs and displaying them in the summary (as per your existing code)
+    // Getting the inputs and displaying them in the summary
     const dateInput = document.querySelector('.js-date');
     const timeInput = document.querySelector('.js-time');
     const radioButtons = document.querySelectorAll('input[name="service"]');
@@ -106,7 +111,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const fnameInput = document.querySelector('.js-fname-input');
     const lnameInput = document.querySelector('.js-lname-input');
     const phoneNumberInput = document.querySelector('.js-phone-number');
-    const emailInput = document.querySelector('.js-email-input');
     const addressInput = document.querySelector('.js-address-input');
     const shippingRadios = document.querySelectorAll('input[name="shipping_method"]');
 
@@ -119,44 +123,31 @@ document.addEventListener('DOMContentLoaded', function () {
     const displayFirstName = document.querySelector('.js-fname');
     const displayLastName = document.querySelector('.js-lname');
     const displayPhoneNumber = document.querySelector('.js-phone_number');
-    const displayEmail = document.querySelector('.js-email');
     const displayAddress = document.querySelector('.js-address');
     const shippingDisplay = document.querySelector('.js-shipping-method');
 
-    // Function to update the display for date and time (as per your existing code)
+    // Function to update the display for date and time
     function updateDisplay() {
         dateDisplay.textContent = dateInput.value || '';
         timeDisplay.textContent = timeInput.value || '';
         const selectedRadio = document.querySelector('input[name="service"]:checked');
         serviceDisplay.textContent = selectedRadio ? selectedRadio.value : 'Wash, Dry, Fold';
-        suggestionDisplay.textContent = otherSuggestionInput.value || 'None';
-        const text = otherSuggestionInput.value.trim();
-        suggestionDisplay.textContent = text ? text : 'None';
+        suggestionDisplay.textContent = otherSuggestionInput.value.trim() || 'None';
         displayCurrentDate.textContent = currentDate;
         displayCurrentTime.textContent = currentTime;
         displayFirstName.textContent = fnameInput.value;
         displayLastName.textContent = lnameInput.value;
         displayPhoneNumber.textContent = phoneNumberInput.value;
-        displayEmail.textContent = emailInput.value;
         displayAddress.textContent = addressInput.value;
         const selectedShippingRadio = document.querySelector('input[name="shipping_method"]:checked');
         shippingDisplay.textContent = selectedShippingRadio ? selectedShippingRadio.value : '2-day Standard';
     }
 
+    // Add event listeners to update the display whenever the user changes the input
+    [dateInput, timeInput, ...radioButtons, otherSuggestionInput, fnameInput, lnameInput, phoneNumberInput, addressInput, ...shippingRadios].forEach(input => {
+        input.addEventListener('input', updateDisplay);
+    });
+
+    // Initial call to update display
     updateDisplay();
-    // Add event listeners to update the display whenever the user changes the input (as per your existing code)
-    dateInput.addEventListener('input', updateDisplay);
-    timeInput.addEventListener('input', updateDisplay);
-    radioButtons.forEach(radio => {
-        radio.addEventListener('change', updateDisplay);
-    });
-    otherSuggestionInput.addEventListener('input', updateDisplay);
-    fnameInput.addEventListener('input', updateDisplay);
-    lnameInput.addEventListener('input', updateDisplay);
-    phoneNumberInput.addEventListener('input', updateDisplay);
-    emailInput.addEventListener('input', updateDisplay);
-    addressInput.addEventListener('input', updateDisplay);
-    shippingRadios.forEach(radio => {
-        radio.addEventListener('change', updateDisplay);
-    });
 });

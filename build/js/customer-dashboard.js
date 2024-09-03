@@ -27,5 +27,10 @@ function openModal(openModal, modalName, closeModal, closeModal2) {
   });
 }
 
+const bookNowBtn = document.querySelector('.js-book-now');
+bookNowBtn.addEventListener('click', () => {
+  window.location.href = 'http://localhost/WashUp-Project/build/booking.php';
+});
+
 openModal('openEditBookingModal', 'toEditBookingModal', 'closeEditBookingModal', 'closeEditBookingModal2');
 openModal('openViewBookingModal', 'toViewBookingModal', 'closeViewBookingModal', 'closeViewBookingModal2');

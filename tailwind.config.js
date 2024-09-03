@@ -5,6 +5,8 @@ module.exports = {
     extend: {
       colors: {
         federal: 'var(--federal)',
+        fedHover: 'var(--fedHover)',
+        fedActive: 'var(--fedActive)',
         polynesian: 'var(--polynesian)',
         celestial: 'var(--celestial)',
         seasalt: 'var(--seasalt)',

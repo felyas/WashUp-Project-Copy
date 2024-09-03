@@ -1,3 +1,16 @@
+<?php
+session_start();
+
+$firstName = isset($_SESSION['first_name']) ? $_SESSION['first_name'] : '';
+$lastName = isset($_SESSION['last_name']) ? $_SESSION['last_name'] : '';
+
+if (!isset($_SESSION['user_id'])) {
+  header("Location: login.php");
+  exit();
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en" class="sm:scroll-smooth">
 
@@ -72,7 +85,7 @@
       </div>
 
       <!-- Step Forms -->
-      <form id="wizardForm" class="w-full bg-white p-6">
+      <form id="wizardForm" class="w-full bg-white p-6" action="./backend/handle_booking.php" method="POST">
         <!-- Step 1 -->
         <div id="step1Content" class="step-content box-border hidden">
           <h2 class="text-lg sm:text-2xl font-bold mb-4">Choose you prefered pickup hours</h2>
@@ -82,8 +95,8 @@
           </div>
 
           <div class="grid grid-cols-2 gap-2">
-            <input type="Date" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-date">
-            <input type="Time" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2
+            <input type="Date" name="pickup_date" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-date">
+            <input type="Time" name="pickup_time" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2
             js-time">
           </div>
 
@@ -98,7 +111,7 @@
           <p class="text-md">Services:</p>
           <div class="flex flex-col lg:flex-row items-center justify-between lg:w-3/5">
             <label class="flex items-center bg-seasalt border border-solid border-gray-300 rounded-lg p-4 mb-4 cursor-pointer hover:bg-gray-200 w-full lg:w-auto">
-              <input type="radio" name="service" value="Wash, Dry, Fold" class="form-radio w-5 h-5 mr-4">
+              <input type="radio" name="service" value="Wash, Dry, Fold" class="form-radio w-5 h-5 mr-4" checked>
               <span class="text-sm">Wash, Dry, Fold</span>
             </label>
             <label class="flex items-center bg-seasalt border border-solid border-gray-300 rounded-lg p-4 mb-4 cursor-pointer hover:bg-gray-200 w-full lg:w-auto">
@@ -111,12 +124,13 @@
             </label>
           </div>
 
+
           <p class="text-md">Other suggestions for my laundry:</p>
-          <textarea class="mb-2 bg-seasalt border border-solid border-gray-300 w-full h-32 rounded-md p-2 js-suggestion" placeholder="Enter your text here">          </textarea>
+          <textarea name="suggestions" class="mb-2 bg-seasalt border border-solid border-gray-300 w-full h-32 rounded-md p-2 js-suggestion" placeholder="(Optional)"></textarea>
 
 
           <div class="flex justify-end">
-            <button id="nextToStep2" type="button" class="px-6 py-2 bg-federal text-seasalt rounded-lg hover:opacity-90 transition text-lg font-bold">→</button>
+            <button id="nextToStep2" type="button" class="px-6 py-2 bg-federal text-seasalt rounded-lg hover:bg-fedHover transition text-lg font-bold">→</button>
           </div>
         </div>
 
@@ -131,19 +145,14 @@
           </div>
 
           <div class="grid grid-cols-2 gap-2">
-            <input type="text" name="fname" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-fname-input" placeholder="First Name: ">
-            <input type="text" name="lname" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-lname-input" placeholder="Last Name: ">
+            <input type="text" name="fname" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-fname-input" placeholder="First Name: " value="<?php echo htmlspecialchars($firstName); ?>">
+            <input type="text" name="lname" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-lname-input" placeholder="Last Name: " value="<?php echo htmlspecialchars($lastName); ?>">
           </div>
 
-          <div class="grid grid-cols-2 gap-2">
-            <label class="text-sm" for="">Phone Number</label>
-            <label class="text-sm" for="">Email</label>
-          </div>
 
-          <div class="grid grid-cols-2 gap-2 mb-2">
-            <input type="text" name="phone_number" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-phone-number" placeholder="Phone Number: ">
-            <input type="email" name="email" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-email-input" placeholder="Email: ">
-          </div>
+          <label class="text-sm" for="">Phone Number</label>
+          <input type="text" name="phone_number" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-phone-number" placeholder="Phone Number: 09691026692">
+
 
           <hr class="w-full my-2">
 
@@ -155,7 +164,7 @@
           <label class="text-sm" for="">Shipping method</label>
           <div class="flex flex-col lg:flex-row items-center justify-between lg:w-1/3">
             <label class="flex items-center bg-seasalt border border-solid border-gray-300 rounded-lg p-4 mb-4 cursor-pointer hover:bg-gray-200 w-full lg:w-auto">
-              <input type="radio" name="shipping_method" value="2-day Standard" class="form-radio w-5 h-5 mr-4">
+              <input type="radio" name="shipping_method" value="2-day Standard" class="form-radio w-5 h-5 mr-4" checked>
               <span class="text-sm">2-day Standard</span>
             </label>
             <label class="flex items-center bg-seasalt border border-solid border-gray-300 rounded-lg p-4 mb-4 cursor-pointer hover:bg-gray-200 w-full lg:w-auto">
@@ -165,8 +174,8 @@
           </div>
 
           <div class="flex justify-between">
-            <button id="backToStep1" type="button" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:opacity-90 transition text-lg font-bold">←</button>
-            <button id="nextToStep3" type="button" class="px-6 py-2 bg-federal text-seasalt rounded-lg hover:opacity-90 transition text-lg font-bold">→</button>
+            <button id="backToStep1" type="button" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition text-lg font-bold">←</button>
+            <button id="nextToStep3" type="button" class="px-6 py-2 bg-federal text-seasalt rounded-lg hover:bg-fedHover transition text-lg font-bold">→</button>
           </div>
         </div>
 
@@ -180,7 +189,6 @@
                 <p>First Name:</p>
                 <p>Last Name:</p>
                 <p>Phone Number:</p>
-                <p>Email Address:</p>
               </div>
               <div>
                 <p>Date: </p>
@@ -201,7 +209,6 @@
                 <p class="js-fname"></p>
                 <p class="js-lname"></p>
                 <p class="js-phone_number"></p>
-                <p class="js-email"></p>
               </div>
 
               <div>

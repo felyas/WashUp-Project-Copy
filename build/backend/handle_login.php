@@ -1,9 +1,11 @@
 <?php
 session_start();
 require_once('./db_connection.php');
-include('./utils/util.php');
+require_once('./utils/util.php');
 
 $util = new Util();
+$db = new Config();
+$conn = $db->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $email = $util->testInput($_POST['email']);
@@ -18,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // Fetch the user from the database
   $sql = "SELECT id, password, verification_status, first_name, last_name, role FROM users WHERE email = :email";
-  $stmt = $pdo->prepare($sql);
+  $stmt = $conn->prepare($sql);
   $stmt->bindParam(':email', $email);
   $stmt->execute();
   $result = $stmt->fetch(PDO::FETCH_ASSOC);

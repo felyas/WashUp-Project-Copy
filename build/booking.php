@@ -228,7 +228,7 @@ if (!isset($_SESSION['user_id'])) {
 
           <div class="flex justify-between mt-2">
             <button id="backToStep2" type="button" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition text-lg font-bold">←</button>
-            <button type="submit" class="px-6 py-2 bg-green-700 text-white rounded-lg hover:opacity-90 transition">Submit</button>
+            <button type="submit" class="px-6 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition">Submit</button>
           </div>
         </div>
       </form>

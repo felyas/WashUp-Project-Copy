@@ -2,6 +2,9 @@
 session_start();
 require_once('./db_connection.php');
 
+$db = new Config();
+$conn = $db->getConnection();
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	// Sanitize the email
 	$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL);
@@ -9,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 	// Validate the sanitized email
 	if (filter_var($email, FILTER_VALIDATE_EMAIL)) {
 		// Check if the email exists in the database
-		$stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
+		$stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
 		$stmt->execute(['email' => $email]);
 		$user = $stmt->fetch(PDO::FETCH_ASSOC);
 
@@ -19,7 +22,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 			$expires = date("U") + 1800; // Token expires in 30 minutes
 
 			// Store the token in the database
-			$stmt = $pdo->prepare("INSERT INTO password_resets (email, token, expires_at) VALUES (:email, :token, :expires_at) ON DUPLICATE KEY UPDATE token=:token, expires_at=:expires_at");
+			$stmt = $conn->prepare("INSERT INTO password_resets (email, token, expires_at) VALUES (:email, :token, :expires_at) ON DUPLICATE KEY UPDATE token=:token, expires_at=:expires_at");
 			if ($stmt->execute([
 				'email' => $email,
 				'token' => $token,

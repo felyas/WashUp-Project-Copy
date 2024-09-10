@@ -1,13 +1,33 @@
 <?php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "washup_db";
 
-try {
-    $pdo = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    die("Connection failed: " . $e->getMessage());
+class Config
+{
+
+    private const DBHOST = 'localhost';
+    private const DBUSER = 'root';
+    private const DBPASS = '';
+    private const DBNAME = 'washup_db';
+
+    private $dsn = 'mysql:host=' . self::DBHOST . '; dbname=' . self::DBNAME . '';
+
+    protected $conn = null;
+
+    // Method for connection to the database
+    public function __construct()
+    {
+        try {
+            $this->conn = new PDO($this->dsn, self::DBUSER, self::DBPASS);
+            $this->conn->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
+            //   echo 'Success';
+        } catch (PDOException $e) {
+            die("Error: " . $e->getMessage());
+        }
+    }
+
+    // Method to return the connection
+    public function getConnection()
+    {
+        return $this->conn;
+    }
 }
-?>
+

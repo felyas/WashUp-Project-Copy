@@ -4,6 +4,8 @@ require_once('./db_connection.php');
 include('./utils/util.php');
 
 $util = new Util();
+$db = new Config();
+$conn = $db->getConnection();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Retrieve and sanitize input
@@ -21,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Check if email already exists
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = :email");
+    $stmt = $conn->prepare("SELECT * FROM users WHERE email = :email");
     $stmt->bindParam(':email', $email);
     $stmt->execute();
 
@@ -41,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Insert the data into the database
     $sql = "INSERT INTO users (first_name, last_name, email, password, otp, verification_status, role) 
             VALUES (:first_name, :last_name, :email, :password, :otp, :verification_status, :role)";
-    $stmt = $pdo->prepare($sql);
+    $stmt = $conn->prepare($sql);
     $verification_status = 0; // Set initial verification status to 0 (not verified)
 
     $stmt->bindParam(':first_name', $firstname);

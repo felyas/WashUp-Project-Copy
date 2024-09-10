@@ -73,10 +73,10 @@ if (!isset($_SESSION['user_id'])) {
       <main class="flex-1 px-6">
         <div class="w-full h-auto flex justify-between items-center py-2">
           <h1 class="text-md font-semibold">
-            Welcome back, <?php echo $_SESSION['first_name'] . " " . $_SESSION['last_name']; ?>
+            Welcome back, <span><?php echo $_SESSION['first_name'] ?></span>
           </h1>
           <div class="flex justify-center items-center">
-            <button class="js-book-now border py-2 px-4 rounded-md bg-federal text-seasalt font-semibold hover:bg-fedHover active:bg-fedActive">BOOK NOW</button>
+            <button class="js-book-now border py-2 px-4 rounded-md bg-federal text-sm sm:text-md text-nowrap text-seasalt font-semibold hover:bg-fedHover active:bg-fedActive">BOOK NOW</button>
           </div>
         </div>
         <!-- Grid for Booking Summaries -->
@@ -122,8 +122,8 @@ if (!isset($_SESSION['user_id'])) {
             <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
               <p class="text-md font-semibold text-ashblack">MANAGE BOOKING</p>
             </div>
-            <div class="overflow-x-auto min-h-[14rem]">
-              <table class="text-nowrap w-full text-left text-ashblack">
+            <div class="overflow-x-auto min-h-[13rem]">
+              <table id="booking-list" class="text-nowrap w-full text-left text-ashblack">
                 <thead class="bg-celestial">
                   <tr>
                     <th class="px-4 py-2 font-medium text-seasalt">#</th>
@@ -142,55 +142,10 @@ if (!isset($_SESSION['user_id'])) {
                     <td class="px-4 py-2">10:00 AM</td>
                     <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
                     <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                      <button id="openEditBookingModal" class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
+                      <button id="openEditBookingModal" class="px-4 py-2 bg-green-700 hover:bg-green-800 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
                       </button>
-                      <button id="openViewBookingModal" class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
-                    </td>
-                  </tr>
-                  <tr class="">
-                    <td class="px-4 py-2">1</td>
-                    <td class="px-4 py-2">John Doe</td>
-                    <td class="px-4 py-2">2024-08-16</td>
-                    <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Completed</td>
-                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                      <button id="openEditBookingModal" class="px-4 py-2 bg-gray-500 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                      </button>
-                      <button id="openViewBookingModal" class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
-                    </td>
-                  </tr>
-                  <tr class="">
-                    <td class="px-4 py-2">1</td>
-                    <td class="px-4 py-2">John Doe</td>
-                    <td class="px-4 py-2">2024-08-16</td>
-                    <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Completed</td>
-                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                      <button id="openEditBookingModal" class="px-4 py-2 bg-gray-500 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                      </button>
-                      <button id="openViewBookingModal" class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
-                    </td>
-                  </tr>
-                  <tr class="">
-                    <td class="px-4 py-2">1</td>
-                    <td class="px-4 py-2">John Doe</td>
-                    <td class="px-4 py-2">2024-08-16</td>
-                    <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Completed</td>
-                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                      <button id="openEditBookingModal" class="px-4 py-2 bg-gray-500 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                      </button>
-                      <button id="openViewBookingModal" class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
+                      <button id="openViewBookingModal" class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
                       </button>
                     </td>
@@ -211,8 +166,6 @@ if (!isset($_SESSION['user_id'])) {
           </button>
         </div>
       </main>
-
-
     </div>
   </div>
 
@@ -267,8 +220,8 @@ if (!isset($_SESSION['user_id'])) {
         </div>
 
         <div class=" flex justify-end">
-          <button type="button" id="closeEditBookingModal2" class="px-4 py-2 bg-gray-500 text-seasalt rounded-md mr-2">Cancel</button>
-          <button type="submit" class="px-4 py-2 bg-green-700 text-seasalt rounded-md">Save</button>
+          <button type="button" id="closeEditBookingModal2" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-seasalt rounded-md mr-2">Cancel</button>
+          <button type="submit" class="px-4 py-2 bg-green-700 hover:bg-green-800 text-seasalt rounded-md">Save</button>
         </div>
       </form>
     </div>
@@ -286,7 +239,7 @@ if (!isset($_SESSION['user_id'])) {
           </svg>
         </button>
       </div>
-      <form id="editForm" class="mt-4">
+      <form id="viewBookingDetailsForm" class="mt-4">
         <div class="grid grid-cols-2 gap-2">
           <div class="mb-4">
             <label for="fname" class="block text-sm font-medium text-gray-700">First Name</label>
@@ -332,11 +285,12 @@ if (!isset($_SESSION['user_id'])) {
 
 
         <div class=" flex justify-end">
-          <button type="button" id="closeViewBookingModal2" class="px-4 py-2 bg-gray-500 text-seasalt rounded-md mr-2">Close</button>
+          <button type="button" id="closeViewBookingModal2" class="px-4 py-2 bg-gray-500 hover:bg-gray-700 text-seasalt rounded-md mr-2">Close</button>
         </div>
       </form>
     </div>
   </div>
+  <!-- End of the Modal -->
 
   <script type="module" src="./js/customer-dashboard.js"></script>
 </body>

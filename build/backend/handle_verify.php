@@ -2,6 +2,9 @@
 session_start();
 require_once('db_connection.php');
 
+$db = new Config();
+$conn = $db->getConnection();
+
 if (!isset($_SESSION['email'])) {
   header("Location: signup.php");
   exit();
@@ -26,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
   // Fetch the OTP and verification status from the database
   $sql = "SELECT otp, verification_status FROM users WHERE email = :email";
-  $stmt = $pdo->prepare($sql);
+  $stmt = $conn->prepare($sql);
   $stmt->bindParam(':email', $email);
   $stmt->execute();
   $result = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -38,13 +41,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   } elseif ($otp === $result['otp']) {
     // Update the verification status
     $updateSql = "UPDATE users SET verification_status = TRUE WHERE email = :email";
-    $updateStmt = $pdo->prepare($updateSql);
+    $updateStmt = $conn->prepare($updateSql);
     $updateStmt->bindParam(':email', $email);
 
     if ($updateStmt->execute()) {
       // Fetch user details to set session variables
       $detailsSql = "SELECT id, first_name, last_name FROM users WHERE email = :email";
-      $detailsStmt = $pdo->prepare($detailsSql);
+      $detailsStmt = $conn->prepare($detailsSql);
       $detailsStmt->bindParam(':email', $email);
       $detailsStmt->execute();
       $userDetails = $detailsStmt->fetch(PDO::FETCH_ASSOC);

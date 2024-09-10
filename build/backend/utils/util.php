@@ -2,6 +2,7 @@
 
 class Util
 {
+  //Method to sanitize inputs
   public function testInput($data){
     $data = trim($data);
     $data = stripslashes($data);

@@ -1,9 +1,6 @@
 <?php
 session_start();
 
-$firstName = isset($_SESSION['first_name']) ? $_SESSION['first_name'] : '';
-$lastName = isset($_SESSION['last_name']) ? $_SESSION['last_name'] : '';
-
 if (!isset($_SESSION['user_id'])) {
   header("Location: login.php");
   exit();
@@ -24,6 +21,10 @@ if (!isset($_SESSION['user_id'])) {
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/palette.css">
 
+  <!-- SweetAlert CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -34,7 +35,7 @@ if (!isset($_SESSION['user_id'])) {
 <body class="bg-seasalt min-h-screen font-poppins flex flex-col">
   <header class="bg-federal text-seasalt sticky top-0 z-10">
     <section class="max-w-5xl mx-auto p-4 flex justify-between items-center">
-      <a href="./landing-page.html">
+      <a href="./customer-dashboard.php">
         <div class="flex items-center justify-center hover:opacity-90">
           <div class="flex justify-center items-center w-[180px]">
             <img src="./img/logo-white.png" alt="" class="w-12 h-10 mr-1">
@@ -44,212 +45,189 @@ if (!isset($_SESSION['user_id'])) {
           </div>
         </div>
       </a>
+
+      <!--Notifications-->
+      <div class="flex items-center justify-between lg:space-x-4 text-sm">
+        <div class="flex items-center justify-between">
+          <div class="relative">
+            <button class="js-notification-button flex items-center justify-center px-4 py-2">
+              <img src="./img/icons/notification-bell.svg" alt="" class="w-5 h-5">
+            </button>
+            <div class="js-notification hidden h-auto w-auto bg-seasalt z-10 absolute right-0 text-nowrap p-4 rounded-lg">
+              <h1 class="text-center mb-4 text-lg font-bold">Notifications</h1>
+              <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
+              <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
+              <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
+            </div>
+          </div>
+          <form action="./backend/handle_logout.php" method="POST" class="p-0 m-0">
+            <button type="submit" class="flex items-center justify-center px-4 py-2">
+              <img src="./img/icons/logout.svg" alt="Logout Icon" class="w-5 h-5">
+            </button>
+          </form>
+
+        </div>
+      </div>
     </section>
   </header>
 
-  <main class="flex-grow flex bg-seasalt items-center justify-center text-ashblack">
-    <section class="flex flex-col items-center justify-center my-4 border border-solid bg-white shadow-lg mx-2 sm:mx-0 w-96 sm:w-3/4">
+  <main class="flex-grow flex bg-seasalt justify-center text-ashblack">
 
-      <div class="flex justify-evenly w-full mt-4 mb-2">
-        <div id="step1" class="step w-12 h-12  sm:w-16 sm:h-16 flex items-center justify-center rounded-full bg-gray-500 font-bold">
-          <img class="h-[20px] sm:h-[25px]" src="./img/icons/shirt-white.svg" alt="">
+
+    <section class="flex flex-col items-center my-4 sm:mx-0 w-96 sm:w-3/4">
+      <div class="w-full flex items-center justify-between mb-4 px-2 sm:px-0">
+        <div class="flex flex-col justify-center">
+          <h1 class="text-ashblack text-md sm:text-xl md:text-2xl font-semibold">
+            Laundry Service Booking Form
+          </h1>
+          <p class="js-current-time text-ashblack text-sm"></p>
         </div>
-        <div id="step2" class="step w-12 h-12  sm:w-16 sm:h-16 flex items-center justify-center rounded-full bg-gray-500 font-bold">
-          <img class="h-[20px] sm:h-[25px]" src="./img/icons/map-location-white.svg" alt="">
-        </div>
-        <div id="step3" class="step w-12 h-12  sm:w-16 sm:h-16 flex items-center justify-center rounded-full bg-gray-500 font-bold">
-          <img class="h-[20px] sm:h-[25px]" src="./img/icons/clipboard-white.svg" alt="">
+
+        <div class="justify-center items-center">
+          <button id="back-to-dashboard-btn" class="flex items-center border-2 border-federal py-2 px-4 rounded-md shadow-lg text-federal hover:bg-federal hover:text-seasalt transition">Back<span class="hidden lg:block ml-1">to Dashboard</span></button>
         </div>
       </div>
 
-      <div class="flex justify-evenly w-full">
-        <div class="w-16 h-16 flex items-center justify-center font-semibold">
-          <div class="flex flex-col items-center justify-center">
-            <p class="text-sm  text-center">Step 1:</p>
-            <p class="text-sm text-center">Services Details</p>
-          </div>
+      <form id="add-booking-form" class="w-full px-6 border border-solid bg-white shadow-lg" novalidate>
+        <div class="w-full">
+          <p class="pb-2 pt-6 text-lg font-semibold">Checkout Details</p>
         </div>
-        <div class="w-16 h-16 flex items-center justify-center font-semibold">
-          <div class="flex flex-col items-center justify-center">
-            <p class="text-sm text-center">Step 2:</p>
-            <p class="text-sm text-center">Checkout Details</p>
+        <div class="grid grid-cols-2 gap-x-4 mb-2 align-top">
+          <div class="grid grid-cols-1 justify-start">
+            <label for="fname">First Name</label>
+            <input type="text" name="fname" class="p-2 border border-ashblack rounded-md" placeholder="Felix" required>
+            <div class="text-red-500 text-sm hidden">First name is required!</div>
           </div>
-        </div>
-        <div class="w-16 h-16 flex items-start justify-center font-semibold">
-          <div class="flex flex-col items-center justify-start h-full">
-            <p class="text-sm text-center">Step 3:</p>
-            <p class="text-sm text-center">Summary</p>
+          <div class="grid grid-cols-1 justify-start">
+            <label for="lname">Last Name</label>
+            <input type="text" name="lname" class="p-2 border border-ashblack rounded-md" placeholder="Bragais" required>
+            <div class="text-red-500 text-sm hidden">Last name is required!</div>
           </div>
         </div>
 
-      </div>
-
-      <!-- Step Forms -->
-      <form id="wizardForm" class="w-full bg-white p-6" action="./backend/handle_booking.php" method="POST">
-        <!-- Step 1 -->
-        <div id="step1Content" class="step-content box-border hidden">
-          <h2 class="text-lg sm:text-2xl font-bold mb-4">Choose you prefered pickup hours</h2>
-          <div class="grid grid-cols-2 gap-2">
-            <label class="text-sm" for="">Date</label>
-            <label class="text-sm" for="">Time</label>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 mb-2">
+          <div class="grid grid-cols-1 justify-start">
+            <label for="phone_number">Phone Number</label>
+            <input type="text" name="phone_number" class="p-2 border border-ashblack rounded-md" placeholder="e.g., +63 912 345 6789" required>
+            <div class="text-red-600 text-sm mt-1 hidden">Phone is required!</div>
           </div>
-
-          <div class="grid grid-cols-2 gap-2">
-            <input type="Date" name="pickup_date" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-date">
-            <input type="Time" name="pickup_time" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2
-            js-time">
+          <div class="grid grid-cols-1 justify-start">
+            <label for="address">Address</label>
+            <input type="text" name="address" class="p-2 border border-ashblack rounded-md" placeholder="e.g., Villa Rizza, Blk 2 Lot 3, Paciano Rizal" required>
+            <div class="text-red-500 text-sm hidden">Address is required!</div>
           </div>
+        </div>
 
-          <div class="h-12 sm:h-8 w-full px-2 bg-red-100 border-red-500 border border-solid text-red-800 flex items-center rounded-full text-sm">
-            <img class="h-4 w-4" src="./img/icons/danger-icon.svg" alt="">
-            <p class="ml-2">Pick-up hours are only available until 6pm</p>
+        <div class="w-full">
+          <p class="pb-2 pt-6 text-lg font-semibold">Choose your prefered pick-up date & time</p>
+        </div>
+        <div class="grid grid-cols-2 gap-x-4 mb-2">
+          <div class="grid grid-cols-1 justify-start">
+            <label for="pickup-date">Pick-up Date</label>
+            <input type="date" name="pickup_date" class="p-2 border border-ashblack rounded-md" required>
+            <div class="text-red-500 text-sm hidden">Pick-up date is required!</div>
           </div>
+          <div class="grid grid-cols-1 justify-start">
+            <label for="pickup-time">Pick-up Time</label>
+            <input type="time" name="pickup_time" class="p-2 border border-ashblack rounded-md" required>
+            <div class="text-red-500 text-sm hidden">Pick-up time is required!</div>
+          </div>
+        </div>
+        <div class="h-12 sm:h-8 w-full px-2 bg-orange-100 border-orange-500 border border-solid text-orange-800 flex items-center rounded-full text-sm font-semibold mb-2">
+          <img class="h-4 w-4" src="./img/icons/danger-icon.svg" alt="">
+          <p class="ml-2">Pick-up hours are only available until 6pm</p>
+        </div>
 
-          <hr class="w-full mb-2 mt-4">
-
-          <h2 class="text-lg sm:text-2xl font-bold mb-4">Customize your desired service</h2>
+        <div class="w-full">
+          <p class="pb-2 pt-6 text-lg font-semibold">Customize your service</p>
           <p class="text-md">Services:</p>
-          <div class="flex flex-col lg:flex-row items-center justify-between lg:w-3/5">
-            <label class="flex items-center bg-seasalt border border-solid border-gray-300 rounded-lg p-4 mb-4 cursor-pointer hover:bg-gray-200 w-full lg:w-auto">
-              <input type="radio" name="service" value="Wash, Dry, Fold" class="form-radio w-5 h-5 mr-4" checked>
-              <span class="text-sm">Wash, Dry, Fold</span>
-            </label>
-            <label class="flex items-center bg-seasalt border border-solid border-gray-300 rounded-lg p-4 mb-4 cursor-pointer hover:bg-gray-200 w-full lg:w-auto">
-              <input type="radio" name="service" value="Wash, Dry, Press" class="form-radio w-5 h-5 mr-4">
-              <span class="text-sm">Wash, Dry, Press</span>
-            </label>
-            <label class="flex items-center bg-seasalt border border-solid border-gray-300 rounded-lg p-4 mb-4 cursor-pointer hover:bg-gray-200 w-full lg:w-auto">
-              <input type="radio" name="service" value="Dry Clean" class="form-radio w-5 h-5 mr-4">
-              <span class="text-sm">Dry Clean</span>
-            </label>
-          </div>
-
-
-          <p class="text-md">Other suggestions for my laundry:</p>
-          <textarea name="suggestions" class="mb-2 bg-seasalt border border-solid border-gray-300 w-full h-32 rounded-md p-2 js-suggestion" placeholder="(Optional)"></textarea>
-
-
-          <div class="flex justify-end">
-            <button id="nextToStep2" type="button" class="px-6 py-2 bg-federal text-seasalt rounded-lg hover:bg-fedHover transition text-lg font-bold">→</button>
-          </div>
         </div>
-
-        <!-- Step 2 -->
-        <div id="step2Content" class="step-content">
-
-          <h2 class="text-lg sm:text-2xl font-bold">Checkout Details</h2>
-          <p class="text-md mb-2">Personal Details:</p>
-          <div class="grid grid-cols-2 gap-2">
-            <label class="text-sm" for="">First Name</label>
-            <label class="text-sm" for="">Last Name</label>
-          </div>
-
-          <div class="grid grid-cols-2 gap-2">
-            <input type="text" name="fname" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-fname-input" placeholder="First Name: " value="<?php echo htmlspecialchars($firstName); ?>">
-            <input type="text" name="lname" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-lname-input" placeholder="Last Name: " value="<?php echo htmlspecialchars($lastName); ?>">
-          </div>
-
-
-          <label class="text-sm" for="">Phone Number</label>
-          <input type="text" name="phone_number" class="w-full border border-solid border-ashblack rounded-lg mb-2 p-2 js-phone-number" placeholder="Phone Number: 09691026692">
-
-
-          <hr class="w-full my-2">
-
-          <p class="text-md mb-2">Pickup &amp; Delivery Details:</p>
-
-          <label class="text-sm" for="">Address</label>
-          <input type="text" name="address" class="mb-4 w-full border border-solid border-ashblack rounded-lg p-2 js-address-input" placeholder="Street Name. Building. House No.* ">
-
-          <label class="text-sm" for="">Shipping method</label>
-          <div class="flex flex-col lg:flex-row items-center justify-between lg:w-1/3">
-            <label class="flex items-center bg-seasalt border border-solid border-gray-300 rounded-lg p-4 mb-4 cursor-pointer hover:bg-gray-200 w-full lg:w-auto">
-              <input type="radio" name="shipping_method" value="2-day Standard" class="form-radio w-5 h-5 mr-4" checked>
-              <span class="text-sm">2-day Standard</span>
-            </label>
-            <label class="flex items-center bg-seasalt border border-solid border-gray-300 rounded-lg p-4 mb-4 cursor-pointer hover:bg-gray-200 w-full lg:w-auto">
-              <input type="radio" name="shipping_method" value="Rush" class="form-radio w-5 h-5 mr-4">
-              <span class="text-sm">Rush</span>
-            </label>
-          </div>
-
-          <div class="flex justify-between">
-            <button id="backToStep1" type="button" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition text-lg font-bold">←</button>
-            <button id="nextToStep3" type="button" class="px-6 py-2 bg-federal text-seasalt rounded-lg hover:bg-fedHover transition text-lg font-bold">→</button>
-          </div>
-        </div>
-
-        <!-- Step 3 -->
-        <div id="step3Content" class="step-content hidden">
-          <h2 class="text-2xl font-bold mb-4">Order Summary</h2>
-
-          <div class="grid grid-cols-2 text-sm sm:text-md">
-            <div class="space-y-4">
-              <div>
-                <p>First Name:</p>
-                <p>Last Name:</p>
-                <p>Phone Number:</p>
-              </div>
-              <div>
-                <p>Date: </p>
-                <p>Time: </p>
-                <p>Address: </p>
-                <p>Shipping Method: </p>
-              </div>
-              <div>
-                <p>Pick-up Date:</p>
-                <p>Pick-up Time:</p>
-                <p>Services:</p>
-                <p>Other Suggestions:</p>
+        <div class="flex flex-col lg:flex-row items-center justify-between lg:w-3/5">
+          <label class="cursor-pointer my-2">
+            <input type="radio" class="peer sr-only" name="service_selection" value="wash, dry, fold" checked />
+            <div class="w-auto max-w-xl rounded-md bg-white px-4 py-2 text-gray-600 ring-2 ring-transparent transition-all hover:shadow peer-checked:text-federal peer-checked:ring-federal peer-checked:ring-offset-2">
+              <div class="flex">
+                <p class="text-sm font-bold">Wash, Dry, Fold</p>
               </div>
             </div>
-
-            <div class="space-y-4">
-              <div>
-                <p class="js-fname"></p>
-                <p class="js-lname"></p>
-                <p class="js-phone_number"></p>
-              </div>
-
-              <div>
-                <p class="js-current-date">2024-08-28</p>
-                <p class="js-current-time">18:01</p>
-                <p class="js-address"></p>
-                <p class="js-shipping-method">2-day Standard</p>
-              </div>
-              <div>
-                <p class="js-preffered-date">2024-08-28</p>
-                <p class="js-preffered-time">18:01</p>
-                <p class="js-service">Wash, Dry, Fold</p>
-                <p class="js-other-suggestions">None</p>
+          </label>
+          <label class="cursor-pointer my-2">
+            <input type="radio" class="peer sr-only" name="service_selection" value="wash, dry, press"/>
+            <div class="w-auto max-w-xl rounded-md bg-white px-4 py-2 text-gray-600 ring-2 ring-transparent transition-all hover:shadow peer-checked:text-federal peer-checked:ring-federal peer-checked:ring-offset-2">
+              <div class="flex">
+                <p class="text-sm font-bold">Wash, Dry, Press</p>
               </div>
             </div>
-          </div>
-
-          <div class="flex justify-between mt-2">
-            <button id="backToStep2" type="button" class="px-6 py-2 bg-gray-500 text-white rounded-lg hover:bg-gray-600 transition text-lg font-bold">←</button>
-            <button type="submit" class="px-6 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 transition">Submit</button>
-          </div>
+          </label>
+          <label class="cursor-pointer my-2">
+            <input type="radio" class="peer sr-only" name="service_selection" value="dry clean"/>
+            <div class="w-auto max-w-xl rounded-md bg-white px-4 py-2 text-gray-600 ring-2 ring-transparent transition-all hover:shadow peer-checked:text-federal peer-checked:ring-federal peer-checked:ring-offset-2">
+              <div class="flex">
+                <p class="text-sm font-bold">Dry Clean</p>
+              </div>
+            </div>
+          </label>
         </div>
+
+        <p class="text-md">Other suggestions for my laundry:</p>
+        <textarea name="suggestions" class="mb-2 bg-seasalt border border-solid border-gray-300 w-full h-32 rounded-md p-2 js-suggestion" value="none" placeholder="(Optional)"></textarea>
+
+        <label class="text-sm mb-2" for="">Service Type:</label>
+        <div class="flex flex-col lg:flex-row items-center justify-between py-2 lg:w-2/3">
+          <label class="cursor-pointer my-2">
+            <input type="radio" class="peer sr-only" value="standard" name="service_type" checked />
+            <div class="w-72 max-w-xl rounded-md bg-white p-2 text-gray-600 ring-2 ring-transparent transition-all hover:shadow peer-checked:text-federal peer-checked:ring-federal peer-checked:ring-offset-2">
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-semibold uppercase text-gray-500">Standard</p>
+                  <div>
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                      <path fill="currentColor" d="m10.6 13.8l-2.175-2.175q-.275-.275-.675-.275t-.7.3q-.275.275-.275.7q0 .425.275.7L9.9 15.9q.275.275.7.275q.425 0 .7-.275l5.675-5.675q.275-.275.275-.675t-.3-.7q-.275-.275-.7-.275q-.425 0-.7.275ZM12 22q-2.075 0-3.9-.788q-1.825-.787-3.175-2.137q-1.35-1.35-2.137-3.175Q2 14.075 2 12t.788-3.9q.787-1.825 2.137-3.175q1.35-1.35 3.175-2.138Q9.925 2 12 2t3.9.787q1.825.788 3.175 2.138q1.35 1.35 2.137 3.175Q22 9.925 22 12t-.788 3.9q-.787 1.825-2.137 3.175q-1.35 1.35-3.175 2.137Q14.075 22 12 22Z" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="flex items-end justify-between">
+                  <p><span class="text-lg font-bold">2</span> days</p>
+                  <p class="text-sm font-bold">Free</p>
+                </div>
+              </div>
+            </div>
+          </label>
+
+          <label class="cursor-pointer my-2">
+            <input type="radio" class="peer sr-only" value="rush" name="service_type" />
+            <div class="w-72 max-w-xl rounded-md bg-white p-2 text-gray-600 ring-2 ring-transparent transition-all hover:shadow peer-checked:text-federal peer-checked:ring-federal peer-checked:ring-offset-2">
+              <div class="flex flex-col gap-1">
+                <div class="flex items-center justify-between">
+                  <p class="text-sm font-semibold uppercase text-gray-500">Rush</p>
+                  <div>
+                    <svg width="24" height="24" viewBox="0 0 24 24">
+                      <path fill="currentColor" d="m10.6 13.8l-2.175-2.175q-.275-.275-.675-.275t-.7.3q-.275.275-.275.7q0 .425.275.7L9.9 15.9q.275.275.7.275q.425 0 .7-.275l5.675-5.675q.275-.275.275-.675t-.3-.7q-.275-.275-.7-.275q-.425 0-.7.275ZM12 22q-2.075 0-3.9-.788q-1.825-.787-3.175-2.137q-1.35-1.35-2.137-3.175Q2 14.075 2 12t.788-3.9q.787-1.825 2.137-3.175q1.35-1.35 3.175-2.138Q9.925 2 12 2t3.9.787q1.825.788 3.175 2.138q1.35 1.35 2.137 3.175Q22 9.925 22 12t-.788 3.9q-.787 1.825-2.137 3.175q-1.35 1.35-3.175 2.137Q14.075 22 12 22Z" />
+                    </svg>
+                  </div>
+                </div>
+                <div class="flex items-end justify-between">
+                  <p><span class="text-lg font-bold">1</span> Day</p>
+                  <p class="text-sm font-bold">&#8369; 50</p>
+                </div>
+              </div>
+            </div>
+          </label>
+        </div>
+        <div class="h-12 sm:h-8 w-full px-2 bg-orange-100 border-orange-500 border border-solid text-orange-800 flex items-center rounded-full text-sm font-semibold mb-4">
+          <img class="h-4 w-4" src="./img/icons/danger-icon.svg" alt="">
+          <p class="ml-2">Note: Rush has additional 50 pesos fee.</p>
+        </div>
+
+        <div class="w-full">
+          <input type="submit" id="add-booking-btn" value="Submit" class="bg-green-700 hover:bg-green-800 py-2 px-4 w-full text-seasalt rounded-lg mb-6 cursor-pointer">
+        </div>
+
       </form>
 
     </section>
 
   </main>
-
-  <footer id="footer" class="bg-federal text-seasalt text-base z-10">
-    <section class="max-w-5xl mx-auto p-4 flex flex-col justify-center items-center sm:flex-row sm:justify-between">
-      <div class="flex flex-col sm:text-left">
-        <p class="font-bold">
-          TAMANG LABA, TAMANG BANGO, TAMANG PRESYO
-        </p>
-      </div>
-
-      <div class="flex flex-col sm:gap-1">
-        <p class="text-right">&copy; <span id="year"></span> All Rights Reserved</p>
-      </div>
-    </section>
-  </footer>
 
   <script type="module" src="./js/booking.js"></script>
 </body>

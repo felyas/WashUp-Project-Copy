@@ -71,14 +71,22 @@ if (!isset($_SESSION['user_id'])) {
 
       <!-- Main Content Area -->
       <main class="flex-1 px-6">
-        <div class="w-full h-auto flex justify-between items-center py-2">
-          <h1 class="text-md font-semibold">
-            Welcome back, <span><?php echo $_SESSION['first_name'] ?></span>
-          </h1>
-          <div class="flex justify-center items-center">
-            <button class="js-book-now border py-2 px-4 rounded-md bg-federal text-sm sm:text-md text-nowrap text-seasalt font-semibold hover:bg-fedHover active:bg-fedActive">BOOK NOW</button>
+        <div class="w-full h-auto flex flex-col lg:flex-row justify-between items-center my-2 p-4 border border-solid border-gray-200 rounded-lg flex-col-reverse">
+          <div class="w-full lg:w-1/4 lg:mb-0">
+            <h1 class="text-lg lg:text-md font-semibold">
+              Welcome back, <span><?php echo $_SESSION['first_name']; ?></span>
+            </h1>
+            <p class="text-gray-400 text-sm mt-2 lg:mt-1">
+              Track the status of your laundry booking with ease and stay updated on every step of the process.
+            </p>
+          </div>
+          <div class="w-full lg:w-auto flex justify-end items-center">
+            <button class="js-book-now border-2 text-md font-semibold border-federal py-2 px-6 rounded-md shadow-lg text-federal hover:bg-federal hover:text-seasalt transition">
+              BOOK NOW
+            </button>
           </div>
         </div>
+
         <!-- Grid for Booking Summaries -->
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
           <!-- Pending Booking Card -->
@@ -116,55 +124,33 @@ if (!isset($_SESSION['user_id'])) {
         </div>
 
         <!--List-->
-        <div class="h-auto grid grid-cols-1 text-sm">
+        <div class="h-auto grid grid-cols-1 text-sm border border-solid border-gray-200 shadow-lg mb-4">
           <!-- List of On Pick-up Booking -->
-          <div class="h-auto w-full rounded-sm bg-white shadow-lg">
+          <div class="h-auto w-full rounded-sm bg-white">
             <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
               <p class="text-md font-semibold text-ashblack">MANAGE BOOKING</p>
             </div>
-            <div class="overflow-x-auto min-h-[13rem]">
-              <table id="booking-list" class="text-nowrap w-full text-left text-ashblack">
-                <thead class="bg-celestial">
+            <div class="overflow-x-auto min-h-[13rem] p-2">
+              <table id="booking-list" class="text-nowrap w-full text-left text-ashblack border-collapse">
+                <thead class="bg-gray-200">
                   <tr>
-                    <th class="px-4 py-2 font-medium text-seasalt">#</th>
-                    <th class="px-4 py-2 font-medium text-seasalt">Customer Name</th>
-                    <th class="px-4 py-2 font-medium text-seasalt">Date</th>
-                    <th class="px-4 py-2 font-medium text-seasalt">Pick-up Time</th>
-                    <th class="px-4 py-2 font-medium text-seasalt">Status</th>
-                    <th class="px-4 py-2 font-medium text-seasalt text-center">Action</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">#</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">FULL NAME</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">BOOKING DATE</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">SERVICE</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">SERVICE TYPE</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">STATUS</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack text-center border-b border-gray-200">ACTION</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr class="">
-                    <td class="px-4 py-2">1</td>
-                    <td class="px-4 py-2">John Doe</td>
-                    <td class="px-4 py-2">2024-08-16</td>
-                    <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
-                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                      <button id="openEditBookingModal" class="px-4 py-2 bg-green-700 hover:bg-green-800 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                      </button>
-                      <button id="openViewBookingModal" class="px-4 py-2 bg-blue-700 hover:bg-blue-800 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
-                    </td>
-                  </tr>
+                <tbody id="users-booking-list">
+                  <!-- List -->
                 </tbody>
               </table>
             </div>
           </div>
         </div>
 
-        <!--Prev & Next button-->
-        <div class="flex items-center justify-center mt-4 w-full space-x-2">
-          <button class="py-2 px-4 bg-federal rounded-md text-sm text-seasalt hover:bg-fedHover">
-            Prev
-          </button>
-          <button class="py-2 px-4 bg-federal rounded-md text-sm text-seasalt hover:bg-fedHover">
-            Next
-          </button>
-        </div>
       </main>
     </div>
   </div>
@@ -174,43 +160,48 @@ if (!isset($_SESSION['user_id'])) {
 
   <!-- Modal (hidden by default) -->
   <!-- Modal for Edit -->
-  <div id="toEditBookingModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
+  <div class="toEditBookingModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
     <div class="bg-white rounded-sm shadow-lg p-6 w-full max-w-lg">
       <div class="flex justify-between items-center border-b pb-2">
-        <!-- Put the user's Full Name here at the top -->
-        <h2 class="text-lg font-semibold">User's Full Name Information</h2>
-        <button id="closeEditBookingModal" class="text-gray-500 hover:text-gray-800">
+        
+        <h2 class="text-lg font-semibold">Booking Information</h2>
+        <button class="closeEditBookingModal text-gray-500 hover:text-gray-800">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
       </div>
-      <form id="editForm" class="mt-4">
+      <form id="edit-booking-form" class="mt-4">
+        <input type="hidden" name="id" id="id">
         <div class="grid grid-cols-2 gap-2">
           <div class="mb-4">
             <label for="fname" class="block text-sm font-medium text-gray-700">First Name</label>
             <input type="text" id="fname" name="fname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" First Name: ">
           </div>
-          <div class=" mb-4">
+          <div class="mb-4">
             <label for="lname" class="block text-sm font-medium text-gray-700">Last Name</label>
             <input type="text" id="lname" name="lname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Last Name: ">
           </div>
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div class="mb-4">
-            <label for="pickupTime" class="block text-sm font-medium text-gray-700">Pick-up Time</label>
-            <input type="text" id="pickupTime" name="pickupTime" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Pick-up Time: ">
+            <label for="pickup_date" class="block text-sm font-medium text-gray-700">Pick-up Date</label>
+            <input type="date" id="pickup_date" name="pickup_date" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Pick-up Date: ">
           </div>
-          <div class=" mb-4">
-            <label for="pickupDate" class="block text-sm font-medium text-gray-700">Pick-up Date</label>
-            <input type="text" id="pickupDate" name="pickupDate" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Pick-up Date: ">
+          <div class="mb-4">
+            <label for="pickup_time" class="block text-sm font-medium text-gray-700">Pick-up Time</label>
+            <input type="time" id="pickup_time" name="pickup_time" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Pick-up Time: ">
           </div>
         </div>
-        <div class=" mb-4">
+        <div class="mb-4">
+          <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone Number</label>
+          <input type="text" id="phone_number" name="phone_number" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., +63 912 345 6789">
+        </div>
+        <div class="mb-4">
           <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-          <input type="text" id="address" name="address" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Address: ">
+          <input type="text" id="address" name="address" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., Villa Rizza, Blk 2 Lot 3, Paciano Rizal">
         </div>
-        <div class=" mb-4">
+        <div class="mb-4">
           <label for="service" class="block text-sm font-medium text-gray-700">Service</label>
           <select id="service" name="service" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack">
             <option value="wash-dry-fold">Wash, Dry, Fold</option>
@@ -219,21 +210,19 @@ if (!isset($_SESSION['user_id'])) {
           </select>
         </div>
 
-        <div class=" flex justify-end">
-          <button type="button" id="closeEditBookingModal2" class="px-4 py-2 bg-gray-500 hover:bg-gray-600 text-seasalt rounded-md mr-2">Cancel</button>
-          <button type="submit" class="px-4 py-2 bg-green-700 hover:bg-green-800 text-seasalt rounded-md">Save</button>
-        </div>
+        <input type="submit" id="edit-booking-btn" value="Save" class="px-4 py-2 w-full bg-green-700 hover:bg-green-800 text-seasalt rounded-md">
       </form>
     </div>
   </div>
+  <!-- End of the Modal -->
 
   <!-- Modal for View -->
-  <div id="toViewBookingModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
+  <div class="toViewBookingModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
     <div class="bg-white rounded-sm shadow-lg p-6 w-full max-w-lg">
       <div class="flex justify-between items-center border-b pb-2">
         <!-- Put the user's Full Name here at the top -->
         <h2 class="text-lg font-semibold">View User's Information</h2>
-        <button id="closeViewBookingModal" class="text-gray-500 hover:text-gray-800">
+        <button class="closeViewBookingModal text-gray-500 hover:text-gray-800">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
@@ -275,17 +264,16 @@ if (!isset($_SESSION['user_id'])) {
           <input type="text" id="address" name="address" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Address: " disabled>
         </div>
         <div class=" mb-4">
-          <label for="service" class="block text-sm font-medium text-gray-700">Service Choosen</label>
-          <input type="text" id="service" name="service" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Service Choosen: " disabled>
+          <label for="service" class="block text-sm font-medium text-gray-700">Service Chosen</label>
+          <input type="text" id="service" name="service" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Service Chosen: " disabled>
         </div>
         <div class=" mb-4">
           <label for="shipping_method" class="block text-sm font-medium text-gray-700">Shipping Method</label>
           <input type="text" id="shipping_method" name="shipping_method" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Shipping Method: " disabled>
         </div>
 
-
         <div class=" flex justify-end">
-          <button type="button" id="closeViewBookingModal2" class="px-4 py-2 bg-gray-500 hover:bg-gray-700 text-seasalt rounded-md mr-2">Close</button>
+          <button type="button" class="closeViewBookingModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-seasalt rounded-md mr-2">Close</button>
         </div>
       </form>
     </div>

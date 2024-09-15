@@ -100,6 +100,7 @@ addBookingForm.addEventListener('submit', async (e) => {
 
     return false;
   } else {
+    document.getElementById('add-booking-btn').value = 'Please Wait...';
     // Show SweetAlert confirmation immediately
     Swal.fire({
       title: 'Are you sure?',
@@ -110,14 +111,12 @@ addBookingForm.addEventListener('submit', async (e) => {
       cancelButtonText: 'Cancel',
     }).then(async (result) => {
       if (result.isConfirmed) {
-        document.getElementById('add-booking-btn').value = 'Please Wait...';
-
         const data = await fetch('./backend/customer_action.php', {
           method: 'POST',
           body: formData,
         });
+        
         const response = await data.text();
-        console.log(response);
 
         //Handle response and show SweetAlert
         if (response.includes('success')) {

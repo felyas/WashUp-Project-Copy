@@ -23,6 +23,10 @@ if (!isset($_SESSION['user_id'])) {
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/palette.css">
 
+  <!-- SweetAlert CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -71,7 +75,7 @@ if (!isset($_SESSION['user_id'])) {
 
       <!-- Main Content Area -->
       <main class="flex-1 px-6">
-        <div class="w-full h-auto flex flex-col lg:flex-row justify-between items-center my-2 p-4 border border-solid border-gray-200 rounded-lg flex-col-reverse">
+        <div class="w-full h-auto flex lg:flex-row justify-between items-center mt-2 mb-4 p-4 border border-solid border-gray-200 rounded-lg flex-col-reverse">
           <div class="w-full lg:w-1/4 lg:mb-0">
             <h1 class="text-lg lg:text-md font-semibold">
               Welcome back, <span><?php echo $_SESSION['first_name']; ?></span>
@@ -80,7 +84,7 @@ if (!isset($_SESSION['user_id'])) {
               Track the status of your laundry booking with ease and stay updated on every step of the process.
             </p>
           </div>
-          <div class="w-full lg:w-auto flex justify-end items-center">
+          <div class="w-full lg:w-auto flex justify-end items-center mb-2 sm:mb-0">
             <button class="js-book-now border-2 text-md font-semibold border-federal py-2 px-6 rounded-md shadow-lg text-federal hover:bg-federal hover:text-seasalt transition">
               BOOK NOW
             </button>
@@ -88,37 +92,49 @@ if (!isset($_SESSION['user_id'])) {
         </div>
 
         <!-- Grid for Booking Summaries -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-x-6 lg:gap-x-12 gap-y-4 mb-4">
           <!-- Pending Booking Card -->
-          <div class="lg:h-36 w-full rounded-lg bg-white shadow-lg">
-            <div class="bg-celestial rounded-t-lg h-12 p-2 flex items-center">
-              <img class="h-6 w-6 mr-2" src="./img/icons/pending.svg" alt="">
-              <p class="text-md lg:text-lg font-semibold text-seasalt flex items-center">For Pick-up</p>
-            </div>
-            <div class="p-4 flex items-center justify-center w-full pt-8">
-              <div class="flex items-center justify-center text-3xl font-bold">1</div>
+          <div class="h-36 rounded-lg bg-white shadow-lg flex justify-center items-center">
+            <div class="grid grid-cols-2 lg:space-x-2">
+              <div class="flex items-center justify-center">
+                <div class="rounded-[50%] bg-celestial p-4 flex items-center justify-center">
+                  <img class="h-6 w-6" src="./img/icons/pending.svg" alt="">
+                </div>
+              </div>
+              <div class="flex flex-col items-center justify-center">
+                <p class="text-lg md:text-3xl font-semibold" id="js-for-pickup"><!-- total count --></p>
+                <p class="text-sm md:text-md text-wrap">For pickup</p>
+              </div>
             </div>
           </div>
 
           <!-- On Pick-up Booking Card -->
-          <div class="h-36 w-full rounded-lg bg-white shadow-lg">
-            <div class="bg-celestial rounded-t-lg h-12 p-2 flex items-center">
-              <img class="h-6 w-6 mr-2" src="./img/icons/pickup.svg" alt="">
-              <p class="text-md lg:text-lg font-semibold text-seasalt">For Delivery</p>
-            </div>
-            <div class="p-4 flex items-center justify-center w-full pt-8">
-              <div class="flex items-center justify-center text-3xl font-bold">0</div>
+          <div class="h-36 rounded-lg bg-white shadow-lg flex justify-center items-center">
+            <div class="grid grid-cols-2 lg:space-x-2">
+              <div class="flex items-center justify-center">
+                <div class="rounded-[50%] bg-polynesian p-4 flex items-center justify-center">
+                  <img class="h-6 w-6" src="./img/icons/pickup.svg" alt="">
+                </div>
+              </div>
+              <div class="flex flex-col items-center justify-center">
+                <p class="text-lg md:text-3xl font-semibold" id="js-for-delivery"><!-- total count --></p>
+                <p class="text-sm md:text-md text-wrap">For Delivery</p>
+              </div>
             </div>
           </div>
 
           <!-- On Delivery Booking Card -->
-          <div class="h-36 w-full rounded-lg bg-white shadow-lg col-span-2 sm:col-span-1">
-            <div class="bg-celestial rounded-t-lg h-12 p-2 flex items-center">
-              <img class="h-6 w-6 mr-2" src="./img/icons/check.svg" alt="">
-              <p class="text-md lg:text-lg font-semibold text-seasalt">Total Booking</p>
-            </div>
-            <div class="p-4 flex items-center justify-center w-full pt-8">
-              <div class="flex items-center justify-center text-3xl font-bold">4</div>
+          <div class="h-36 rounded-lg bg-white shadow-lg flex justify-center items-center col-span-2 sm:col-span-1">
+            <div class="grid grid-cols-2 lg:space-x-2">
+              <div class="flex items-center justify-center">
+                <div class="rounded-[50%] bg-green-700 p-4 flex items-center justify-center">
+                  <img class="h-6 w-6" src="./img/icons/check.svg" alt="">
+                </div>
+              </div>
+              <div class="flex flex-col items-center justify-center">
+                <p class="text-lg md:text-3xl font-semibold" id="js-for-complete-booking"><!-- total count --></p>
+                <p class="text-sm md:text-md text-wrap">Complete Booking</p>
+              </div>
             </div>
           </div>
         </div>
@@ -161,10 +177,10 @@ if (!isset($_SESSION['user_id'])) {
   <!-- Modal (hidden by default) -->
   <!-- Modal for Edit -->
   <div class="toEditBookingModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
-    <div class="bg-white rounded-sm shadow-lg p-6 w-full max-w-lg">
+    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2">
       <div class="flex justify-between items-center border-b pb-2">
-        
-        <h2 class="text-lg font-semibold">Booking Information</h2>
+
+        <h2 class="text-lg font-semibold text-gray-500">Booking Information</h2>
         <button class="closeEditBookingModal text-gray-500 hover:text-gray-800">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -175,42 +191,40 @@ if (!isset($_SESSION['user_id'])) {
         <input type="hidden" name="id" id="id">
         <div class="grid grid-cols-2 gap-2">
           <div class="mb-4">
-            <label for="fname" class="block text-sm font-medium text-gray-700">First Name</label>
+            <label for="fname" class="block text-sm font-medium text-gray-500">First Name</label>
             <input type="text" id="fname" name="fname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" First Name: ">
+            <div class="text-red-500 text-sm hidden">First name is required!</div>
           </div>
           <div class="mb-4">
-            <label for="lname" class="block text-sm font-medium text-gray-700">Last Name</label>
+            <label for="lname" class="block text-sm font-medium text-gray-500">Last Name</label>
             <input type="text" id="lname" name="lname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Last Name: ">
+            <div class="text-red-500 text-sm hidden">Last name is required!</div>
           </div>
         </div>
         <div class="grid grid-cols-2 gap-2">
           <div class="mb-4">
-            <label for="pickup_date" class="block text-sm font-medium text-gray-700">Pick-up Date</label>
+            <label for="pickup_date" class="block text-sm font-medium text-gray-500">Pick-up Date</label>
             <input type="date" id="pickup_date" name="pickup_date" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Pick-up Date: ">
+            <div class="text-red-500 text-sm hidden">Pick-up date is required!</div>
           </div>
           <div class="mb-4">
-            <label for="pickup_time" class="block text-sm font-medium text-gray-700">Pick-up Time</label>
+            <label for="pickup_time" class="block text-sm font-medium text-gray-500">Pick-up Time</label>
             <input type="time" id="pickup_time" name="pickup_time" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Pick-up Time: ">
+            <div class="text-red-500 text-sm hidden">Pick-up time is required!</div>
           </div>
         </div>
         <div class="mb-4">
-          <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone Number</label>
+          <label for="phone_number" class="block text-sm font-medium text-gray-500">Phone Number</label>
           <input type="text" id="phone_number" name="phone_number" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., +63 912 345 6789">
+          <div class="text-red-500 text-sm hidden">Phone number is required!</div>
         </div>
         <div class="mb-4">
-          <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
+          <label for="address" class="block text-sm font-medium text-gray-500">Address</label>
           <input type="text" id="address" name="address" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., Villa Rizza, Blk 2 Lot 3, Paciano Rizal">
-        </div>
-        <div class="mb-4">
-          <label for="service" class="block text-sm font-medium text-gray-700">Service</label>
-          <select id="service" name="service" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack">
-            <option value="wash-dry-fold">Wash, Dry, Fold</option>
-            <option value="wash-dry-press">Wash, Dry, Press</option>
-            <option value="dry-clean">Dry Clean</option>
-          </select>
+          <div class="text-red-500 text-sm hidden">Address is required!</div>
         </div>
 
-        <input type="submit" id="edit-booking-btn" value="Save" class="px-4 py-2 w-full bg-green-700 hover:bg-green-800 text-seasalt rounded-md">
+        <input type="submit" id="edit-booking-btn" value="Save" class="px-4 py-2 w-full bg-green-700 hover:bg-green-800 text-seasalt font-semibold rounded-md">
       </form>
     </div>
   </div>
@@ -218,66 +232,67 @@ if (!isset($_SESSION['user_id'])) {
 
   <!-- Modal for View -->
   <div class="toViewBookingModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
-    <div class="bg-white rounded-sm shadow-lg p-6 w-full max-w-lg">
-      <div class="flex justify-between items-center border-b pb-2">
-        <!-- Put the user's Full Name here at the top -->
-        <h2 class="text-lg font-semibold">View User's Information</h2>
-        <button class="closeViewBookingModal text-gray-500 hover:text-gray-800">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
+    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2">
+      <div class="w-full h-auto py-2 flex flex-col items-center text-nowrap text-gray-500">
+        <h4 class="text-lg font-bold">WASHUP LAUNDRY</h4>
+        <p class="text-sm">Blk 1 lot 2 morales subdivision, Calamba Laguna</p>
+        <p class="text-sm">Phone: +63 930 520 5088</p>
       </div>
-      <form id="viewBookingDetailsForm" class="mt-4">
-        <div class="grid grid-cols-2 gap-2">
-          <div class="mb-4">
-            <label for="fname" class="block text-sm font-medium text-gray-700">First Name</label>
-            <input type="text" id="fname" name="fname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="First Name: " disabled>
-          </div>
-          <div class="mb-4">
-            <label for="lname" class="block text-sm font-medium text-gray-700">Last Name</label>
-            <input type="text" id="lname" name="lname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Last Name: " disabled>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div class="mb-4">
-            <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone Number</label>
-            <input type="text" id="phone_number" name="phone_number" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Phone Number: " disabled>
-          </div>
-          <div class=" mb-4">
-            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-            <input type="text" id="email" name="email" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Email: " disabled>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div class="mb-4">
-            <label for="pickupTime" class="block text-sm font-medium text-gray-700">Pick-up Time</label>
-            <input type="text" id="pickupTime" name="pickupTime" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Pick-up Time: " disabled>
-          </div>
-          <div class=" mb-4">
-            <label for="pickupDate" class="block text-sm font-medium text-gray-700">Pick-up Date</label>
-            <input type="text" id="pickupDate" name="pickupDate" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Pick-up Date: " disabled>
-          </div>
-        </div>
-        <div class=" mb-4">
-          <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-          <input type="text" id="address" name="address" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Address: " disabled>
-        </div>
-        <div class=" mb-4">
-          <label for="service" class="block text-sm font-medium text-gray-700">Service Chosen</label>
-          <input type="text" id="service" name="service" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Service Chosen: " disabled>
-        </div>
-        <div class=" mb-4">
-          <label for="shipping_method" class="block text-sm font-medium text-gray-700">Shipping Method</label>
-          <input type="text" id="shipping_method" name="shipping_method" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Shipping Method: " disabled>
-        </div>
 
-        <div class=" flex justify-end">
-          <button type="button" class="closeViewBookingModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-seasalt rounded-md mr-2">Close</button>
+      <div class="grid grid-cols-2 gap-2 mb-4 text-gray-500">
+        <div class="flex justify-start">
+          <p class="text-sm">Date: </p>
         </div>
-      </form>
+        <div class="flex justify-end">
+          <p class="text-sm">2024-08-09</p>
+        </div>
+      </div>
+
+      <div class="w-full text-ashblack text-md font-semibold mb-2">
+        <p class="justify-start">Booking Summary</p>
+      </div>
+
+      <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
+        <div class="grid grid-cols-2 gap-2">
+          <p>Customer Name:</p>
+          <p id="display-full-name" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Phone Number:</p>
+          <p id="display-phone-number" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Address:</p>
+          <p id="display-address" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Pick-up Date:</p>
+          <p id="display-pickup-date" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Pick-up Time:</p>
+          <p id="display-pickup-time" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Service:</p>
+          <p id="display-service-selection" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Service Type:</p>
+          <p id="display-service-type" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Suggestions:</p>
+          <p id="display-suggestions" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+      </div>
+
+      <div class="flex justify-center items-center w-full">
+        <button type="button" class="closeViewBookingModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-seasalt rounded-md mr-2">Close</button>
+      </div>
     </div>
   </div>
+
   <!-- End of the Modal -->
 
   <script type="module" src="./js/customer-dashboard.js"></script>

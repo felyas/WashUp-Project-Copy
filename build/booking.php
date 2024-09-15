@@ -175,7 +175,7 @@ if (!isset($_SESSION['user_id'])) {
         <label class="text-sm mb-2" for="">Service Type:</label>
         <div class="flex flex-col lg:flex-row items-center justify-between py-2 lg:w-2/3">
           <label class="cursor-pointer my-2">
-            <input type="radio" class="peer sr-only" value="standard" name="service_type" checked />
+            <input type="radio" class="peer sr-only" value="2-days Standard" name="service_type" checked />
             <div class="w-72 max-w-xl rounded-md bg-white p-2 text-gray-600 ring-2 ring-transparent transition-all hover:shadow peer-checked:text-federal peer-checked:ring-federal peer-checked:ring-offset-2">
               <div class="flex flex-col gap-1">
                 <div class="flex items-center justify-between">
@@ -195,7 +195,7 @@ if (!isset($_SESSION['user_id'])) {
           </label>
 
           <label class="cursor-pointer my-2">
-            <input type="radio" class="peer sr-only" value="rush" name="service_type" />
+            <input type="radio" class="peer sr-only" value="Rush" name="service_type" />
             <div class="w-72 max-w-xl rounded-md bg-white p-2 text-gray-600 ring-2 ring-transparent transition-all hover:shadow peer-checked:text-federal peer-checked:ring-federal peer-checked:ring-offset-2">
               <div class="flex flex-col gap-1">
                 <div class="flex items-center justify-between">

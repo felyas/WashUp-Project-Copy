@@ -95,7 +95,11 @@ addBookingForm.addEventListener('submit', async (e) => {
       icon: 'error',
       title: 'Validation Error',
       text: 'Please fill out all required fields correctly.',
-      confirmButtonText: 'OK'
+      confirmButtonText: 'OK',
+      customClass: {
+        confirmButton: 'bg-gray-500 hover:bg-gray-600 text-white px-5 py-3 font-semibold rounded-lg'
+      },
+      buttonsStyling: false
     });
 
     return false;
@@ -109,13 +113,18 @@ addBookingForm.addEventListener('submit', async (e) => {
       showCancelButton: true,
       confirmButtonText: 'Yes',
       cancelButtonText: 'Cancel',
+      customClass: {
+        confirmButton: 'bg-green-700 hover:bg-green-800 text-white px-5 py-3 mr-4 font-semibold rounded-lg', 
+        cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-5 py-3 font-semibold rounded-lg'  
+      },
+      buttonsStyling: false
     }).then(async (result) => {
       if (result.isConfirmed) {
         const data = await fetch('./backend/customer_action.php', {
           method: 'POST',
           body: formData,
         });
-        
+
         const response = await data.text();
 
         //Handle response and show SweetAlert
@@ -124,6 +133,10 @@ addBookingForm.addEventListener('submit', async (e) => {
             icon: 'success',
             title: 'Success',
             text: 'Booked successfully!',
+            buttonsStyling: false,
+            customClass: {
+              confirmButton: 'bg-green-700 hover:bg-green-800 text-white font-semibold py-3 px-5 rounded-lg'
+            }
           }).then(() => {
             document.getElementById('add-booking-btn').value = 'Submit';
             window.location.href = './customer-dashboard.php';
@@ -133,6 +146,10 @@ addBookingForm.addEventListener('submit', async (e) => {
             icon: 'error',
             title: 'Error',
             text: 'Something went wrong!',
+            buttonsStyling: false, // Disable default button styling
+            customClass: {
+              confirmButton: 'bg-gray-700 hover:bg-gray-800 text-white font-semibold py-3 px-5 rounded-lg'
+            }
           });
         }
 

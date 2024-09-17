@@ -1,4 +1,4 @@
-import { handleDisplayCurrentTime, handleNotification, handleTdColor } from "./dashboards-main.js";
+import { handleDisplayCurrentTime, handleTdColor } from "./dashboards-main.js";
 
 const bookNowBtn = document.querySelector('.js-book-now');
 const editBookingForm = document.getElementById('edit-booking-form');
@@ -11,7 +11,6 @@ bookNowBtn.addEventListener('click', () => {
 document.addEventListener("DOMContentLoaded", () => {
   handleTdColor();
   handleDisplayCurrentTime();
-  handleNotification();
   openModal('editModalTrigger', 'toEditBookingModal', 'closeEditBookingModal', 'closeEditBookingModal2');
   openModal('viewModalTrigger', 'toViewBookingModal', 'closeViewBookingModal', 'closeViewBookingModal2');
 });
@@ -43,17 +42,37 @@ function openModal(modalTriggerClass, modalClass, closeModalClass, closeModalCla
 
 
 
+const paginationContainer = document.getElementById('pagination-container');
+const searchInput = document.getElementById('search-input');
 
-
-// Fetch All Users Ajax Request
-const fetchUserAllBooking = async () => {
-  const data = await fetch('./backend/customer_action.php?read=1', {
+const fetchUserAllBooking = async (page = 1, searchQuery = '') => {
+  const response = await fetch(`./backend/customer_action.php?read=1&page=${page}&search=${searchQuery}`, {
     method: 'GET',
   });
-  const response = await data.text();
-  tbody.innerHTML = response;
-}
+  const data = await response.json();
+
+  tbody.innerHTML = data.rows;
+  paginationContainer.innerHTML = data.pagination;
+
+  // Add event listeners for pagination links
+  document.querySelectorAll('.page-link').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const page = e.target.dataset.page;
+      fetchUserAllBooking(page, searchInput.value);
+    });
+  });
+};
+
+// Event listener for search
+searchInput.addEventListener('input', () => {
+  fetchUserAllBooking(1, searchInput.value);
+});
+
+// Initial fetch
 fetchUserAllBooking();
+
+
 
 // Edit User Ajax Request
 tbody.addEventListener('click', (e) => {
@@ -128,7 +147,10 @@ editBookingForm.addEventListener('submit', async (e) => {
       icon: 'error',
       title: 'Validation Error',
       text: 'Please fill out all required fields correctly.',
-      confirmButtonText: 'OK'
+      buttonsStyling: false, // Disable default button styling
+      customClass: {
+        confirmButton: 'bg-gray-700 hover:bg-gray-800 text-white font-semibold py-3 px-5 rounded-lg'
+      }
     });
 
     return false;
@@ -148,6 +170,10 @@ editBookingForm.addEventListener('submit', async (e) => {
         icon: 'success',
         title: 'Success',
         text: 'Booking updated successfully!',
+        buttonsStyling: false, // Disable default button styling
+        customClass: {
+          confirmButton: 'bg-green-700 hover:bg-green-800 text-white font-semibold py-3 px-5 rounded-lg'
+        }
       }).then(() => {
         document.getElementById('edit-booking-btn').value = 'Save';
         editBookingForm.reset();
@@ -159,6 +185,10 @@ editBookingForm.addEventListener('submit', async (e) => {
         icon: 'error',
         title: 'Error',
         text: 'Something went wrong!',
+        buttonsStyling: false, // Disable default button styling
+        customClass: {
+          confirmButton: 'bg-gray-700 hover:bg-gray-800 text-white font-semibold py-3 px-5 rounded-lg'
+        }
       });
     }
 
@@ -190,10 +220,15 @@ const deleteBooking = async (id) => {
     showCancelButton: true,
     confirmButtonText: 'Yes',
     cancelButtonText: 'No',
+    customClass: {
+      confirmButton: 'bg-red-700 hover:bg-red-800 text-white px-5 py-3 mr-4 font-semibold rounded-lg',
+      cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-5 py-3 font-semibold rounded-lg'
+    },
+    buttonsStyling: false
   });
 
   if (result.isConfirmed) {
-    const data = await fetch(`./backend/customer_action.php?delete=1&id=${id}`, { 
+    const data = await fetch(`./backend/customer_action.php?delete=1&id=${id}`, {
       method: 'GET',
     });
     const response = await data.text();
@@ -216,7 +251,7 @@ const fetchBookingCounts = async () => {
       method: 'GET',
     });
     const data = await response.json(); // Assuming the response is in JSON format
-    
+
     // Update the HTML elements with the counts
     document.getElementById('js-for-pickup').textContent = data.pickupCount; // For Pick-Up count
     document.getElementById('js-for-delivery').textContent = data.deliveryCount; // For Delivery count
@@ -226,5 +261,88 @@ const fetchBookingCounts = async () => {
   }
 };
 fetchBookingCounts();
+
+// Long polling function for fetching notifications
+const fetchNotifications = async (lastCheckTime) => {
+  try {
+    const response = await fetch(`./backend/customer_action.php?fetch_notifications=1&last_check=${lastCheckTime}`);
+    const notifications = await response.json();
+
+    const notificationContainer = document.querySelector('.js-notification-messages');
+    const notificationDot = document.querySelector('.js-notification-dot'); // Red dot element
+    const totalNotificationsElement = document.querySelector('.js-total-notifications'); // Total notifications element
+
+    // If there are new notifications, display them
+    if (notifications.length > 0) {
+      // Clear existing messages
+      notificationContainer.innerHTML = '';
+
+      // Append each notification to the container
+      notifications.forEach(notification => {
+        const notificationElement = document.createElement('div');
+        notificationElement.classList.add('p-2', 'flex', 'items-center', 'justify-between', 'bg-gray-200', 'mb-1');
+        notificationElement.innerHTML = `
+          <p class="w-auto">Booking #${notification.id} status updated to "${notification.status}"</p>
+          <button class="w-12 p-0 border-none font-bold js-notification-close" data-id="${notification.id}">&#10005;</button>
+        `;
+        notificationContainer.appendChild(notificationElement);
+      });
+
+      // Update total notification count
+      totalNotificationsElement.textContent = notifications.length;
+
+      // Show the red dot for new notifications
+      notificationDot.classList.remove('hidden');
+    } else {
+      // Hide the red dot if no notifications
+      notificationDot.classList.add('hidden');
+    }
+
+    // Continue long polling after 5 seconds
+    setTimeout(() => {
+      const currentTimestamp = new Date().toISOString(); // Use current time as last check
+      fetchNotifications(currentTimestamp);
+    }, 5000); // Check every 5 seconds
+  } catch (error) {
+    console.error('Error fetching notifications:', error);
+  }
+};
+
+// Initial call to start long polling
+let initialTimestamp = new Date().toISOString(); // Start with the current time
+fetchNotifications(initialTimestamp);
+
+// Toggle notification dropdown visibility on bell icon click
+document.querySelector('.js-notification-button').addEventListener('click', () => {
+  const notificationDropdown = document.querySelector('.js-notification');
+  const notificationDot = document.querySelector('.js-notification-dot');
+
+  // Show or hide the notification dropdown
+  notificationDropdown.classList.toggle('hidden');
+
+  // Hide the red dot once notifications are viewed
+  if (!notificationDropdown.classList.contains('hidden')) {
+    notificationDot.classList.add('hidden'); // Hide the red dot
+  }
+});
+
+// Handle closing individual notifications
+document.addEventListener('click', (event) => {
+  if (event.target.classList.contains('js-notification-close')) {
+    const notificationId = event.target.getAttribute('data-id');
+    event.target.parentElement.remove(); // Remove notification from UI
+
+    // Optionally, send a request to the server to mark this notification as read
+    // fetch(`./backend/customer_action.php?mark_as_read=1&id=${notificationId}`);
+  }
+});
+
+
+
+
+
+
+
+
 
 

@@ -27,15 +27,53 @@ class Database extends Config
     return true;
   }
 
-  // Fetch User All Booking From Database
-  public function read($user_id)
+  // Fetch User Booking With Pagination and Search
+  public function read($user_id, $search_query = '', $limit = 4, $offset = 0)
   {
-    $sql = 'SELECT * FROM booking WHERE user_id = :user_id ORDER BY id DESC LIMIT 4';
+    $sql = 'SELECT * FROM booking WHERE user_id = :user_id';
+
+    // If there's a search query, add to SQL
+    if (!empty($search_query)) {
+      $sql .= ' AND (fname LIKE :search_query OR lname LIKE :search_query OR service_selection LIKE :search_query)';
+    }
+
+    $sql .= ' ORDER BY id DESC LIMIT :limit OFFSET :offset';
+
     $stmt = $this->conn->prepare($sql);
-    $stmt->execute(['user_id' => $user_id]);
+
+    // Bind values
+    $stmt->bindValue(':user_id', $user_id);
+    if (!empty($search_query)) {
+      $stmt->bindValue(':search_query', "%$search_query%");
+    }
+    $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+    $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+
+    $stmt->execute();
     $result = $stmt->fetchAll();
     return $result;
   }
+
+  // Method to Count the Total Records for Pagination
+  public function countAllBookings($user_id, $search_query = '')
+  {
+    $sql = 'SELECT COUNT(*) FROM booking WHERE user_id = :user_id';
+
+    if (!empty($search_query)) {
+      $sql .= ' AND (fname LIKE :search_query OR lname LIKE :search_query OR service_selection LIKE :search_query)';
+    }
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(':user_id', $user_id);
+    if (!empty($search_query)) {
+      $stmt->bindValue(':search_query', "%$search_query%");
+    }
+
+    $stmt->execute();
+    return $stmt->fetchColumn(); // Returns the total count
+  }
+
+
 
   // Fetch User Specific Booking From Database
   public function readOne($id)
@@ -46,6 +84,8 @@ class Database extends Config
     $result = $stmt->fetch();
     return $result;
   }
+
+
 
   // Update Specific Booking From Database
   public function updateBooking($id, $fname, $lname, $pickup_date, $pickup_time, $phone_number, $address)
@@ -83,5 +123,27 @@ class Database extends Config
     $stmt->execute(['user_id' => $user_id, 'status' => $status]);
     $result = $stmt->fetch();
     return $result['count'];
+  }
+
+  // Handle Notification Polling Request
+  public function fetch_notification($lastCheck)
+  {
+    $sql = 'SELECT id, status, status_updated_at FROM booking WHERE status_updated_at > :last_check ORDER BY id DESC';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['last_check' => $lastCheck]);
+
+    // Fetch all notifications for bookings that have been updated
+    $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    // Return the result to be processed by the calling function
+    return $notifications;
+  }
+
+  // Update booking status and status_changed_at
+  public function update_booking_status($id, $newStatus)
+  {
+    $sql = 'UPDATE booking SET status = :new_status, status_changed_at = NOW() WHERE id = :id';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['new_status' => $newStatus, 'id' => $id]);
   }
 }

@@ -25,7 +25,7 @@ if (!isset($_SESSION['user_id'])) {
 
   <!-- SweetAlert CDN -->
   <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -47,21 +47,39 @@ if (!isset($_SESSION['user_id'])) {
             <img class="w-10 h-8" src="./img/logo-white.png" alt="LOGO">
           </div>
 
-          <!--Notifications-->
+          <!--Notifications & Logout Section-->
           <div class="flex items-center justify-between lg:space-x-4 text-sm">
             <p class="js-current-time text-seasalt"></p>
             <div class="flex items-center justify-between">
               <div class="relative">
-                <button class="js-notification-button flex items-center justify-center px-4 py-2">
-                  <img src="./img/icons/notification-bell.svg" alt="" class="w-5 h-5">
+                <button class="js-notification-button flex items-center justify-center px-4 py-2 relative">
+                  <!-- Notification Bell Icon -->
+                  <img src="./img/icons/notification-bell.svg" alt="Notification Bell" class="w-5 h-5">
+
+                  <!-- Red Dot for New Notifications (hidden by default) -->
+                  <span class="js-notification-dot hidden absolute top-[5px] right-[14px] h-3 w-3 bg-red-600 rounded-full"></span>
                 </button>
-                <div class="js-notification hidden h-auto w-auto bg-seasalt z-10 absolute right-0 text-nowrap p-4 rounded-lg">
-                  <h1 class="text-center mb-4 text-lg font-bold">Notifications</h1>
-                  <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
-                  <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
-                  <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
+
+                <!-- Notification Dropdown -->
+                <div class="js-notification hidden h-auto w-80 z-10000 absolute top-[52px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
+                  <div class="w-full p-4 flex items-center justify-between">
+                    <h1 class="text- text-lg font-semibold">Notification</h1>
+                    <p class="js-total-notifications"><!-- Dynamic Total Notification  --></p>
+                  </div>
+                  <hr class="w-full py-0">
+
+                  <div class="js-notification-messages p-4 w-full text-wrap">
+                    <!-- Dynamic Real-time Notification -->
+
+                    <!-- <div class="p-2 flex items-center justify-between bg-gray-200 mb-1">
+                      <p class="w-auto">Booking Status with no.34 was updated to "for delivery"</p>
+                      <button class="w-12 p-0 border-none font-bold">&#10005;</button>
+                    </div> -->
+                  </div>
                 </div>
               </div>
+
+
               <form action="./backend/handle_logout.php" method="POST" class="p-0 m-0">
                 <button type="submit" class="flex items-center justify-center px-4 py-2">
                   <img src="./img/icons/logout.svg" alt="Logout Icon" class="w-5 h-5">
@@ -139,14 +157,18 @@ if (!isset($_SESSION['user_id'])) {
           </div>
         </div>
 
+
         <!--List-->
-        <div class="h-auto grid grid-cols-1 text-sm border border-solid border-gray-200 shadow-lg mb-4">
+        <div class="h-auto grid grid-cols-1 text-sm border border-solid border-gray-200 shadow-lg">
           <!-- List of On Pick-up Booking -->
           <div class="h-auto w-full rounded-sm bg-white">
-            <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
+            <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
               <p class="text-md font-semibold text-ashblack">MANAGE BOOKING</p>
+              <div class="flex justify-between items-center">
+                <input id="search-input" type="text" placeholder="Search bookings..." class="p-2 border border-gray-200 rounded-sm w-1/2 lg:w-1/4 outline-none">
+              </div>
             </div>
-            <div class="overflow-x-auto min-h-[13rem] p-2">
+            <div class="overflow-x-auto h-auto px-2">
               <table id="booking-list" class="text-nowrap w-full text-left text-ashblack border-collapse">
                 <thead class="bg-gray-200">
                   <tr>
@@ -165,6 +187,11 @@ if (!isset($_SESSION['user_id'])) {
               </table>
             </div>
           </div>
+        </div>
+
+        <!-- Pagination Container -->
+        <div id="pagination-container" class="text-center w-full">
+
         </div>
 
       </main>

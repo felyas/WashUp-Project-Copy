@@ -128,22 +128,31 @@ class Database extends Config
   // Handle Notification Polling Request
   public function fetch_notification($lastCheck)
   {
-    $sql = 'SELECT id, status, status_updated_at FROM booking WHERE status_updated_at > :last_check ORDER BY id DESC';
+    $sql = 'SELECT id, status, status_updated_at FROM booking WHERE status_updated_at > :last_check AND is_read = 0 ORDER BY id DESC';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute(['last_check' => $lastCheck]);
 
-    // Fetch all notifications for bookings that have been updated
+    // Fetch all unread notifications for bookings that have been updated
     $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-    // Return the result to be processed by the calling function
     return $notifications;
   }
 
-  // Update booking status and status_changed_at
-  public function update_booking_status($id, $newStatus)
+
+
+  // Handle marking a notification as read
+  public function mark_as_read($notificationId)
   {
-    $sql = 'UPDATE booking SET status = :new_status, status_changed_at = NOW() WHERE id = :id';
+    $sql = 'UPDATE booking SET is_read = 1 WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
-    $stmt->execute(['new_status' => $newStatus, 'id' => $id]);
+    $stmt->execute(['id' => $notificationId]);
   }
+
+  //Future use, for admin side to change the status and also update the is_read flag
+  // public function update_booking_status($bookingId, $newStatus)
+  // {
+  //   $sql = 'UPDATE booking SET status = :status, is_read = 0, status_updated_at = NOW() WHERE id = :id';
+  //   $stmt = $this->conn->prepare($sql);
+  //   $stmt->execute(['id' => $bookingId, 'status' => $newStatus]);
+  // }
 }

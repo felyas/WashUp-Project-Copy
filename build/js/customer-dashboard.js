@@ -290,11 +290,11 @@ const fetchNotifications = async (lastCheckTime) => {
 
       // Update total notification count
       totalNotificationsElement.textContent = notifications.length;
-
-      // Show the red dot for new notifications
       notificationDot.classList.remove('hidden');
+      // Calling other function to update the UI
+      fetchUserAllBooking();
+      fetchBookingCounts();
     } else {
-      // Hide the red dot if no notifications
       notificationDot.classList.add('hidden');
     }
 
@@ -332,10 +332,21 @@ document.addEventListener('click', (event) => {
     const notificationId = event.target.getAttribute('data-id');
     event.target.parentElement.remove(); // Remove notification from UI
 
-    // Optionally, send a request to the server to mark this notification as read
-    // fetch(`./backend/customer_action.php?mark_as_read=1&id=${notificationId}`);
+    // Send a request to the server to mark this notification as read
+    fetch(`./backend/customer_action.php?mark_as_read=1&id=${notificationId}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          console.log('Notification marked as read.');
+        } else {
+          console.error('Failed to mark notification as read.');
+        }
+      })
+      .catch(error => console.error('Error:', error));
   }
 });
+
+
 
 
 

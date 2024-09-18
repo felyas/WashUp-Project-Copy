@@ -160,3 +160,15 @@ if (isset($_GET['fetch_notifications'])) {
   echo json_encode($notifications);
 }
 
+// Handle marking notification as read
+if (isset($_GET['mark_as_read'])) {
+  $notificationId = $_GET['id'];
+
+  // Mark the specific notification as read
+  $db->mark_as_read($notificationId);
+
+  // Send a success response
+  echo json_encode(['success' => true]);
+}
+
+

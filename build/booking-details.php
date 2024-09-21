@@ -60,7 +60,7 @@
     <div class="flex-1 flex flex-col min-h-screen">
       <!-- Header -->
       <header class="bg-federal shadow p-4">
-        <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center lg:justify-end">
           <!-- Hamburger Menu -->
           <button id="hamburger" class="lg:hidden px-4 py-2 text-seasalt">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -68,24 +68,43 @@
             </svg>
           </button>
 
-          <h1 class="text-2xl font-bold text-seasalt hidden lg:block">Admin Dashboard</h1>
-          <div class="flex items-center justify-between lg:space-x-4 text-sm">
+          <!-- <h1 class="text-2xl font-bold text-seasalt hidden lg:block">Admin Dashboard</h1> -->
+          <div class="flex items-center justify-between  lg:space-x-4 text-sm">
             <p class="js-current-time text-seasalt"></p>
             <div class="flex items-center justify-between">
               <div class="relative">
-                <button class="js-notification-button flex items-center justify-center px-4 py-2">
-                  <img src="./img/icons/notification-bell.svg" alt="Logout Icon" class="w-5 h-5">
+                <button class="js-notification-button flex items-center justify-center px-4 py-2 relative">
+                  <!-- Notification Bell Icon -->
+                  <img src="./img/icons/notification-bell.svg" alt="Notification Bell" class="w-5 h-5">
+
+                  <!-- Red Dot for New Notifications (hidden by default) -->
+                  <span class="js-notification-dot hidden absolute top-[5px] right-[14px] h-3 w-3 bg-red-600 rounded-full"></span>
                 </button>
-                <div class="js-notification hidden h-auto w-auto bg-seasalt z-10 absolute right-0 text-nowrap p-4 rounded-lg">
-                  <h1 class="text-center mb-4 text-lg font-bold">Notifications</h1>
-                  <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
-                  <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
-                  <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
+
+                <!-- Notification Dropdown -->
+                <div class="js-notification hidden h-auto w-80 z-10000 absolute top-[52px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
+                  <div class="w-full p-4 flex items-center justify-between">
+                    <h1 class="text- text-lg font-semibold">Notification</h1>
+                    <p class="js-total-notifications"><!-- Dynamic Total Notification  --></p>
+                  </div>
+                  <hr class="w-full py-0">
+
+                  <div class="js-notification-messages p-4 w-full text-wrap">
+                    <!-- Dynamic Real-time Notification -->
+
+                    <!-- <div class="p-2 flex items-center justify-between bg-gray-200 mb-1">
+                      <p class="w-auto">Booking Status with no.34 was updated to "for delivery"</p>
+                      <button class="w-12 p-0 border-none font-bold">&#10005;</button>
+                    </div> -->
+                  </div>
                 </div>
               </div>
-              <button class="flex items-center justify-center px-4 py-2">
-                <img src="./img/icons/logout.svg" alt="Logout Icon" class="w-5 h-5">
-              </button>
+
+              <form action="./backend/handle_logout.php" method="POST" class="p-0 m-0">
+                <button type="submit" class="flex items-center justify-center px-4 py-2">
+                  <img src="./img/icons/logout.svg" alt="Logout Icon" class="w-5 h-5">
+                </button>
+              </form>
             </div>
           </div>
         </div>
@@ -103,22 +122,24 @@
         </div>
 
         <!--List-->
-        <div class="h-auto grid grid-cols-1 text-sm">
+        <div class="h-auto grid grid-cols-1 text-sm border border-solid border-gray-200">
           <!-- List of On Pick-up Booking -->
           <div class="h-auto w-full rounded-sm bg-white shadow-lg">
             <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack">List of On Pick-up Booking</p>
+              <p class="text-md font-semibold text-ashblack">List of Booking</p>
             </div>
-            <div class="overflow-x-auto">
+            <div class="overflow-x-auto h-80 min-h-80">
               <table class="text-nowrap w-full text-left text-ashblack">
                 <thead class="bg-celestial">
                   <tr>
                     <th class="px-4 py-2 font-medium text-seasalt">#</th>
-                    <th class="px-4 py-2 font-medium text-seasalt">Customer Name</th>
-                    <th class="px-4 py-2 font-medium text-seasalt">Date</th>
-                    <th class="px-4 py-2 font-medium text-seasalt">Time</th>
-                    <th class="px-4 py-2 font-medium text-seasalt">Status</th>
-                    <th class="px-4 py-2 font-medium text-seasalt text-center">Action</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">CUSTOMER NAME</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">BOOKING DATE</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">BOOKING TIME</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">PHONE</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">ADDRESS</th>
+                    <th class="px-4 py-2 font-medium text-seasalt">STATUS</th>
+                    <th class="px-4 py-2 font-medium text-seasalt text-center">ACTION</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -127,14 +148,55 @@
                     <td class="px-4 py-2">John Doe</td>
                     <td class="px-4 py-2">2024-08-16</td>
                     <td class="px-4 py-2">10:00 AM</td>
+                    <td class="px-4 py-2">09691026692</td>
+                    <td class="px-4 py-2">Pueblo Del Rio</td>
                     <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
                     <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                      <button id="openEditBookingModal" class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                      </button>
-                      <button id="openViewBookingModal" class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
+                      <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition editLink">
+                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
+                      </a>
+                      <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
+                        <img class="w-4 h-4" src="./img/icons/check.svg" alt="edit">
+                      </a>
+                      <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition editLink">
+                        <img class="w-4 h-4" src="./img/icons/decline.svg" alt="edit">
+                      </a>
+                    </td>
+                  </tr>
+                  <tr class="">
+                    <td class="px-4 py-2">1</td>
+                    <td class="px-4 py-2">John Doe</td>
+                    <td class="px-4 py-2">2024-08-16</td>
+                    <td class="px-4 py-2">10:00 AM</td>
+                    <td class="px-4 py-2">09601026692</td>
+                    <td class="px-4 py-2">Pueblo Del Rio</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
+                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
+                      <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition editLink">
+                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
+                      </a>
+                      <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
+                        <img class="w-4 h-4" src="./img/icons/check.svg" alt="edit">
+                      </a>
+                      </a>
+                    </td>
+                  </tr>
+                  <tr class="">
+                    <td class="px-4 py-2">1</td>
+                    <td class="px-4 py-2">John Doe</td>
+                    <td class="px-4 py-2">2024-08-16</td>
+                    <td class="px-4 py-2">10:00 AM</td>
+                    <td class="px-4 py-2">09601026692</td>
+                    <td class="px-4 py-2">Pueblo Del Rio</td>
+                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
+                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
+                      <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition editLink">
+                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
+                      </a>
+                      <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
+                        <img class="w-4 h-4" src="./img/icons/check.svg" alt="edit">
+                      </a>
+                      </a>
                     </td>
                   </tr>
                 </tbody>

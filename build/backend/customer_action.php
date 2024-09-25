@@ -28,74 +28,72 @@ if (isset($_POST['add'])) {
 
 if (isset($_GET['read'])) {
   $user_id = $_SESSION['user_id'];
-  $search_query = isset($_GET['search']) ? $_GET['search'] : '';
   $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
-  $limit = 4;
-  $offset = ($page - 1) * $limit;
+  $limit = 4; // Rows per page
+  $search_query = isset($_GET['search']) ? $_GET['search'] : '';
 
-  // Get the total number of bookings for pagination
+  $booking = $db->read($user_id, $search_query, $limit, ($page - 1) * $limit);
   $total_records = $db->countAllBookings($user_id, $search_query);
+  $total_pages = ceil($total_records / $limit);
 
-  // Fetch bookings with pagination and search
-  $booking = $db->read($user_id, $search_query, $limit, $offset);
   $output = '';
-
   if ($booking) {
     foreach ($booking as $row) {
       $output .= '
-              <tr>
-                  <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['id'] . '</td>
-                  <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['fname'] . ' ' . $row['lname'] . '</td>
-                  <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['created_at'] . '</td>
-                  <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['service_selection'] . '</td>
-                  <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['service_type'] . '</td>
-                  <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle font-semibold">' . $row['status'] . '</td>
-                  <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
-                      <div class="flex justify-center space-x-2">';
+        <tr>
+          <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['id'] . '</td>
+          <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['fname'] . ' ' . $row['lname'] . '</td>
+          <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['created_at'] . '</td>
+          <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['service_selection'] . '</td>
+          <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['service_type'] . '</td>
+          <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle font-semibold">' . $row['status'] . '</td>
+          <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
+            <div class="flex justify-center space-x-2">';
 
+      // Action buttons based on status
       if ($row['status'] == 'pending') {
         $output .= '
-                  <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
-                      <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                  </a>';
-      }
-
-      if ($row['status'] == 'pending') {
-        $output .= '
-                  <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
-                      <img class="w-4 h-4" src="./img/icons/trash.svg" alt="edit">
-                  </a>';
+          <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
+            <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
+          </a>
+          <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
+            <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
+          </a>';
       }
 
       $output .= '
-              <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
-                  <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-              </a>
+          <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
+            <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+          </a>
           </div>
-      </td>
-  </tr>';
+        </td>
+      </tr>';
     }
-
-    // Pagination Logic
-    $total_pages = ceil($total_records / $limit);
-    $current_page = $page;
-    $pagination = '<div class="pagination text-center py-2">';
-
-    // Previous button
-    if ($current_page > 1) {
-      $pagination .= '<a href="#" class="px-3 py-1 m-1 text-sm border border-federal bg-white text-federal rounded-md hover:bg-federal hover:text-white transition page-link" data-page="' . ($current_page - 1) . '">&#60; Prev</a>';
-    }
-
-    // Next button
-    if ($current_page < $total_pages) {
-      $pagination .= '<a href="#" class="px-3 py-1 m-1 text-sm border border-federal bg-white text-federal rounded-md hover:bg-federal hover:text-white transition page-link" data-page="' . ($current_page + 1) . '">Next &#62;</a>';
-    }
-
-    $pagination .= '</div>';
-
-    echo json_encode(['rows' => $output, 'pagination' => $pagination]);
   }
+
+  // Pagination HTML
+  $pagination = '<div class="flex justify-center items-center space-x-2">';
+
+  // Previous button
+  if ($page > 1) {
+    $pagination .= '<a href="#" data-page="' . ($page - 1) . '" class="page-link bg-gray-200 text-gray-600 px-4 py-2 rounded">Previous</a>';
+  } else {
+    $pagination .= '<span class="bg-gray-300 text-gray-500 px-4 py-2 rounded">Previous</span>';
+  }
+
+  // Next button
+  if ($page < $total_pages) {
+    $pagination .= '<a href="#" data-page="' . ($page + 1) . '" class="page-link bg-gray-200 text-gray-600 px-4 py-2 rounded">Next</a>';
+  } else {
+    $pagination .= '<span class="bg-gray-300 text-gray-500 px-4 py-2 rounded">Next</span>';
+  }
+
+  $pagination .= '</div>';
+
+  // Return JSON response
+  echo json_encode(['rows' => $output, 'pagination' => $pagination]);
 }
+
 
 
 
@@ -170,5 +168,3 @@ if (isset($_GET['mark_as_read'])) {
   // Send a success response
   echo json_encode(['success' => true]);
 }
-
-

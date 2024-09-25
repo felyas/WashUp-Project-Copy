@@ -29,17 +29,23 @@ if ($_SESSION['role'] !== 'admin') {
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/palette.css">
 
+  <!-- SweetAlert CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+
+  <!-- Include Chart.js from CDN -->
+  <script src="../node_modules/chart.js/dist/chart.umd.js" defer></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 
-<body class="bg-seasalt min-h-screen font-poppins">
+<body class="bg-white min-h-screen font-poppins">
   <div class="flex min-h-screen">
     <!-- Sidebar -->
-    <div id="sidebar" class="w-64 bg-gray-800 text-seasalt flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full">
+    <div id="sidebar" class="w-64 bg-gray-800 text-white flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full">
       <div class="p-4 text-lg font-bold border-b border-gray-700">
         <div class="flex justify-center items-center w-[180px]">
           <img src="./img/logo-white.png" alt="" class="w-12 h-10 mr-1">
@@ -67,7 +73,7 @@ if ($_SESSION['role'] !== 'admin') {
         </a>
         <div class="flex items-center justify-center py-24">
           <!-- Close Button -->
-          <button id="close-sidebar" class="lg:hidden p-6 text-seasalt rounded-full bg-gray-900 hover:bg-gray-700">
+          <button id="close-sidebar" class="lg:hidden p-6 text-white rounded-full bg-gray-900 hover:bg-gray-700">
             <img class="h-6 w-6 mx-auto" src="./img/icons/close-button.svg" alt="">
           </button>
         </div>
@@ -80,15 +86,15 @@ if ($_SESSION['role'] !== 'admin') {
       <header class="bg-federal shadow p-4">
         <div class="flex justify-between items-center lg:justify-end">
           <!-- Hamburger Menu -->
-          <button id="hamburger" class="lg:hidden px-4 py-2 text-seasalt">
+          <button id="hamburger" class="lg:hidden px-4 py-2 text-white">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
             </svg>
           </button>
 
-          <!-- <h1 class="text-2xl font-bold text-seasalt hidden lg:block">Admin Dashboard</h1> -->
+          <!-- <h1 class="text-2xl font-bold text-white hidden lg:block">Admin Dashboard</h1> -->
           <div class="flex items-center justify-between  lg:space-x-4 text-sm">
-            <p class="js-current-time text-seasalt"></p>
+            <p class="js-current-time text-white"></p>
             <div class="flex items-center justify-between">
               <div class="relative">
                 <button class="js-notification-button flex items-center justify-center px-4 py-2 relative">
@@ -103,7 +109,7 @@ if ($_SESSION['role'] !== 'admin') {
                 <div class="js-notification hidden h-auto w-80 z-10000 absolute top-[52px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
                   <div class="w-full p-4 flex items-center justify-between">
                     <h1 class="text- text-lg font-semibold">Notification</h1>
-                    <p class="js-total-notifications"><!-- Dynamic Total Notification  --></p>
+                    <p class="js-total-notifications"><!-- Dynamic Total Notification  -->0</p>
                   </div>
                   <hr class="w-full py-0">
 
@@ -117,7 +123,7 @@ if ($_SESSION['role'] !== 'admin') {
                   </div>
                 </div>
               </div>
-              
+
               <form action="./backend/handle_logout.php" method="POST" class="p-0 m-0">
                 <button type="submit" class="flex items-center justify-center px-4 py-2">
                   <img src="./img/icons/logout.svg" alt="Logout Icon" class="w-5 h-5">
@@ -141,22 +147,41 @@ if ($_SESSION['role'] !== 'admin') {
         <!-- Grid for Booking Summaries -->
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
           <!-- Pending Booking Card -->
-          <div class="h-36 rounded-lg bg-white shadow-lg flex justify-center items-center">
+          <div class="h-36 rounded-lg bg-white shadow-md border border-solid border-gray-200 flex justify-center items-center">
             <div class="grid grid-cols-2 lg:space-x-2">
               <div class="flex items-center justify-center">
-                <div class="rounded-[50%] bg-celestial p-4 flex items-center justify-center">
+                <div class="rounded-[50%] bg-sky-600 p-4 flex items-center justify-center">
                   <img class="h-6 w-6" src="./img/icons/pending.svg" alt="">
+
                 </div>
               </div>
               <div class="flex flex-col items-center justify-center">
-                <p class="text-lg md:text-3xl font-semibold" id="js-for-pickup"><!-- total count -->13</p>
+                <p class="text-lg md:text-3xl font-semibold" id="js-pending-count"><!-- total count --></p>
+                <p class="text-sm md:text-md text-wrap">Pending Booking</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- For Pickup Booking Card -->
+          <div class="h-36 rounded-lg bg-white shadow-md border border-solid border-gray-200 flex justify-center items-center">
+            <div class="grid grid-cols-2 lg:space-x-2">
+              <div class="flex items-center justify-center">
+                <div class="rounded-[50%] bg-celestial p-4 flex items-center justify-center">
+                  <div class="relative">
+                    <img class="h-6 w-6" src="./img/icons/hand-holding-solid.svg" alt="">
+                    <img src="./img/icons/box.svg" class="absolute top-0 right-[5px] h-3 w-3" alt="">
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-col items-center justify-center">
+                <p class="text-lg md:text-3xl font-semibold" id="js-for-pickup-count"><!-- total count --></p>
                 <p class="text-sm md:text-md text-wrap">For Pickup</p>
               </div>
             </div>
           </div>
 
-          <!-- On Pick-up Booking Card -->
-          <div class="h-36 rounded-lg bg-white shadow-lg flex justify-center items-center">
+          <!-- For Delivery Booking Card -->
+          <div class="h-36 rounded-lg bg-white shadow-md border border-solid border-gray-200 flex justify-center items-center">
             <div class="grid grid-cols-2 lg:space-x-2">
               <div class="flex items-center justify-center">
                 <div class="rounded-[50%] bg-polynesian p-4 flex items-center justify-center">
@@ -164,14 +189,14 @@ if ($_SESSION['role'] !== 'admin') {
                 </div>
               </div>
               <div class="flex flex-col items-center justify-center">
-                <p class="text-lg md:text-3xl font-semibold" id="js-for-delivery"><!-- total count -->8</p>
+                <p class="text-lg md:text-3xl font-semibold" id="js-for-delivery-count"><!-- total count --></p>
                 <p class="text-sm md:text-md text-wrap">For Delivery</p>
               </div>
             </div>
           </div>
 
-          <!-- On Delivery Booking Card -->
-          <div class="h-36 rounded-lg bg-white shadow-lg flex justify-center items-center">
+          <!-- Complete Booking Card -->
+          <div class="h-36 rounded-lg bg-white shadow-md border border-solid border-gray-200 flex justify-center items-center">
             <div class="grid grid-cols-2 lg:space-x-2">
               <div class="flex items-center justify-center">
                 <div class="rounded-[50%] bg-green-700 p-4 flex items-center justify-center">
@@ -179,14 +204,14 @@ if ($_SESSION['role'] !== 'admin') {
                 </div>
               </div>
               <div class="flex flex-col items-center justify-center">
-                <p class="text-lg md:text-3xl font-semibold" id="js-for-complete-booking"><!-- total count -->24</p>
+                <p class="text-lg md:text-3xl font-semibold" id="js-complete-count"><!-- total count -->24</p>
                 <p class="text-sm md:text-md text-wrap">Complete Booking</p>
               </div>
             </div>
           </div>
 
-          <!-- On Delivery Booking Card -->
-          <div class="h-36 rounded-lg bg-white shadow-lg flex justify-center items-center">
+          <!-- Total Items Booking Card -->
+          <div class="h-36 rounded-lg bg-white shadow-md border border-solid border-gray-200 flex justify-center items-center">
             <div class="grid grid-cols-2 lg:space-x-2">
               <div class="flex items-center justify-center">
                 <div class="rounded-[50%] bg-violet-700 p-4 flex items-center justify-center">
@@ -194,14 +219,14 @@ if ($_SESSION['role'] !== 'admin') {
                 </div>
               </div>
               <div class="flex flex-col items-center justify-center">
-                <p class="text-lg md:text-3xl font-semibold" id="js-for-complete-booking"><!-- total count -->24</p>
+                <p class="text-lg md:text-3xl font-semibold" id="js-total-items"><!-- total count -->24</p>
                 <p class="text-sm md:text-md text-wrap">Total Items</p>
               </div>
             </div>
           </div>
 
-          <!-- On Delivery Booking Card -->
-          <div class="h-36 rounded-lg bg-white shadow-lg flex justify-center items-center col-span-2 sm:col-span-1">
+          <!-- Total User Booking Card -->
+          <div class="h-36 rounded-lg bg-white shadow-md border border-solid border-gray-200 flex justify-center items-center col-span-2 sm:col-span-1">
             <div class="grid grid-cols-2 lg:space-x-2">
               <div class="flex items-center justify-center">
                 <div class="rounded-[50%] bg-federal p-4 flex items-center justify-center">
@@ -209,31 +234,66 @@ if ($_SESSION['role'] !== 'admin') {
                 </div>
               </div>
               <div class="flex flex-col items-center justify-center">
-                <p class="text-lg md:text-3xl font-semibold" id="js-for-complete-booking"><!-- total count -->24</p>
-                <p class="text-sm md:text-md text-wrap"> User Count</p>
+                <p class="text-lg md:text-3xl font-semibold" id="js-users-count"><!-- total count --></p>
+                <p class="text-sm md:text-md text-wrap"> Total Users</p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Grid for Chart and Pending Booking List -->
-        <div class="max-72 grid grid-cols-1 lg:grid-cols-4 gap-4 mb-4 text-sm">
-          <!-- List of Pending Booking -->
-          <div class="h-full w-full rounded-sm bg-white shadow-lg lg:col-span-3 border border-solid border-gray-200">
-            <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack">LIST OF PENDING BOOKING</p>
+        <!-- Grid for Chart -->
+        <div class="w-full h-auto grid grid-cols-1 gap-4 mb-4 text-sm sm:grid-cols-2">
+          <!-- Total Booking This Month Line Chart -->
+          <div class="w-full bg-white shadow-lg border border-solid border-gray-200 rounded-sm">
+            <div class="p-2 border-solid border-b border-ashblack">
+              <p class="text-md font-semibold text-ashblack">TOTAL BOOKING THIS MONTH</p>
             </div>
-            <div class="overflow-x-auto h-72 min-h-72 px-2">
+            <div class="p-4">
+              <!-- Set height for the canvas to control container size -->
+              <canvas id="totalBookingChart" class="w-full h-60"></canvas>
+            </div>
+          </div>
+
+
+
+
+          <!-- Total User Doughnut Chart -->
+          <div class="w-full bg-white shadow-lg border border-solid border-gray-200 rounded-sm">
+            <div class="p-2 border-solid border-b border-ashblack">
+              <p class="text-md font-semibold text-ashblack">TOTAL USER</p>
+            </div>
+            <div class="p-4 flex justify-center">
+              <canvas id="userPerMonthChart" style="max-width: 100%; max-height: 250px; width: 100%; height: auto;"></canvas>
+            </div>
+          </div>
+
+
+
+        </div>
+
+        <!-- List of Pending Booking -->
+        <div class="w-full grid grid-cols-1 text-sm">
+          <div class="h-auto w-full rounded-sm bg-white shadow-lg border border-solid border-gray-200">
+            <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
+              <p class="text-md font-semibold text-ashblack py-2">MANAGE BOOKING</p>
+              <div class="flex justify-between items-center relative">
+                <input id="search-input" type="text" placeholder="Search bookings..." class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
+                <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
+                  <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
+                </button>
+              </div>
+            </div>
+            <div class="overflow-x-auto h-auto min-h-72 px-2">
               <table class="text-nowrap w-full text-left text-ashblack border-collapse">
-                <thead class="bg-celestial">
+                <thead class="bg-gray-200">
                   <tr>
-                    <th class="px-4 py-2 font-medium text-sm text-seasalt border-b border-gray-200">#</th>
-                    <th class="px-4 py-2 font-medium text-sm text-seasalt border-b border-gray-200">CUSTOMER NAME</th>
-                    <th class="px-4 py-2 font-medium text-sm text-seasalt border-b border-gray-200">PHONE NUMBER</th>
-                    <th class="px-4 py-2 font-medium text-sm text-seasalt border-b border-gray-200">ADDRESS</th>
-                    <th class="px-4 py-2 font-medium text-sm text-seasalt border-b border-gray-200">PICK-UP DATE</th>
-                    <th class="px-4 py-2 font-medium text-sm text-seasalt border-b border-gray-200">PICK-UP TIME</th>
-                    <th class="px-4 py-2 font-medium text-sm text-seasalt border-b border-gray-200 text-center">ACTION</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">#</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">CUSTOMER NAME</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">PHONE NUMBER</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ADDRESS</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">PICK-UP DATE</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">PICK-UP TIME</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 text-center">ACTION</th>
                   </tr>
                 </thead>
                 <tbody id="js-pending-tbody">
@@ -259,16 +319,11 @@ if ($_SESSION['role'] !== 'admin') {
               </table>
             </div>
           </div>
-
-          <!-- Total Booking This Month Chart -->
-          <div class="h-auto lg:h-48 w-full rounded-sm bg-white shadow-lg lg:col-span-1 border border-solid border-gray-200">
-            <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack border-b">
-              <p class="text-md font-semibold text-ashblack">TOTAL BOOKING THIS MONTH</p>
-            </div>
-            <div class="p-4 flex items-center justify-center">
-            </div>
-          </div>
         </div>
+        <div id="pagination-container" class="bg-white w-full p-4 mb-4 justify-center items-center flex text-sm">
+          <!-- Pagination links will be populated here -->
+        </div>
+
 
         <!-- Grid for On Pick-up and On Delivery Booking List -->
         <div class="h-auto grid grid-cols-1 lg:grid-cols-2 gap-4 text-sm">
@@ -349,66 +404,65 @@ if ($_SESSION['role'] !== 'admin') {
 
 
   <!-- Modal for View -->
-  <div id="toViewBookingModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
-    <div class="bg-white rounded-sm shadow-lg p-6 w-full max-w-lg">
-      <div class="flex justify-between items-center border-b pb-2">
-        <!-- Put the user's Full Name here at the top -->
-        <h2 class="text-lg font-semibold">View User's Information</h2>
-        <button id="closeViewBookingModal" class="text-gray-500 hover:text-gray-800">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-        </button>
+  <div class="toViewBookingModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
+    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2">
+      <div class="w-full h-auto py-2 flex flex-col items-center text-nowrap text-gray-500">
+        <h4 class="text-lg font-bold">WASHUP LAUNDRY</h4>
+        <p class="text-sm">Blk 1 lot 2 morales subdivision, Calamba Laguna</p>
+        <p class="text-sm">Phone: +63 930 520 5088</p>
       </div>
-      <form id="editForm" class="mt-4">
-        <div class="grid grid-cols-2 gap-2">
-          <div class="mb-4">
-            <label for="fname" class="block text-sm font-medium text-gray-700">First Name</label>
-            <input type="text" id="fname" name="fname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="First Name: " disabled>
-          </div>
-          <div class="mb-4">
-            <label for="lname" class="block text-sm font-medium text-gray-700">Last Name</label>
-            <input type="text" id="lname" name="lname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Last Name: " disabled>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div class="mb-4">
-            <label for="phone_number" class="block text-sm font-medium text-gray-700">Phone Number</label>
-            <input type="text" id="phone_number" name="phone_number" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Phone Number: " disabled>
-          </div>
-          <div class=" mb-4">
-            <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-            <input type="text" id="email" name="email" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Email: " disabled>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div class="mb-4">
-            <label for="pickupTime" class="block text-sm font-medium text-gray-700">Pick-up Time</label>
-            <input type="text" id="pickupTime" name="pickupTime" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Pick-up Time: " disabled>
-          </div>
-          <div class=" mb-4">
-            <label for="pickupDate" class="block text-sm font-medium text-gray-700">Pick-up Date</label>
-            <input type="text" id="pickupDate" name="pickupDate" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Pick-up Date: " disabled>
-          </div>
-        </div>
-        <div class=" mb-4">
-          <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-          <input type="text" id="address" name="address" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Address: " disabled>
-        </div>
-        <div class=" mb-4">
-          <label for="service" class="block text-sm font-medium text-gray-700">Service Choosen</label>
-          <input type="text" id="service" name="service" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Service Choosen: " disabled>
-        </div>
-        <div class=" mb-4">
-          <label for="shipping_method" class="block text-sm font-medium text-gray-700">Shipping Method</label>
-          <input type="text" id="shipping_method" name="shipping_method" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Shipping Method: " disabled>
-        </div>
 
-
-        <div class=" flex justify-end">
-          <button type="button" id="closeViewBookingModal2" class="px-4 py-2 bg-gray-500 text-seasalt rounded-md mr-2">Close</button>
+      <div class="grid grid-cols-2 gap-2 mb-4 text-gray-500">
+        <div class="flex justify-start">
+          <p class="text-sm">Date: </p>
         </div>
-      </form>
+        <div class="flex justify-end">
+          <p class="text-sm">2024-08-09</p>
+        </div>
+      </div>
+
+      <div class="w-full text-ashblack text-md font-semibold mb-2">
+        <p class="justify-start">Booking Summary</p>
+      </div>
+
+      <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
+        <div class="grid grid-cols-2 gap-2">
+          <p>Customer Name:</p>
+          <p id="display-full-name" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Phone Number:</p>
+          <p id="display-phone-number" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Address:</p>
+          <p id="display-address" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Pick-up Date:</p>
+          <p id="display-pickup-date" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Pick-up Time:</p>
+          <p id="display-pickup-time" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Service:</p>
+          <p id="display-service-selection" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Service Type:</p>
+          <p id="display-service-type" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Suggestions:</p>
+          <p id="display-suggestions" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+      </div>
+
+      <div class="flex justify-center items-center w-full">
+        <button type="button" class="closeViewBookingModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md mr-2">Close</button>
+      </div>
     </div>
   </div>
 

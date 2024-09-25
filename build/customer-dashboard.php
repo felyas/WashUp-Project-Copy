@@ -34,7 +34,7 @@ if (!isset($_SESSION['user_id'])) {
 
 </head>
 
-<body class="bg-seasalt min-h-screen font-poppins">
+<body class="bg-white min-h-screen font-poppins">
   <div class="flex min-h-screen">
 
     <!-- Main Content -->
@@ -43,13 +43,13 @@ if (!isset($_SESSION['user_id'])) {
       <header class="bg-federal shadow p-4">
         <div class="flex justify-between items-center">
           <!-- Hamburger Menu -->
-          <div id="logo" class="text-seasalt">
+          <div id="logo" class="text-white">
             <img class="w-10 h-8" src="./img/logo-white.png" alt="LOGO">
           </div>
 
           <!--Notifications & Logout Section-->
           <div class="flex items-center justify-between lg:space-x-4 text-sm">
-            <p class="js-current-time text-seasalt"></p>
+            <p class="js-current-time text-white"></p>
             <div class="flex items-center justify-between">
               <div class="relative">
                 <button class="js-notification-button flex items-center justify-center px-4 py-2 relative">
@@ -64,7 +64,7 @@ if (!isset($_SESSION['user_id'])) {
                 <div class="js-notification hidden h-auto w-80 z-10000 absolute top-[52px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
                   <div class="w-full p-4 flex items-center justify-between">
                     <h1 class="text- text-lg font-semibold">Notification</h1>
-                    <p class="js-total-notifications"><!-- Dynamic Total Notification  --></p>
+                    <p class="js-total-notifications"><!-- Dynamic Total Notification  -->0</p>
                   </div>
                   <hr class="w-full py-0">
 
@@ -103,7 +103,7 @@ if (!isset($_SESSION['user_id'])) {
             </p>
           </div>
           <div class="w-full lg:w-auto flex justify-end items-center mb-2 sm:mb-0">
-            <button class="js-book-now border-2 text-md font-semibold border-federal py-2 px-6 rounded-md shadow-lg text-federal hover:bg-federal hover:text-seasalt transition">
+            <button class="js-book-now border-2 text-md font-semibold border-federal py-2 px-6 rounded-md shadow-lg text-federal hover:bg-federal hover:text-white transition">
               BOOK NOW
             </button>
           </div>
@@ -116,7 +116,10 @@ if (!isset($_SESSION['user_id'])) {
             <div class="grid grid-cols-2 lg:space-x-2">
               <div class="flex items-center justify-center">
                 <div class="rounded-[50%] bg-celestial p-4 flex items-center justify-center">
-                  <img class="h-6 w-6" src="./img/icons/pending.svg" alt="">
+                  <div class="relative">
+                    <img class="h-6 w-6" src="./img/icons/hand-holding-solid.svg" alt="">
+                    <img src="./img/icons/box.svg" class="absolute top-0 right-[5px] h-3 w-3" alt="">
+                  </div>
                 </div>
               </div>
               <div class="flex flex-col items-center justify-center">
@@ -163,9 +166,12 @@ if (!isset($_SESSION['user_id'])) {
           <!-- List of On Pick-up Booking -->
           <div class="h-auto w-full rounded-sm bg-white">
             <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack">MANAGE BOOKING</p>
-              <div class="flex justify-between items-center">
-                <input id="search-input" type="text" placeholder="Search bookings..." class="p-2 border border-gray-200 rounded-sm w-1/2 lg:w-1/4 outline-none">
+              <p class="text-md font-semibold text-ashblack py-2">MANAGE BOOKING</p>
+              <div class="flex justify-between items-center relative">
+                <input id="search-input" type="text" placeholder="Search bookings..." class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
+                <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
+                  <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
+                </button>
               </div>
             </div>
             <div class="overflow-x-auto h-auto px-2">
@@ -190,8 +196,7 @@ if (!isset($_SESSION['user_id'])) {
         </div>
 
         <!-- Pagination Container -->
-        <div id="pagination-container" class="text-center w-full">
-
+        <div id="pagination-container" class="w-full p-4 justify-center items-center flex text-sm">
         </div>
 
       </main>
@@ -251,7 +256,7 @@ if (!isset($_SESSION['user_id'])) {
           <div class="text-red-500 text-sm hidden">Address is required!</div>
         </div>
 
-        <input type="submit" id="edit-booking-btn" value="Save" class="px-4 py-2 w-full bg-green-700 hover:bg-green-800 text-seasalt font-semibold rounded-md">
+        <input type="submit" id="edit-booking-btn" value="Save" class="px-4 py-2 w-full bg-green-700 hover:bg-green-800 text-white font-semibold rounded-md">
       </form>
     </div>
   </div>
@@ -271,7 +276,7 @@ if (!isset($_SESSION['user_id'])) {
           <p class="text-sm">Date: </p>
         </div>
         <div class="flex justify-end">
-          <p class="text-sm">2024-08-09</p>
+          <p id="created_at" class="text-sm"><!-- Dynamic Date --></p>
         </div>
       </div>
 
@@ -315,7 +320,7 @@ if (!isset($_SESSION['user_id'])) {
       </div>
 
       <div class="flex justify-center items-center w-full">
-        <button type="button" class="closeViewBookingModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-seasalt rounded-md mr-2">Close</button>
+        <button type="button" class="closeViewBookingModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md mr-2">Close</button>
       </div>
     </div>
   </div>

@@ -1,4 +1,6 @@
-//Dashvoard functionality
+//Dashboard functionalities
+
+// Function to Handle Status Colors
 function handleTdColor() {
   // Select all table cells with the "td" tag
   const tableCells = document.querySelectorAll("td");
@@ -17,6 +19,7 @@ function handleTdColor() {
   });
 }
 
+// Function to handle Notification
 function handleNotification() {
   const notificationBtn = document.querySelector('.js-notification-button');
   const notificationElm = document.querySelector('.js-notification');
@@ -40,6 +43,7 @@ function handleNotification() {
   });
 }
 
+// Function to Handle Sidebar 
 function handleSidebar() {
   const sidebar = document.getElementById('sidebar');
   const hamburger = document.getElementById('hamburger');
@@ -54,6 +58,7 @@ function handleSidebar() {
   });
 }
 
+// Function to Display Current Time
 function handleDisplayCurrentTime() {
   const now = new Date();
   const options = {
@@ -68,5 +73,30 @@ function handleDisplayCurrentTime() {
   setInterval(handleDisplayCurrentTime, 1000);
 }
 
+// Function to open and close modals using classes
+function openModal(modalTriggerClass, modalClass, closeModalClass, closeModalClass2) {
+  // Open modal when element with modalTriggerClass is clicked
+  document.body.addEventListener('click', function (event) {
+    if (event.target.closest(`.${modalTriggerClass}`)) {
+      event.preventDefault(); // Prevent default anchor behavior
+      document.querySelector(`.${modalClass}`).classList.remove('hidden');
+    }
+  });
+
+  // Close modal when element with closeModalClass is clicked
+  document.body.addEventListener('click', function (event) {
+    if (event.target.closest(`.${closeModalClass}`)) {
+      document.querySelector(`.${modalClass}`).classList.add('hidden');
+    }
+  });
+
+  // Close modal when element with closeModalClass2 is clicked
+  document.body.addEventListener('click', function (event) {
+    if (event.target.closest(`.${closeModalClass2}`)) {
+      document.querySelector(`.${modalClass}`).classList.add('hidden');
+    }
+  });
+}
+
 // Export functions without calling them
-export { handleSidebar, handleDisplayCurrentTime, handleNotification, handleTdColor };
+export { handleSidebar, handleDisplayCurrentTime, handleNotification, handleTdColor, openModal };

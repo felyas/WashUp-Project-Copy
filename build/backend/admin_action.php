@@ -1,4 +1,8 @@
 <?php
+
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 session_start();
 
 require_once './admin_db.php';
@@ -7,43 +11,76 @@ require_once './utils/util.php';
 $db = new Database();
 $util = new Util();
 
-// Handle Fetch All Pending Booking Ajax Request
+// Handle Fetch All Pending Booking with Search and Pagination
 if (isset($_GET['readPending'])) {
-  $pendingBooking = $db->fetchPendings();
+  $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+  $limit = 10; // Rows per page
+  $query = isset($_GET['query']) ? $_GET['query'] : '';
+
+  $pendingBooking = $db->fetchPendingsWithPagination($page, $limit, $query);
+  $totalRows = $db->getTotalPendingRows($query);
+  $totalPages = ceil($totalRows / $limit);
+
   $output = '';
   if ($pendingBooking) {
     foreach ($pendingBooking as $row) {
       $output .= '
-                  <tr class="border-b border-gray-200">
-                    <td class="px-4 py-2">' . $row['id'] . '</td>
-                    <td class="px-4 py-2 text-nowrap">' . $row['fname'] . ' ' . $row['lname'] . '</td>
-                    <td class="px-4 py-2 text-nowrap">' . $row['phone_number'] . '</td>
-                    <td class="px-4 py-2 text-nowrap">' . $row['address'] . '</td>
-                    <td class="px-4 py-2 text-nowrap">' . $row['pickup_date'] . '</td>
-                    <td class="px-4 py-2 text-nowrap">' . $row['pickup_time'] . '</td>
-                    <td class="min-w-[168px] flex items-center justify-center space-x-2 flex-grow">
-                      <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
-                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
-                      </a>
-                      <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition admitLink">
-                        <img class="w-4 h-4" src="./img/icons/check.svg" alt="edit">
-                      </a>
-                      <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deniedLink">
-                        <img class="w-4 h-4" src="./img/icons/decline.svg" alt="edit">
-                      </a>
-                    </td>
-                  </tr>
+        <tr class="border-b border-gray-200">
+          <td class="px-4 py-2">' . $row['id'] . '</td>
+          <td class="px-4 py-2 text-nowrap">' . $row['fname'] . ' ' . $row['lname'] . '</td>
+          <td class="px-4 py-2 text-nowrap">' . $row['phone_number'] . '</td>
+          <td class="px-4 py-2 text-nowrap">' . $row['address'] . '</td>
+          <td class="px-4 py-2 text-nowrap">' . $row['pickup_date'] . '</td>
+          <td class="px-4 py-2 text-nowrap">' . $row['pickup_time'] . '</td>
+          <td class="min-w-[168px] flex items-center justify-center space-x-2 flex-grow">
+            <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
+              <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
+            </a>
+            <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition admitLink">
+              <img class="w-4 h-4" src="./img/icons/check.svg" alt="edit">
+            </a>
+            <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deniedLink">
+              <img class="w-4 h-4" src="./img/icons/decline.svg" alt="edit">
+            </a>
+          </td>
+        </tr>
       ';
     }
-    echo $output;
   } else {
-    echo '<tr>
-            <td colspan="7" class="text-center py-4 text-gray-200">
-              No Pending Booking Found in the Database!
-            </td>
-          </tr>';
+    $output = '<tr>
+      <td colspan="7" class="text-center py-4 text-gray-200">
+        No Pending Booking Found!
+      </td>
+    </tr>';
   }
+
+  // Pagination HTML for Previous/Next
+  $paginationOutput = '<div class="flex justify-center items-center space-x-2">';
+
+  // Previous button
+  if ($page > 1) {
+    $paginationOutput .= '<a href="#" data-page="' . ($page - 1) . '" class="pagination-link bg-gray-200 text-gray-600 px-4 py-2 rounded">Previous</a>';
+  } else {
+    $paginationOutput .= '<span class="bg-gray-300 text-gray-500 px-4 py-2 rounded">Previous</span>';
+  }
+
+  // Next button
+  if ($page < $totalPages) {
+    $paginationOutput .= '<a href="#" data-page="' . ($page + 1) . '" class="pagination-link bg-gray-200 text-gray-600 px-4 py-2 rounded">Next</a>';
+  } else {
+    $paginationOutput .= '<span class="bg-gray-300 text-gray-500 px-4 py-2 rounded">Next</span>';
+  }
+
+  $paginationOutput .= '</div>';
+
+  // Return JSON response
+  echo json_encode([
+    'bookings' => $output,
+    'pagination' => $paginationOutput
+  ]);
 }
+
+
 
 // Handle Fetch All For Pickup Booking Ajax Request
 if (isset($_GET['readPickup'])) {
@@ -84,10 +121,10 @@ if (isset($_GET['readDelivery'])) {
     foreach ($deliveryBooking as $row) {
       $output .= '
                   <tr class="border-b border-gray-200">
-                    <td class="px-4 py-2 text-nowrap">'. $row['id'] .'</td>
-                    <td class="px-4 py-2 text-nowrap">'. $row['fname'] . ' ' . $row['lname'] .'</td>
-                    <td class="px-4 py-2 text-nowrap">'. $row['phone_number'] .'</td>
-                    <td class="px-4 py-2 text-nowrap">'. $row['address'] .'</td>
+                    <td class="px-4 py-2 text-nowrap">' . $row['id'] . '</td>
+                    <td class="px-4 py-2 text-nowrap">' . $row['fname'] . ' ' . $row['lname'] . '</td>
+                    <td class="px-4 py-2 text-nowrap">' . $row['phone_number'] . '</td>
+                    <td class="px-4 py-2 text-nowrap">' . $row['address'] . '</td>
                     <td class="min-w-[100px] h-auto flex items-center justify-center space-x-2 flex-grow">
                       <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
                         <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
@@ -104,4 +141,86 @@ if (isset($_GET['readDelivery'])) {
             </td>
           </tr>';
   }
+}
+
+// Handle View Booking Ajax Request
+if (isset($_GET['view'])) {
+  $id = $_GET['id'];
+
+  $booking = $db->readOne($id);
+  echo json_encode($booking);
+}
+
+// Handle Admit Booking Ajax Request
+if (isset($_GET['admit'])) {
+  $id = $_GET['id'];
+
+  if ($db->admitBooking($id)) {
+    echo $util->showMessage('success', 'Booking admited successfully');
+  }
+}
+
+// Handle Denied Booking Ajax Request
+if (isset($_GET['denied'])) {
+  $id = $_GET['id'];
+
+  if ($db->deniedBooking($id)) {
+    echo $util->showMessage('success', 'Booking denied successfully');
+  }
+}
+
+// Handle Total Count by Status for Summary Card Ajax Request
+if (isset($_GET['count_all'])) {
+  // echo json_encode(['message => success']);
+
+  $pendingCount = $db->totalCountByStatus('pending');
+  $pickupCount = $db->totalCountByStatus('for pick-up');
+  $deliveryCount = $db->totalCountByStatus('for delivery');
+  $completeCount = $db->totalCountByStatus('complete');
+
+  echo json_encode([
+    'pendingCount' => $pendingCount,
+    'pickupCount' => $pickupCount,
+    'deliveryCount' => $deliveryCount,
+    'completeCount' => $completeCount,
+  ]);
+}
+
+// Handle Total Count of User for Card Ajax Request
+if (isset($_GET['count_user_total'])) {
+  $usersCount = $db->totalCountofUser('user');
+  echo json_encode(['usersCount' => $usersCount]);
+}
+
+// Handle Fetch New Booking Notifications
+if (isset($_GET['fetch_new_bookings'])) {
+
+  // Fetch new booking requests that haven't been read
+  $notifications = $db->fetch_new_bookings();
+
+  // Send the notifications back as a JSON response
+  echo json_encode($notifications);
+}
+
+// Handle marking booking as read (admin viewed notification)
+if (isset($_GET['mark_admin_booking_read'])) {
+  $bookingId = $_GET['id'];
+
+  // Mark the specific booking as read by the admin
+  $db->mark_admin_booking_as_read($bookingId);
+
+  // Send a success response
+  echo json_encode(['success' => true]);
+}
+
+// Handle AJAX request to fetch total users per month
+if (isset($_GET['fetchUsersPerMonth'])) {
+  $usersPerMonth = $db->fetchUserCountPerMonth();
+  echo json_encode($usersPerMonth); // Return data as JSON
+}
+
+// Handle Fetch Booking Data for Doughnut Chart
+if (isset($_GET['fetchBookingData'])) {
+  $bookingData = $db->fetchBookingData();
+  echo json_encode($bookingData); // Return the JSON-encoded data
 }

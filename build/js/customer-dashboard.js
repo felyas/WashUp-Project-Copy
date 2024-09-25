@@ -1,80 +1,57 @@
-import { handleDisplayCurrentTime, handleTdColor } from "./dashboards-main.js";
+import { handleDisplayCurrentTime, openModal } from "./dashboards-main.js";
 
 const bookNowBtn = document.querySelector('.js-book-now');
 const editBookingForm = document.getElementById('edit-booking-form');
-const tbody = document.getElementById('users-booking-list');
 
 bookNowBtn.addEventListener('click', () => {
   window.location.href = './booking.php';
 })
 
 document.addEventListener("DOMContentLoaded", () => {
-  handleTdColor();
   handleDisplayCurrentTime();
   openModal('editModalTrigger', 'toEditBookingModal', 'closeEditBookingModal', 'closeEditBookingModal2');
   openModal('viewModalTrigger', 'toViewBookingModal', 'closeViewBookingModal', 'closeViewBookingModal2');
 });
 
-// Function to open and close modals using classes
-function openModal(modalTriggerClass, modalClass, closeModalClass, closeModalClass2) {
-  // Open modal when element with modalTriggerClass is clicked
-  document.body.addEventListener('click', function (event) {
-    if (event.target.closest(`.${modalTriggerClass}`)) {
-      event.preventDefault(); // Prevent default anchor behavior
-      document.querySelector(`.${modalClass}`).classList.remove('hidden');
-    }
-  });
-
-  // Close modal when element with closeModalClass is clicked
-  document.body.addEventListener('click', function (event) {
-    if (event.target.closest(`.${closeModalClass}`)) {
-      document.querySelector(`.${modalClass}`).classList.add('hidden');
-    }
-  });
-
-  // Close modal when element with closeModalClass2 is clicked
-  document.body.addEventListener('click', function (event) {
-    if (event.target.closest(`.${closeModalClass2}`)) {
-      document.querySelector(`.${modalClass}`).classList.add('hidden');
-    }
-  });
-}
 
 
-
+const tbody = document.getElementById('users-booking-list');
 const paginationContainer = document.getElementById('pagination-container');
 const searchInput = document.getElementById('search-input');
 
-const fetchUserAllBooking = async (page = 1, searchQuery = '') => {
+// Fetch All Bookings with Pagination and Search
+const fetchAllBookings = async (page = 1) => {
+  const searchQuery = searchInput.value.trim();
   const response = await fetch(`./backend/customer_action.php?read=1&page=${page}&search=${searchQuery}`, {
     method: 'GET',
   });
   const data = await response.json();
 
   tbody.innerHTML = data.rows;
-  paginationContainer.innerHTML = data.pagination;
-
-  // Add event listeners for pagination links
-  document.querySelectorAll('.page-link').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const page = e.target.dataset.page;
-      fetchUserAllBooking(page, searchInput.value);
-    });
-  });
+  paginationContainer.innerHTML = data.pagination; // Pagination displayed here
 };
 
-// Event listener for search
+// Search Input Event Listener
 searchInput.addEventListener('input', () => {
-  fetchUserAllBooking(1, searchInput.value);
+  fetchAllBookings(1); // Fetch data when search input changes
 });
 
-// Initial fetch
-fetchUserAllBooking();
+// Pagination Links Event Delegation
+paginationContainer.addEventListener('click', (event) => {
+  if (event.target.classList.contains('page-link')) {
+    event.preventDefault();
+    const page = event.target.dataset.page;
+    fetchAllBookings(page); // Fetch data for the clicked page
+  }
+});
+
+// Initial Fetch
+fetchAllBookings();
 
 
 
-// Edit User Ajax Request
+
+// Edit Booking Ajax Request
 tbody.addEventListener('click', (e) => {
   if (e.target && (e.target.matches('a.editLink') || e.target.closest('a.editLink'))) {
     e.preventDefault();
@@ -83,7 +60,7 @@ tbody.addEventListener('click', (e) => {
     editBooking(id);
   }
 
-  // View User Ajax Request
+  // View Booking Ajax Request
   if (e.target && (e.target.matches('a.viewLink') || e.target.closest('a.viewLink'))) {
     e.preventDefault();
     let targetElement = e.target.matches('a.viewLink') ? e.target : e.target.closest('a.viewLink');
@@ -91,7 +68,7 @@ tbody.addEventListener('click', (e) => {
     bookingSummary(id);
   }
 
-  // Delete User Ajax Request
+  // Delete Booking Ajax Request
   if (e.target && (e.target.matches('a.deleteLink') || e.target.closest('a.deleteLink'))) {
     e.preventDefault();
     let targetElement = e.target.matches('a.deleteLink') ? e.target : e.target.closest('a.deleteLink');
@@ -177,7 +154,7 @@ editBookingForm.addEventListener('submit', async (e) => {
       }).then(() => {
         document.getElementById('edit-booking-btn').value = 'Save';
         editBookingForm.reset();
-        fetchUserAllBooking();
+        fetchAllBookings();
         document.querySelector('.toEditBookingModal').classList.add('hidden');
       });
     } else {
@@ -201,7 +178,7 @@ const bookingSummary = async (id) => {
     method: 'GET',
   });
   const response = await data.json();
-  console.log(response);
+  document.getElementById('created_at').innerHTML = response.created_at;
   document.getElementById('display-full-name').innerHTML = response.fname + " " + response.lname;
   document.getElementById('display-phone-number').innerHTML = response.phone_number;
   document.getElementById('display-address').innerHTML = response.address;
@@ -212,6 +189,7 @@ const bookingSummary = async (id) => {
   document.getElementById('display-suggestions').innerHTML = response.suggestions;
 }
 
+// Deleting Booking Ajax Request
 const deleteBooking = async (id) => {
   const result = await Swal.fire({
     title: 'Are you sure?',
@@ -234,11 +212,11 @@ const deleteBooking = async (id) => {
     const response = await data.text();
     if (response.includes('success')) {
       Swal.fire('Deleted!', 'Booking deleted successfully.', 'success');
-      fetchUserAllBooking();
+      fetchAllBookings();
       fetchForPickUpCount();
     } else {
       Swal.fire('Error!', 'Failed to delete booking.', 'error');
-      fetchUserAllBooking();
+      fetchAllBookings();
       fetchForPickUpCount();
     }
   }
@@ -247,15 +225,15 @@ const deleteBooking = async (id) => {
 // Fetch the total number of bookings for each status: "for pick-up", "for delivery", and "complete"
 const fetchBookingCounts = async () => {
   try {
-    const response = await fetch('./backend/customer_action.php?count_all=1', {
+    const data = await fetch('./backend/customer_action.php?count_all=1', {
       method: 'GET',
     });
-    const data = await response.json(); // Assuming the response is in JSON format
+    const response = await data.json(); // Assuming the response is in JSON format
 
     // Update the HTML elements with the counts
-    document.getElementById('js-for-pickup').textContent = data.pickupCount; // For Pick-Up count
-    document.getElementById('js-for-delivery').textContent = data.deliveryCount; // For Delivery count
-    document.getElementById('js-for-complete-booking').textContent = data.completeCount; // Complete count
+    document.getElementById('js-for-pickup').textContent = response.pickupCount; // For Pick-Up count
+    document.getElementById('js-for-delivery').textContent = response.deliveryCount; // For Delivery count
+    document.getElementById('js-for-complete-booking').textContent = response.completeCount; // Complete count
   } catch (error) {
     console.error('Error fetching booking counts:', error);
   }
@@ -292,7 +270,7 @@ const fetchNotifications = async (lastCheckTime) => {
       totalNotificationsElement.textContent = notifications.length;
       notificationDot.classList.remove('hidden');
       // Calling other function to update the UI
-      fetchUserAllBooking();
+      fetchAllBookings();
       fetchBookingCounts();
     } else {
       notificationDot.classList.add('hidden');
@@ -302,7 +280,7 @@ const fetchNotifications = async (lastCheckTime) => {
     setTimeout(() => {
       const currentTimestamp = new Date().toISOString(); // Use current time as last check
       fetchNotifications(currentTimestamp);
-    }, 5000); // Check every 5 seconds
+    }, 1000); // Check every 5 seconds
   } catch (error) {
     console.error('Error fetching notifications:', error);
   }
@@ -327,24 +305,23 @@ document.querySelector('.js-notification-button').addEventListener('click', () =
 });
 
 // Handle closing individual notifications
-document.addEventListener('click', (event) => {
-  if (event.target.classList.contains('js-notification-close')) {
-    const notificationId = event.target.getAttribute('data-id');
-    event.target.parentElement.remove(); // Remove notification from UI
+document.addEventListener('click', async (e) => {
+  if (e.target.classList.contains('js-notification-close')) {
+    const notificationId = e.target.getAttribute('data-id');
+    e.target.parentElement.remove(); // Remove notification from UI
 
     // Send a request to the server to mark this notification as read
-    fetch(`./backend/customer_action.php?mark_as_read=1&id=${notificationId}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          console.log('Notification marked as read.');
-        } else {
-          console.error('Failed to mark notification as read.');
-        }
-      })
-      .catch(error => console.error('Error:', error));
+    const response = await fetch(`./backend/customer_action.php?mark_as_read=1&id=${notificationId}`);
+    const data = await response.json();
+
+    if (data.success) {
+      console.log('Notification marked as read.');
+    } else {
+      console.error('Failed to mark notification as read.');
+    }
   }
 });
+
 
 
 

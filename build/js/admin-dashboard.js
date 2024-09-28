@@ -107,6 +107,7 @@ document.addEventListener("DOMContentLoaded", () => {
       method: 'GET',
     });
     const response = await data.json();
+    document.getElementById('booking-date').innerHTML = response.created_at;
     document.getElementById('display-full-name').innerHTML = response.fname + " " + response.lname;
     document.getElementById('display-phone-number').innerHTML = response.phone_number;
     document.getElementById('display-address').innerHTML = response.address;
@@ -218,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       // Continue long polling after 1 seconds
-      setTimeout(fetchNewBookings, 1000);  // Poll every 5 seconds
+      setTimeout(fetchNewBookings, 10000);  // Poll every 5 seconds
     } catch (error) {
       console.error('Error fetching new bookings:', error);
     }

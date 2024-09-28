@@ -147,8 +147,8 @@ if (isset($_GET['readDelivery'])) {
 if (isset($_GET['view'])) {
   $id = $_GET['id'];
 
-  $booking = $db->readOne($id);
-  echo json_encode($booking);
+  $bookingSummary = $db->readOne($id);
+  echo json_encode($bookingSummary);
 }
 
 // Handle Admit Booking Ajax Request

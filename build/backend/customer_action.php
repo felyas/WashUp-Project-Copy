@@ -26,6 +26,7 @@ if (isset($_POST['add'])) {
   }
 }
 
+// Handle Fetch Booking Ajax Request
 if (isset($_GET['read'])) {
   $user_id = $_SESSION['user_id'];
   $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;

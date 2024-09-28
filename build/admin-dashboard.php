@@ -250,12 +250,9 @@ if ($_SESSION['role'] !== 'admin') {
             </div>
             <div class="p-4">
               <!-- Set height for the canvas to control container size -->
-              <canvas id="totalBookingChart" class="w-full h-60"></canvas>
+              <canvas id="totalBookingChart" class="w-full" style="height: 250px;"></canvas>
             </div>
           </div>
-
-
-
 
           <!-- Total User Doughnut Chart -->
           <div class="w-full bg-white shadow-lg border border-solid border-gray-200 rounded-sm">
@@ -266,10 +263,8 @@ if ($_SESSION['role'] !== 'admin') {
               <canvas id="userPerMonthChart" style="max-width: 100%; max-height: 250px; width: 100%; height: auto;"></canvas>
             </div>
           </div>
-
-
-
         </div>
+
 
         <!-- List of Pending Booking -->
         <div class="w-full grid grid-cols-1 text-sm">
@@ -287,7 +282,7 @@ if ($_SESSION['role'] !== 'admin') {
               <table class="text-nowrap w-full text-left text-ashblack border-collapse">
                 <thead class="bg-gray-200">
                   <tr>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">#</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ID</th>
                     <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">CUSTOMER NAME</th>
                     <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">PHONE NUMBER</th>
                     <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ADDRESS</th>
@@ -297,24 +292,7 @@ if ($_SESSION['role'] !== 'admin') {
                   </tr>
                 </thead>
                 <tbody id="js-pending-tbody">
-                  <!-- <tr class="border-b border-gray-400">
-                    <td class="px-4 py-2">1</td>
-                    <td class="px-4 py-2">John Doe</td>
-                    <td class="px-4 py-2">2024-08-16</td>
-                    <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pending</td>
-                    <td class="min-w-[168px] flex items-center justify-center space-x-2 flex-grow">
-                      <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition editLink">
-                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
-                      </a>
-                      <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
-                        <img class="w-4 h-4" src="./img/icons/check.svg" alt="edit">
-                      </a>
-                      <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition editLink">
-                        <img class="w-4 h-4" src="./img/icons/decline.svg" alt="edit">
-                      </a>
-                    </td>
-                  </tr> -->
+                  <!-- Dynamic Data -->
                 </tbody>
               </table>
             </div>
@@ -417,7 +395,7 @@ if ($_SESSION['role'] !== 'admin') {
           <p class="text-sm">Date: </p>
         </div>
         <div class="flex justify-end">
-          <p class="text-sm">2024-08-09</p>
+          <p id="booking-date" class="text-sm"><!-- dynamic data --></p>
         </div>
       </div>
 

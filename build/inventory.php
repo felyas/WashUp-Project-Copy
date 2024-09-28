@@ -1,3 +1,18 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+  header("Location: login.php");
+  exit();
+}
+
+// Check if the user is an admin
+if ($_SESSION['role'] !== 'admin') {
+  header("Location: ./404.php"); // Redirect to the 404 page
+  exit();
+}
+?>
+
 <!DOCTYPE html>
 <html lang="en" class="sm:scroll-smooth">
 
@@ -13,6 +28,14 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- SweetAlert CDN -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+
+  <!-- Include Chart.js from CDN -->
+  <script src="../node_modules/chart.js/dist/chart.umd.js" defer></script>
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -85,7 +108,7 @@
                 <div class="js-notification hidden h-auto w-80 z-10 absolute top-[52px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
                   <div class="w-full p-4 flex items-center justify-between">
                     <h1 class="text- text-lg font-semibold">Notification</h1>
-                    <p class="js-total-notifications"><!-- Dynamic Total Notification  --></p>
+                    <p class="js-total-notifications"><!-- Dynamic Total Notification  -->0</p>
                   </div>
                   <hr class="w-full py-0">
 
@@ -119,9 +142,9 @@
               <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
             </button>
           </div>
-          <button id="openAddItemModal" class="py-2 px-4 bg-federal rounded-lg text-seasalt ">
+          <a href="#" id="' . $row['id'] . '" class="addModalTrigger px-4 py-2 text-white bg-federal rounded-md transition">
             Add Item
-          </button>
+          </a>
         </div>
 
         <!--List-->
@@ -129,29 +152,29 @@
           <!-- List of On Pick-up Booking -->
           <div class="h-auto w-full rounded-sm bg-white shadow-lg">
             <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack">List of Items</p>
+              <p class="text-md font-semibold text-ashblack">LIST OF ITEMS</p>
             </div>
             <div class="overflow-x-auto">
               <table class="text-nowrap w-full text-left text-ashblack">
-                <thead class="bg-celestial">
+                <thead class="bg-gray-200">
                   <tr>
-                    <th class="px-4 py-2 font-medium text-seasalt">#</th>
-                    <th class="px-4 py-2 font-medium text-seasalt">Product</th>
-                    <th class="px-4 py-2 font-medium text-seasalt">Quantity</th>
-                    <th class="px-4 py-2 font-medium text-seasalt">Total Quantity</th>
-                    <th class="px-4 py-2 font-medium text-seasalt text-center">Action</th>
+                    <th class="px-4 py-2 font-medium text-ashblack">ID</th>
+                    <th class="px-4 py-2 font-medium text-ashblack">PRODUCT</th>
+                    <th class="px-4 py-2 font-medium text-ashblack">QUANTITY</th>
+                    <th class="px-4 py-2 font-medium text-ashblack">TOTAL QUANTITY</th>
+                    <th class="px-4 py-2 font-medium text-ashblack text-center">ACTION</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
+                  <tr class="border-b border-gray-200">
                     <td class="px-4 py-2">1</td>
                     <td class="px-4 py-2">Detergent</td>
                     <td class="px-4 py-2">457</td>
                     <td class="px-4 py-2">999</td>
-                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                      <button id="openEditItemModal" class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
+                    <td class="min-w-[100px] h-auto flex items-center justify-center space-x-2 flex-grow">
+                      <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
                         <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                      </button>
+                      </a>
                       <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
                         <img class="w-4 h-4" src="./img/icons/trash.svg" alt="view">
                       </button>
@@ -177,56 +200,93 @@
   </div>
 
   <!-- Modal (hidden by default) -->
-  <div id="toEditModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
-    <div class="bg-white rounded-sm shadow-lg p-6 w-full max-w-lg">
+  <!-- Modal for Edit -->
+  <div class="toEditItemModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
+    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2">
       <div class="flex justify-between items-center border-b pb-2">
-        <h2 class="text-lg font-semibold">Edit Information</h2>
-        <button id="closeEditModal" class="text-gray-500 hover:text-gray-800">
+
+        <h2 class="text-lg font-semibold text-gray-500">Update Item</h2>
+        <button class="closeEditItemModal text-gray-500 hover:text-gray-800">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
       </div>
-      <form id="editForm" class="mt-4">
+      <form id="update-items-form" class="mt-4">
+        <input type="hidden" name="id" id="id">
         <div class="mb-4">
-          <label for="fullName" class="block text-sm font-medium text-gray-700">Product</label>
-          <input type="text" id="product" name="product" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Product Name: ">
+          <label for="product" class="block text-sm font-medium text-gray-500">Product Name</label>
+          <input type="text" id="product" name="product" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Product Name: ">
+          <div class="text-red-500 text-sm hidden">Product Name is required!</div>
         </div>
         <div class="mb-4">
-          <label for="email" class="block text-sm font-medium text-gray-700">Quantity</label>
-          <input type="number" id="quantity" name="quantity" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Quantity: ">
+          <label for="phone_number" class="block text-sm font-medium text-gray-500">Phone Number</label>
+          <input type="text" id="phone_number" name="phone_number" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., +63 912 345 6789">
+          <div class="text-red-500 text-sm hidden">Phone number is required!</div>
         </div>
-        <div class="flex justify-end">
-          <button type="button" id="closeEditModal2" class="px-4 py-2 bg-gray-500 text-seasalt rounded-md mr-2">Cancel</button>
-          <button type="submit" class="px-4 py-2 bg-green-700 text-seasalt rounded-md">Save</button>
+        <div class="mb-4">
+          <label for="address" class="block text-sm font-medium text-gray-500">Address</label>
+          <input type="text" id="address" name="address" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., Villa Rizza, Blk 2 Lot 3, Paciano Rizal">
+          <div class="text-red-500 text-sm hidden">Address is required!</div>
         </div>
+
+        <input type="submit" id="edit-booking-btn" value="Save" class="px-4 py-2 w-full bg-green-700 hover:bg-green-800 text-white font-semibold rounded-md">
       </form>
     </div>
   </div>
+  <!-- End of the Modal -->
 
-  <div id="toAddItemModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
-    <div class="bg-white rounded-sm shadow-lg p-6 w-full max-w-lg">
+  <!-- Add Item Modal -->
+  <div class="toAddItemModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
+    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2">
       <div class="flex justify-between items-center border-b pb-2">
-        <h2 class="text-lg font-semibold">Add Items</h2>
-        <button id="closeAddItemModal" class="text-gray-500 hover:text-gray-800">
+
+        <h2 class="text-lg font-semibold text-gray-500">Add Item to Inventory</h2>
+        <button class="closeAddItemModal text-gray-500 hover:text-gray-800">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
           </svg>
         </button>
       </div>
-      <form id="editForm" class="mt-4">
+      <form id="add-items-form" class="mt-4" novalidate>
+        <input type="hidden" name="id" id="id">
         <div class="mb-4">
-          <label for="fullName" class="block text-sm font-medium text-gray-700">Product</label>
-          <input type="text" id="product" name="product" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Product Name: ">
+          <label for="product" class="block text-sm font-medium text-gray-500">Product Name</label>
+          <input required type="text" id="product" name="product" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Product Name: ">
+          <div class="text-red-500 text-sm hidden">Product Name is required!</div>
         </div>
         <div class="mb-4">
-          <label for="email" class="block text-sm font-medium text-gray-700">Quantity</label>
-          <input type="number" id="quantity" name="quantity" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Quantity: ">
+          <label for="bar-code" class="block text-sm font-medium text-gray-500">Bar Code</label>
+          <input required type="text" id="bar-code" name="bar-code" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Bar Code: ">
+          <div class="text-red-500 text-sm hidden">Bar Code is required!</div>
         </div>
-        <div class="flex justify-end">
-          <button type="button" id="closeAddItemModal2" class="px-4 py-2 bg-gray-500 text-seasalt rounded-md mr-2">Cancel</button>
-          <button type="submit" class="px-4 py-2 bg-green-700 text-seasalt rounded-md">Save</button>
+        <div class="grid grid-cols-2 gap-2">
+          <div class="mb-4">
+            <label for="quantity" class="block text-sm font-medium text-gray-500">Quantity</label>
+            <input required type="text" id="quantity" name="quantity" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" 99">
+            <div class="text-red-500 text-sm hidden">Quantity is required!</div>
+          </div>
+          <div class="mb-4">
+            <label for="Total Quantity" class="block text-sm font-medium text-gray-500">Total Quantity</label>
+            <input required type="text" id="Total Quantity" name="Total Quantity" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="100">
+            <div class="text-red-500 text-sm hidden">Total Quantity is required!</div>
+          </div>
         </div>
+        <div class="grid grid-cols-2 gap-2">
+          <div class="mb-4">
+            <label for="date" class="block text-sm font-medium text-gray-500">Date</label>
+            <input type="date" id="added_date" name="date" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack">
+            <div class="text-red-500 text-sm hidden">Date is required!</div>
+          </div>
+          <div class="mb-4">
+            <label for="time" class="block text-sm font-medium text-gray-500">Time</label>
+            <input type="time" id="added_time" name="time" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack">
+            <div class="text-red-500 text-sm hidden">Time is required!</div>
+          </div>
+        </div>
+        
+
+        <input type="submit" id="add-item-btn" value="Add" class="px-4 py-2 w-full bg-polynesian text-white font-semibold rounded-md cursor-pointer">
       </form>
     </div>
   </div>

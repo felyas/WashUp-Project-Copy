@@ -5,6 +5,12 @@ if (!isset($_SESSION['user_id'])) {
   header("Location: login.php");
   exit();
 }
+
+// Check if the user is an admin
+if ($_SESSION['role'] !== 'user') {
+  header("Location: ./404.php"); // Redirect to the 404 page
+  exit();
+}
 ?>
 
 
@@ -112,7 +118,7 @@ if (!isset($_SESSION['user_id'])) {
         <!-- Grid for Booking Summaries -->
         <div class="grid grid-cols-2 sm:grid-cols-3 gap-x-6 lg:gap-x-12 gap-y-4 mb-4">
           <!-- Pending Booking Card -->
-          <div class="h-36 rounded-lg bg-white shadow-lg flex justify-center items-center">
+          <div class="h-36 rounded-lg bg-white shadow-md flex justify-center items-center border border-solid border-gray-200">
             <div class="grid grid-cols-2 lg:space-x-2">
               <div class="flex items-center justify-center">
                 <div class="rounded-[50%] bg-celestial p-4 flex items-center justify-center">
@@ -130,7 +136,7 @@ if (!isset($_SESSION['user_id'])) {
           </div>
 
           <!-- On Pick-up Booking Card -->
-          <div class="h-36 rounded-lg bg-white shadow-lg flex justify-center items-center">
+          <div class="h-36 rounded-lg bg-white shadow-md flex justify-center items-center border border-solid border-gray-200">
             <div class="grid grid-cols-2 lg:space-x-2">
               <div class="flex items-center justify-center">
                 <div class="rounded-[50%] bg-polynesian p-4 flex items-center justify-center">
@@ -145,7 +151,7 @@ if (!isset($_SESSION['user_id'])) {
           </div>
 
           <!-- On Delivery Booking Card -->
-          <div class="h-36 rounded-lg bg-white shadow-lg flex justify-center items-center col-span-2 sm:col-span-1">
+          <div class="h-36 rounded-lg bg-white shadow-md flex justify-center items-center col-span-2 sm:col-span-1 border border-solid border-gray-200">
             <div class="grid grid-cols-2 lg:space-x-2">
               <div class="flex items-center justify-center">
                 <div class="rounded-[50%] bg-green-700 p-4 flex items-center justify-center">
@@ -178,7 +184,7 @@ if (!isset($_SESSION['user_id'])) {
               <table id="booking-list" class="text-nowrap w-full text-left text-ashblack border-collapse">
                 <thead class="bg-gray-200">
                   <tr>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">#</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ID</th>
                     <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">FULL NAME</th>
                     <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">BOOKING DATE</th>
                     <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">SERVICE</th>

@@ -620,8 +620,16 @@ video {
   inset: 0px;
 }
 
+.-right-3 {
+  right: -0.75rem;
+}
+
 .-right-\[68px\] {
   right: -68px;
+}
+
+.-top-1 {
+  top: -0.25rem;
 }
 
 .bottom-0 {
@@ -634,6 +642,10 @@ video {
 
 .right-0 {
   right: 0px;
+}
+
+.right-1 {
+  right: 0.25rem;
 }
 
 .right-\[14px\] {
@@ -650,6 +662,10 @@ video {
 
 .top-0 {
   top: 0px;
+}
+
+.top-\[40\%\] {
+  top: 40%;
 }
 
 .top-\[52px\] {
@@ -854,10 +870,6 @@ video {
   height: 2rem;
 }
 
-.h-80 {
-  height: 20rem;
-}
-
 .h-\[20px\] {
   height: 20px;
 }
@@ -868,6 +880,10 @@ video {
 
 .h-\[4rem\] {
   height: 4rem;
+}
+
+.h-\[8px\] {
+  height: 8px;
 }
 
 .h-auto {
@@ -888,10 +904,6 @@ video {
 
 .min-h-72 {
   min-height: 18rem;
-}
-
-.min-h-80 {
-  min-height: 20rem;
 }
 
 .min-h-\[14rem\] {
@@ -970,6 +982,10 @@ video {
   width: 70px;
 }
 
+.w-\[8px\] {
+  width: 8px;
+}
+
 .w-auto {
   width: auto;
 }
@@ -980,6 +996,10 @@ video {
 
 .min-w-\[100px\] {
   min-width: 100px;
+}
+
+.min-w-\[150px\] {
+  min-width: 150px;
 }
 
 .min-w-\[168px\] {
@@ -1020,6 +1040,11 @@ video {
 
 .border-collapse {
   border-collapse: collapse;
+}
+
+.-translate-x-1\/2 {
+  --tw-translate-x: -50%;
+  transform: translate(var(--tw-translate-x), var(--tw-translate-y)) rotate(var(--tw-rotate)) skewX(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
 }
 
 .-translate-x-full {
@@ -1287,6 +1312,11 @@ video {
   border-color: rgb(239 68 68 / var(--tw-border-opacity));
 }
 
+.bg-\[\#0E4483\] {
+  --tw-bg-opacity: 1;
+  background-color: rgb(14 68 131 / var(--tw-bg-opacity));
+}
+
 .bg-ashblack {
   background-color: var(--ashblack);
 }
@@ -1454,6 +1484,11 @@ video {
 .py-0 {
   padding-top: 0px;
   padding-bottom: 0px;
+}
+
+.py-1 {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
 }
 
 .py-12 {
@@ -1718,6 +1753,10 @@ video {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
+}
+
 .transition {
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-backdrop-filter;
   transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
@@ -1842,6 +1881,11 @@ video {
 .after\:content-\[\'\\201D\'\]::after {
   --tw-content: '\201D';
   content: var(--tw-content);
+}
+
+.hover\:bg-\[\#0C376A\]:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(12 55 106 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-blue-600:hover {

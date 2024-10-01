@@ -65,10 +65,27 @@ if ($_SESSION['role'] !== 'admin') {
           <img class="h-4 w-4 mr-4" src="./img/icons/warehouse.svg" alt="">
           <p>Inventory</p>
         </a>
-        <a href="./account.php" class="flex items-center p-2 rounded hover:bg-gray-700">
-          <img class="h-4 w-4 mr-4" src="./img/icons/users.svg" alt="">
-          <p>Account</p>
-        </a>
+        <div>
+          <a href="javascript:void(0);" id="account-dropdown" class="flex items-center p-2 rounded hover:bg-gray-700">
+            <img class="h-4 w-4 mr-4" src="./img/icons/users.svg" alt="">
+            <p>Account</p>
+            <svg class="ml-auto h-4 w-4 transform transition-transform" id="dropdown-icon" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06-.02L10 10.94l3.71-3.75a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.23 8.25a.75.75 0 01-.02-1.06z" clip-rule="evenodd"></path>
+            </svg>
+          </a>
+
+          <!-- Dropdown Options -->
+          <div id="dropdown-menu" class="hidden flex flex-col ml-8 mt-2 space-y-2">
+            <a href="./account.php" class="p-2 rounded hover:bg-gray-700 text-sm flex items-center">
+              <img src="./img/icons/account-list.svg" alt="add" class="w-4 h-4 mr-2">
+              <h2>List of Users</h2>
+            </a>
+            <a href="./add_account.php" class="p-2 rounded hover:bg-gray-700 text-sm flex items-center">
+              <img src="./img/icons/user-plus.svg" alt="add" class="w-4 h-4 mr-2">
+              <h2>Add User</h2>
+            </a>
+          </div>
+        </div>
         <div class="flex items-center justify-center py-24">
           <!-- Close Button -->
           <button id="close-sidebar" class="lg:hidden p-6 text-white rounded-full bg-gray-900 hover:bg-gray-700">
@@ -188,26 +205,6 @@ if ($_SESSION['role'] !== 'admin') {
 
                   <tbody id="js-list-tbody">
                     <!-- Dynamic Data -->
-                    <tr class="border-b border-gray-200">
-                      <td class="px-4 py-2">1</td>
-                      <td class="px-4 py-2">John Doe</td>
-                      <td class="px-4 py-2">09691026692</td>
-                      <td class="px-4 py-2"> Pueblo Del Rio</td>
-                      <td class="px-4 py-2">2024-08-16</td>
-                      <td class="px-4 py-2">10:00 AM</td>
-                      <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
-                      <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                        <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
-                          <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
-                        </a>
-                        <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
-                          <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                        </a>
-                        <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
-                          <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
-                        </a>
-                      </td>
-                    </tr>
                   </tbody>
                 </table>
               </div>

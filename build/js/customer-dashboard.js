@@ -139,8 +139,6 @@ editBookingForm.addEventListener('submit', async (e) => {
       body: formData,
     });
     const response = await data.text();
-    console.log(response);
-
     //Handle response and show SweetAlert
     if (response.includes('success')) {
       Swal.fire({

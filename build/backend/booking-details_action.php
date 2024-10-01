@@ -112,6 +112,7 @@ if (isset($_GET['view'])) {
   echo json_encode($bookingSummary);
 }
 
+// Handle Done Process Ajax Request
 if (isset($_GET['done'])) {
   $id = $_GET['id'];
 

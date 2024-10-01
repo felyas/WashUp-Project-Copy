@@ -98,5 +98,18 @@ function openModal(modalTriggerClass, modalClass, closeModalClass, closeModalCla
   });
 }
 
+// Function to handle account dropdown
+function handleDropdown() {
+  const accountDropdown = document.getElementById('account-dropdown');
+  const dropdownMenu = document.getElementById('dropdown-menu');
+  const dropdownIcon = document.getElementById('dropdown-icon');
+
+  // Toggle dropdown visibility on click
+  accountDropdown.addEventListener('click', function () {
+    dropdownMenu.classList.toggle('hidden');
+    dropdownIcon.classList.toggle('rotate-180');
+  });
+}
+
 // Export functions without calling them
-export { handleSidebar, handleDisplayCurrentTime, handleNotification, handleTdColor, openModal };
+export { handleSidebar, handleDisplayCurrentTime, handleNotification, handleTdColor, openModal, handleDropdown };

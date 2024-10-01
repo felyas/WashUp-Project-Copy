@@ -1,8 +1,9 @@
-import { handleSidebar, handleDisplayCurrentTime, openModal } from "./dashboards-main.js";
+import { handleSidebar, handleDisplayCurrentTime, openModal, handleDropdown } from "./dashboards-main.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   handleSidebar();
   handleDisplayCurrentTime();
+  handleDropdown();
   openModal('viewModalTrigger', 'toViewBookingModal', 'closeViewBookingModal', 'closeViewBookingModal2');
 
   const tbody = document.getElementById('js-list-tbody');

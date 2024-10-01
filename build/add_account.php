@@ -152,134 +152,65 @@ if ($_SESSION['role'] !== 'admin') {
       </header>
 
       <!-- Main Content Area -->
-      <main class="flex-1 p-6">
-        <div class="flex items-center mb-4 w-full relative z-0">
-          <div class="relative w-1/2">
-            <input type="text" id="js-search-bar" class="w-full py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200" placeholder="Search">
-            <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
-              <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
-            </button>
+      <main class="flex-1 p-6 flex items-center justify-center">
+        <div class="flex flex-col box-border text-ashblack p-4 items-center border border-solid border-gray-200 shadow-lg">
+          <p class="text-3xl my-4 font-semibold">Create an Account</p>
+
+          <!-- Div to display success and errors. -->
+          <div class="error-div hidden w-full  flex items-center justify-center py-2 px-4 border bg-red-100 border-red-500 border-solid text-red-800 rounded-lg">
+            <p id='js-error-message'><!-- Dynamic Error --></p>
           </div>
-        </div>
 
-        <!--List-->
-        <div class="h-auto grid grid-cols-1 text-sm border border-solid border-gray-200">
-          <!-- List of On Pick-up Booking -->
-          <div class="h-auto w-full rounded-sm bg-white shadow-lg">
-            <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack">LIST OF USERS</p>
+          <form id="add-user-form" class="mt-4" novalidate>
+            <input type="hidden" name="id" id="id">
+            <div class="grid grid-cols-2 gap-2 mb-4">
+              <div>
+                <label for="fname" class="block text-sm font-medium text-gray-500">First Name</label>
+                <input required type="text" id="fname" name="fname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" First Name: ">
+                <div class="text-red-500 text-sm hidden">First Name is required!</div>
+              </div>
+              <div>
+                <label for="lname" class="block text-sm font-medium text-gray-500">Last Name</label>
+                <input required type="text" id="lname" name="lname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Last Name: ">
+                <div class="text-red-500 text-sm hidden">Last Name is required!</div>
+              </div>
             </div>
-            <div class="overflow-x-auto h-auto min-h-72 px-2">
-              <table class="text-nowrap w-full text-left text-ashblack border-collapse">
-                <thead class="bg-gray-200">
-                  <tr>
-                    <th data-column="id" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
-                      ID
-                      <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
-                    </th>
-                    <th data-column="first_name" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
-                      FIRST NAME
-                      <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
-                    </th>
-                    <th data-column="last_name" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
-                      LAST NAME
-                      <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
-                    </th>
-                    <th data-column="email" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
-                      EMAIL
-                      <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
-                    </th>
-                    <!-- Adding the status dropdown filter -->
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">
-                      <select id="status-filter" class="ml-2 px-2 py-1 text-sm border border-gray-300 rounded">
-                        <option value="">Role: All</option>
-                        <option value="user">User</option>
-                        <option value="admin">Admin</option>
-                        <option value="delivery">Delivery Man</option>
-                      </select>
-                    </th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 text-center">ACTION</th>
-                  </tr>
-                </thead>
-
-                <tbody id="js-users-tbody">
-                  <tr class="border-b border-gray-200">
-                    <td class="px-4 py-2">1</td>
-                    <td class="px-4 py-2">Felix</td>
-                    <td class="px-4 py-2">Bragais</td>
-                    <td class="px-4 py-2">feelixbragais@gmail.com</td>
-                    <td class="px-4 py-2">user</td>
-                    <td class="min-w-[100px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                      <a href="#" id="' . $row['product_id'] . '" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
-                        <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                      </a>
-                      <a href="#" id="' . $row['product_id'] . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
-                        <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
-                      </a>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+            <div class="grid grid-cols-2 gap-2 mb-4">
+              <div class="flex flex-col">
+                <label for="email" class="block text-sm font-medium text-gray-500">Email</label>
+                <input required type="text" id="email" name="email" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Email: ">
+                <div class="text-red-500 text-sm hidden">Email is required!</div>
+              </div>
+              <div class="flex flex-col">
+                <label for="Role" class="block text-sm font-medium text-gray-500">Role</label>
+                <select id="status-filter" name="role" class="mt-1 px-2 py-1 w-full text-sm border h-full border-gray-300 rounded">
+                  <option value="admin">Admin</option>
+                  <option value="delivery">Delivery Man</option>
+                </select>
+              </div>
             </div>
-          </div>
-        </div>
+            <div class="mb-4">
+              <label for="password" class="block text-sm font-medium text-gray-500">Password</label>
+              <input required type="password" id="password" name="password" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Password: ">
+              <div class="text-red-500 text-sm hidden">Password is required!</div>
+            </div>
+            <div class="mb-4">
+              <label for="cpassword" class="block text-sm font-medium text-gray-500">Confirm Password</label>
+              <input required type="password" id="cpassword" name="cpassword" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Confirm Password: ">
+              <div class="text-red-500 text-sm hidden">Confirm Password is required!</div>
+            </div>
 
 
-        <div id="pagination-container" class="bg-white w-full p-2 justify-center items-center flex text-sm">
-          <!-- Dynamic Data -->
+
+
+            <input type="submit" id="add-user-btn" value="Add" class="px-4 py-2 w-full bg-polynesian text-white font-semibold rounded-md cursor-pointer">
+          </form>
         </div>
       </main>
     </div>
   </div>
 
-
-
-
-  <!-- Modal for View -->
-  <div class="toViewUsersModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
-    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2">
-      <div class="w-full h-auto py-2 flex flex-col items-center text-nowrap text-gray-500">
-        <h4 class="text-lg font-bold">WASHUP LAUNDRY</h4>
-        <p class="text-sm">Blk 1 lot 2 morales subdivision, Calamba Laguna</p>
-        <p class="text-sm">Phone: +63 930 520 5088</p>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2 mb-4 text-gray-500">
-        <div class="flex justify-start">
-          <p class="text-sm">User ID: </p>
-        </div>
-        <div class="flex justify-end">
-          <p id="js-user-id" class="text-sm"><!-- dynamic data --></p>
-        </div>
-      </div>
-
-      <div class="w-full text-ashblack text-md font-semibold mb-2">
-        <p class="justify-start">User Information</p>
-      </div>
-
-      <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
-        <div class="grid grid-cols-2 gap-2">
-          <p>Full Name:</p>
-          <p id="display-full-name" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <p>Email:</p>
-          <p id="display-email" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <p>Role:</p>
-          <p id="display-role" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-      </div>
-
-      <div class="flex justify-center items-center w-full">
-        <button type="button" class="closeViewUsersModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md mr-2">Close</button>
-      </div>
-    </div>
-  </div>
-
-
-  <script type="module" src="./js/account.js"></script>
+  <script type="module" src="./js/add_account.js"></script>
 </body>
 
 

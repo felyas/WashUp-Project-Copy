@@ -66,10 +66,27 @@ if ($_SESSION['role'] !== 'admin') {
           <img class="h-4 w-4 mr-4" src="./img/icons/warehouse.svg" alt="">
           <p>Inventory</p>
         </a>
-        <a href="./account.php" class="flex items-center p-2 rounded hover:bg-gray-700">
-          <img class="h-4 w-4 mr-4" src="./img/icons/users.svg" alt="">
-          <p>Account</p>
-        </a>
+        <div>
+          <a href="javascript:void(0);" id="account-dropdown" class="flex items-center p-2 rounded hover:bg-gray-700">
+            <img class="h-4 w-4 mr-4" src="./img/icons/users.svg" alt="">
+            <p>Account</p>
+            <svg class="ml-auto h-4 w-4 transform transition-transform" id="dropdown-icon" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06-.02L10 10.94l3.71-3.75a.75.75 0 111.06 1.06l-4.24 4.25a.75.75 0 01-1.06 0L5.23 8.25a.75.75 0 01-.02-1.06z" clip-rule="evenodd"></path>
+            </svg>
+          </a>
+
+          <!-- Dropdown Options -->
+          <div id="dropdown-menu" class="hidden flex flex-col ml-8 mt-2 space-y-2">
+            <a href="./account.php" class="p-2 rounded hover:bg-gray-700 text-sm flex items-center">
+              <img src="./img/icons/account-list.svg" alt="add" class="w-4 h-4 mr-2">
+              <h2>List of Users</h2>
+            </a>
+            <a href="./add_account.php" class="p-2 rounded hover:bg-gray-700 text-sm flex items-center">
+              <img src="./img/icons/user-plus.svg" alt="add" class="w-4 h-4 mr-2">
+              <h2>Add User</h2>
+            </a>
+          </div>
+        </div>
         <div class="flex items-center justify-center py-24">
           <!-- Close Button -->
           <button id="close-sidebar" class="lg:hidden p-6 text-seasalt rounded-full bg-gray-900 hover:bg-gray-700">
@@ -137,7 +154,7 @@ if ($_SESSION['role'] !== 'admin') {
       <main class="flex-1 p-6">
         <div class="flex items-center justify-between mb-4 w-full relative z-0">
           <div class="relative w-1/2">
-            <input type="text" class="w-full py-2 rounded-lg pl-14 outline-none" placeholder="Search">
+            <input type="text" id="js-search-bar" class="w-full py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200" placeholder="Search">
             <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
               <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
             </button>
@@ -154,32 +171,36 @@ if ($_SESSION['role'] !== 'admin') {
             <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
               <p class="text-md font-semibold text-ashblack">LIST OF ITEMS</p>
             </div>
-            <div class="overflow-x-auto">
-              <table class="text-nowrap w-full text-left text-ashblack">
+            <div class="overflow-x-auto h-auto min-h-72 px-2">
+              <table class="text-nowrap w-full text-left text-ashblack border-collapse">
                 <thead class="bg-gray-200">
                   <tr>
-                    <th class="px-4 py-2 font-medium text-ashblack">ID</th>
-                    <th class="px-4 py-2 font-medium text-ashblack">PRODUCT</th>
-                    <th class="px-4 py-2 font-medium text-ashblack">QUANTITY</th>
-                    <th class="px-4 py-2 font-medium text-ashblack">TOTAL QUANTITY</th>
-                    <th class="px-4 py-2 font-medium text-ashblack text-center">ACTION</th>
+                    <th data-column="product_id" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
+                      ID
+                      <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
+                    </th>
+                    <th data-column="product_name" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
+                      PRODUCT
+                      <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
+                    </th>
+                    <th data-column="quantity" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
+                      QUANTITY
+                      <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
+                    </th>
+                    <!-- Adding the status dropdown filter -->
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">
+                      <select id="status-filter" class="ml-2 px-2 py-1 text-sm border border-gray-300 rounded">
+                        <option value="">Status: All</option>
+                        <option value="good">Good</option>
+                        <option value="for critical">Critial</option>
+                      </select>
+                    </th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 text-center">ACTION</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr class="border-b border-gray-200">
-                    <td class="px-4 py-2">1</td>
-                    <td class="px-4 py-2">Detergent</td>
-                    <td class="px-4 py-2">457</td>
-                    <td class="px-4 py-2">999</td>
-                    <td class="min-w-[100px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                      <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
-                        <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                      </a>
-                      <button class="px-4 py-2 bg-red-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/trash.svg" alt="view">
-                      </button>
-                    </td>
-                  </tr>
+
+                <tbody id="js-inventory-tbody">
+                  <!-- Dynamic Data -->
                 </tbody>
               </table>
             </div>
@@ -187,13 +208,8 @@ if ($_SESSION['role'] !== 'admin') {
         </div>
 
 
-        <div class="flex items-center justify-center mt-4 w-full space-x-2">
-          <button class="py-2 px-4 bg-federal rounded-lg text-seasalt">
-            Prev
-          </button>
-          <button class="py-2 px-4 bg-federal rounded-lg text-seasalt">
-            Next
-          </button>
+        <div id="pagination-container" class="bg-white w-full p-2 justify-center items-center flex text-sm">
+          <!-- Dynamic Data -->
         </div>
       </main>
     </div>
@@ -205,7 +221,7 @@ if ($_SESSION['role'] !== 'admin') {
     <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2">
       <div class="flex justify-between items-center border-b pb-2">
 
-        <h2 class="text-lg font-semibold text-gray-500">Update Item</h2>
+        <h2 class="text-lg font-semibold text-gray-500">Update Item from Invetory</h2>
         <button class="closeEditItemModal text-gray-500 hover:text-gray-800">
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -213,21 +229,27 @@ if ($_SESSION['role'] !== 'admin') {
         </button>
       </div>
       <form id="update-items-form" class="mt-4">
-        <input type="hidden" name="id" id="id">
-        <div class="mb-4">
-          <label for="product" class="block text-sm font-medium text-gray-500">Product Name</label>
-          <input type="text" id="product" name="product" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Product Name: ">
-          <div class="text-red-500 text-sm hidden">Product Name is required!</div>
-        </div>
-        <div class="mb-4">
-          <label for="phone_number" class="block text-sm font-medium text-gray-500">Phone Number</label>
-          <input type="text" id="phone_number" name="phone_number" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., +63 912 345 6789">
-          <div class="text-red-500 text-sm hidden">Phone number is required!</div>
-        </div>
-        <div class="mb-4">
-          <label for="address" class="block text-sm font-medium text-gray-500">Address</label>
-          <input type="text" id="address" name="address" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., Villa Rizza, Blk 2 Lot 3, Paciano Rizal">
-          <div class="text-red-500 text-sm hidden">Address is required!</div>
+        <input type="hidden" name="product_id" id="product_id">
+        <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
+          <div class="grid grid-cols-2 gap-2">
+            <p>Product Name:</p>
+            <p id="display-product-name" class=" flex">Zonrox<!-- dynamic data --></p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <p>Bar Code:</p>
+            <p id="display-bar-code" class=" flex">115824<!-- dynamic data --></p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label for="quantity" class="block text-sm font-medium text-gray-500">Max Qty</label>
+              <p id="display-max-qty" class="flex text-sm">100<!-- dynamic data --></p>
+            </div>
+            <div>
+              <label for="quantity" class="block text-sm font-medium text-gray-500">Quantity</label>
+              <input required type="number" id="quantity" name="quantity" class="mt-1 block border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" 99">
+              <div class="text-red-500 text-sm hidden">Quantity is required!</div>
+            </div>
+          </div>
         </div>
 
         <input type="submit" id="edit-booking-btn" value="Save" class="px-4 py-2 w-full bg-green-700 hover:bg-green-800 text-white font-semibold rounded-md">
@@ -257,34 +279,15 @@ if ($_SESSION['role'] !== 'admin') {
         </div>
         <div class="mb-4">
           <label for="bar-code" class="block text-sm font-medium text-gray-500">Bar Code</label>
-          <input required type="text" id="bar-code" name="bar-code" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Bar Code: ">
+          <input required type="text" id="bar-code" name="bar_code" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Bar Code: ">
           <div class="text-red-500 text-sm hidden">Bar Code is required!</div>
         </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div class="mb-4">
-            <label for="quantity" class="block text-sm font-medium text-gray-500">Quantity</label>
-            <input required type="text" id="quantity" name="quantity" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" 99">
-            <div class="text-red-500 text-sm hidden">Quantity is required!</div>
-          </div>
-          <div class="mb-4">
-            <label for="Total Quantity" class="block text-sm font-medium text-gray-500">Total Quantity</label>
-            <input required type="text" id="Total Quantity" name="Total Quantity" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="100">
-            <div class="text-red-500 text-sm hidden">Total Quantity is required!</div>
-          </div>
+        <div class="mb-4">
+          <label for="quantity" class="block text-sm font-medium text-gray-500">Quantity</label>
+          <input required type="text" id="quantity" name="quantity" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" 99">
+          <div class="text-red-500 text-sm hidden">Quantity is required!</div>
         </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div class="mb-4">
-            <label for="date" class="block text-sm font-medium text-gray-500">Date</label>
-            <input type="date" id="added_date" name="date" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack">
-            <div class="text-red-500 text-sm hidden">Date is required!</div>
-          </div>
-          <div class="mb-4">
-            <label for="time" class="block text-sm font-medium text-gray-500">Time</label>
-            <input type="time" id="added_time" name="time" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack">
-            <div class="text-red-500 text-sm hidden">Time is required!</div>
-          </div>
-        </div>
-        
+
 
         <input type="submit" id="add-item-btn" value="Add" class="px-4 py-2 w-full bg-polynesian text-white font-semibold rounded-md cursor-pointer">
       </form>

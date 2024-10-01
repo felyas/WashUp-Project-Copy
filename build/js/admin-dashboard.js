@@ -1,10 +1,11 @@
-import { handleSidebar, handleDisplayCurrentTime, handleTdColor, openModal } from "./dashboards-main.js";
+import { handleSidebar, handleDisplayCurrentTime, handleTdColor, openModal, handleDropdown } from "./dashboards-main.js";
 
 
 document.addEventListener("DOMContentLoaded", () => {
   handleTdColor();
   handleSidebar();
   handleDisplayCurrentTime();
+  handleDropdown();
   openModal('viewModalTrigger', 'toViewBookingModal', 'closeViewBookingModal', 'closeViewBookingModal2');
 
 

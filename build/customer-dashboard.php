@@ -29,10 +29,6 @@ if ($_SESSION['role'] !== 'user') {
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/palette.css">
 
-  <!-- SweetAlert CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -98,6 +94,11 @@ if ($_SESSION['role'] !== 'user') {
       </header>
 
       <!-- Main Content Area -->
+      <!-- Toaster -->
+      <div id="toaster" class="fixed top-4 right-4 hidden text-white shadow-lg z-50">
+        <!-- Dynamic Toaster Content -->
+      </div>
+
       <main class="flex-1 px-6">
         <div class="w-full h-auto flex lg:flex-row justify-between items-center mt-2 mb-4 p-4 border border-solid border-gray-200 rounded-lg flex-col-reverse">
           <div class="w-full lg:w-1/4 lg:mb-0">
@@ -168,9 +169,9 @@ if ($_SESSION['role'] !== 'user') {
 
 
         <!--List-->
-        <div class="h-auto grid grid-cols-1 text-sm border border-solid border-gray-200 shadow-lg">
-          <!-- List of On Pick-up Booking -->
-          <div class="h-auto w-full rounded-sm bg-white">
+        <div class="h-auto grid grid-cols-1 lg:grid-cols-4 gap-4 text-sm mb-4">
+          <!-- First div taking 3/4 of the width on large screens -->
+          <div class="col-span-4 lg:col-span-3 h-auto w-full rounded-sm bg-white px-4 py-2 border border-solid border-gray-200 shadow-lg">
             <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
               <p class="text-md font-semibold text-ashblack py-2">MANAGE BOOKING</p>
               <div class="flex justify-between items-center relative">
@@ -181,7 +182,7 @@ if ($_SESSION['role'] !== 'user') {
               </div>
             </div>
             <div class="overflow-x-auto h-auto px-2">
-              <table id="booking-list" class="text-nowrap w-full text-left text-ashblack border-collapse">
+              <table id="booking-list" class="text-nowrap w-full text-left text-ashblack border-collapse border border-solid border-gray-200">
                 <thead class="bg-gray-200">
                   <tr>
                     <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ID</th>
@@ -194,15 +195,40 @@ if ($_SESSION['role'] !== 'user') {
                   </tr>
                 </thead>
                 <tbody id="users-booking-list">
-                  <!-- List -->
+                  <!-- Dynamic List -->
+                  <tr>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">1</td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Felix Bragais</td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">2024-10-2</td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Wash</td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Standard 2-days</td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle font-semibold">for delivery</td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
+                      <div class="flex justify-center space-x-2">'
+                        <a href="#" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
+                          <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
+                        </a>
+                        <a href="#" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
+                          <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
+                        </a>
+                        <a href="#" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
+                          <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+                        </a>
+                      </div>
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
-          </div>
-        </div>
 
-        <!-- Pagination Container -->
-        <div id="pagination-container" class="w-full p-4 justify-center items-center flex text-sm">
+            <!-- Pagination Container -->
+            <div id="pagination-container" class="w-full py-2 justify-center items-center flex text-sm">
+            </div>
+          </div>
+
+          <!-- Second div taking 1/4 of the width on large screens -->
+          <div class="col-span-4 lg:col-span-1 w-auto h-auto p-4 bg-white border border-solid border-gray-200 shadow-lg">
+          </div>
         </div>
 
       </main>
@@ -210,9 +236,63 @@ if ($_SESSION['role'] !== 'user') {
   </div>
 
 
+  <!-- Delete Warning Modal Overlay -->
+  <div id="delete-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+    <div class="bg-white px-4 py-4 rounded-md shadow-lg w-full max-w-sm flex items-center flex-col">
+      <div class="grid grid-cols-4 mb-4">
+        <!-- First child taking 1/4 of the parent's width -->
+        <div class="col-span-1 flex items-center">
+          <div class="flex justify-center items-center col-span-1 bg-red-500 rounded-full w-16 h-16">
+            <img class="w-8 h-8" src="./img/icons/circle-error.svg" alt="">
+          </div>
+        </div>
+        <!-- Second child taking 3/4 of the parent's width -->
+        <div class="col-span-3">
+          <h1 id="modal-title" class="text-lg font-bold mb-2 text-red-600">Warning !</h1>
+          <p id="modal-message" class="text-md text-gray-500 text-wrap">Do you want to cancel the booking?</p>
+        </div>
+      </div>
+
+      <div class="w-full flex justify-end items-center space-x-2 text-sm font-semibold">
+        <button id="delete-confirm-modal" class="bg-red-600 border-2 border-solid border-red-600 text-white hover:bg-red-700 hover:border-red-700 py-2 px-4 rounded transition">
+          Yes
+        </button>
+        <button id="delete-close-modal" class="bg-white border-2 border-solid border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white py-2 px-4 rounded transition">
+          No
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Success Modal Overlay -->
+  <div id="success-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+    <div class="bg-white px-4 py-4 rounded-md shadow-lg w-full max-w-sm flex items-center flex-col">
+      <div class="grid grid-cols-4 mb-4">
+        <!-- First child taking 1/4 of the parent's width -->
+        <div class="col-span-1 flex items-center">
+          <div class="flex justify-center items-center col-span-1 bg-green-600 rounded-full w-16 h-16">
+            <img class="w-8 h-8" src="./img/icons/circle-success.svg" alt="">
+          </div>
+        </div>
+        <!-- Second child taking 3/4 of the parent's width -->
+        <div class="col-span-3">
+          <h1 id="modal-title" class="text-lg font-bold mb-2 text-green-700">Success !</h1>
+          <p id="modal-message" class="text-md text-gray-500 text-wrap">Booking updated successfully!</p>
+        </div>
+      </div>
+
+      <div class="w-full flex justify-end items-center space-x-2 text-sm font-semibold">
+        <button id="success-confirm-modal" class="hidden bg-green-700 border-2 border-solid border-green-700 text-white hover:bg-green-800 hover:border-green-800 py-2 px-4 rounded transition">
+          Yes
+        </button>
+        <button id="success-close-modal" class="bg-green-700 border-2 border-solid border-green-700 text-white hover:bg-green-800 hover:border-green-800 py-2 px-4 rounded transition">
+          Ok
+        </button>
+      </div>
+    </div>
+  </div>
 
 
-  <!-- Modal (hidden by default) -->
   <!-- Modal for Edit -->
   <div class="toEditBookingModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
     <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2">
@@ -266,7 +346,6 @@ if ($_SESSION['role'] !== 'user') {
       </form>
     </div>
   </div>
-  <!-- End of the Modal -->
 
   <!-- Modal for View -->
   <div class="toViewBookingModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
@@ -330,8 +409,6 @@ if ($_SESSION['role'] !== 'user') {
       </div>
     </div>
   </div>
-
-  <!-- End of the Modal -->
 
   <script type="module" src="./js/customer-dashboard.js"></script>
 </body>

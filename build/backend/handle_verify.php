@@ -56,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $_SESSION['user_id'] = $userDetails['id'];
       $_SESSION['first_name'] = $userDetails['first_name'];
       $_SESSION['last_name'] = $userDetails['last_name'];
+      $_SESSION['role'] = $userDetails['role'];
 
       header("Location: ../customer-dashboard.php");
       exit();

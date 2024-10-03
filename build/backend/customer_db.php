@@ -126,11 +126,18 @@ class Database extends Config
   }
 
   // Handle Notification Polling Request
-  public function fetch_notification($lastCheck)
+  public function fetch_notification($lastCheck, $user_id)
   {
-    $sql = 'SELECT id, status, status_updated_at FROM booking WHERE status_updated_at > :last_check AND is_read = 0 ORDER BY id DESC';
+    $sql = 'SELECT id, status, status_updated_at FROM booking 
+          WHERE status_updated_at > :last_check 
+          AND is_read = 0 
+          AND user_id = :user_id 
+          ORDER BY id DESC';
     $stmt = $this->conn->prepare($sql);
-    $stmt->execute(['last_check' => $lastCheck]);
+    $stmt->execute([
+      'last_check' => $lastCheck,
+      'user_id' => $user_id
+    ]);
 
     // Fetch all unread notifications for bookings that have been updated
     $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);

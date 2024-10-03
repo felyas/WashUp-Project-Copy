@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         let targetElement = e.target.matches('a.admitLink') ? e.target : e.target.closest('a.admitLink');
         let id = targetElement.getAttribute('id');
-        adminBooking(id);
+        admitBooking(id);
       }
 
       // Target the deniedLink
@@ -120,7 +120,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Admit Booking and Update Status to For Pick-Up Ajax Request.
-  const adminBooking = async (id) => {
+  const admitBooking = async (id) => {
     const data = await fetch(`./backend/admin_action.php?admit=1&id=${id}`, {
       method: 'GET',
     });

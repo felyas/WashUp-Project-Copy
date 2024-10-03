@@ -151,6 +151,11 @@ if ($_SESSION['role'] !== 'admin') {
 
       <!-- Main Content Area -->
       <main class="flex-1 p-6 flex flex-col items-center justify-center">
+        <!-- Toaster -->
+        <div id="toaster" class="fixed top-4 right-4 hidden text-white shadow-lg z-50">
+          <!-- Dynamic Toaster Content -->
+        </div>
+
         <div class="flex items-center justify-between mb-2 w-full relative ">
           <div class="relative w-1/2">
             <input type="text" id="js-search-bar" class="w-full py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200" placeholder="Search">
@@ -220,6 +225,33 @@ if ($_SESSION['role'] !== 'admin') {
 
 
 
+  <!-- Warning Modal Overlay -->
+  <div id="warning-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+    <div class="bg-white px-4 py-4 rounded-md shadow-lg w-full max-w-sm flex items-center flex-col">
+      <div class="grid grid-cols-4 mb-4">
+        <!-- First child taking 1/4 of the parent's width -->
+        <div class="col-span-1 flex items-center">
+          <div class="flex justify-center items-center col-span-1 bg-[#f9d6a0] rounded-full w-16 h-16">
+            <img class="w-8 h-8" src="./img/icons/triangle-warning.svg" alt="">
+          </div>
+        </div>
+        <!-- Second child taking 3/4 of the parent's width -->
+        <div class="col-span-3">
+          <h1 id="modal-title" class="text-lg font-bold mb-2">Warning!</h1>
+          <p id="modal-message" class="text-md text-gray-500 text-wrap">Do you really want to perform this action?</p>
+        </div>
+      </div>
+
+      <div class="w-full flex justify-end items-center space-x-2 text-sm font-semibold">
+        <button id="confirm-modal" class="bg-[#e69500] border-2 border-solid border-[#e69500] text-white hover:bg-[#cc8400] hover:border-[#cc8400] py-2 px-4 rounded transition">
+          Yes
+        </button>
+        <button id="close-modal" class="bg-white border-2 border-solid border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white py-2 px-4 rounded transition">
+          No
+        </button>
+      </div>
+    </div>
+  </div>
 
   <!-- Modal (hidden by default) -->
   <!-- Modal for View -->

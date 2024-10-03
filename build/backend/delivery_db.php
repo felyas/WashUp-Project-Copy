@@ -5,7 +5,7 @@ require_once './db_connection.php';
 class Database extends Config
 {
 
-  // Read All Row from Database with Sorting, Pagination, Search, and Status
+  // FETCH ROWS WHO HAS A STATUS OF 'FOR PICK-UP' & 'FOR DELIVERY'
   public function readAll($start, $limit, $column, $order, $query, $status)
   {
     $searchQuery = '%' . $query . '%'; // Adding wildcards for search
@@ -13,7 +13,8 @@ class Database extends Config
 
     // Constructing the SQL query to search and order results
     $sql = "SELECT * FROM booking 
-        WHERE (fname LIKE :query OR lname LIKE :query OR phone_number LIKE :query OR address LIKE :query)
+        WHERE (fname LIKE :query OR lname LIKE :query OR phone_number LIKE :query OR service_type LIKE :query OR address LIKE :query)
+        AND status IN ('for pick-up', 'for delivery')
         $statusCondition
         ORDER BY $column $order 
         LIMIT :start, :limit";
@@ -36,7 +37,7 @@ class Database extends Config
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  // Count total rows for pagination based on the search query and status
+  // COUNT TOTAL ROWS FOR PAGINATION BASED ON THE SEARCH QUERY AND STATUS
   public function getTotalRows($query, $status)
   {
     $searchQuery = '%' . $query . '%'; // Wildcards for search
@@ -44,7 +45,8 @@ class Database extends Config
 
     // SQL to count the total number of matching rows
     $sql = "SELECT COUNT(*) as total FROM booking 
-            WHERE (fname LIKE :query OR lname LIKE :query OR phone_number LIKE :query OR address LIKE :query)
+            WHERE (fname LIKE :query OR lname LIKE :query OR phone_number LIKE :query  OR service_type LIKE :query)
+            AND status IN ('for pick-up', 'for delivery')
             $statusCondition";
 
     // Preparing the statement
@@ -66,9 +68,8 @@ class Database extends Config
     return $row['total'];
   }
 
-  // Fetch User Specific Booking From Database
-  public function readOne($id)
-  {
+  // VIEW 1 ROW FROM DATABASE
+  public function viewSummary ($id) {
     $sql = 'SELECT * FROM booking WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute(['id' => $id]);
@@ -77,17 +78,40 @@ class Database extends Config
     return $result;
   }
 
-  // UPDATE ON PROCESS STATUS FROM DATABASE
-  public function done($id) {
+  // UPDATE PICKUP STATUS FROM DATABASE
+  public function updatePickup($id) {
     $sql = 'UPDATE booking SET status = :status, is_read = :is_read WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
-      'status' => 'for delivery',
+      'status' => 'on process',
       'is_read' => 0,            
       'id' => $id      
     ]);
 
     return true;
   }
-  
+
+  // UPDATE PICKUP STATUS FROM DATABASE
+  public function updateDelivery($id) {
+    $sql = 'UPDATE booking SET status = :status, is_read = :is_read WHERE id = :id';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'status' => 'is receive',
+      'is_read' => 0,            
+      'id' => $id      
+    ]);
+
+    return true;
+  }
+
+  // Count the Total Based on Status from Database
+  public function countByStatus( $status)
+  {
+    $sql = 'SELECT COUNT(*) as count FROM booking WHERE status = :status';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['status' => $status]);
+    $result = $stmt->fetch();
+    return $result['count'];
+  }
+
 }

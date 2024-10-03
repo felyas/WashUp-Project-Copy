@@ -49,7 +49,7 @@ if (isset($_GET['read'])) {
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['service_type'] . '</td>
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle font-semibold">' . $row['status'] . '</td>
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
-            <div class="flex justify-center space-x-2">';
+            <div class="flex justify-center space-x-2 min-w-[150px]">';
 
       // Action buttons based on status
       if ($row['status'] == 'pending') {
@@ -151,9 +151,10 @@ if (isset($_GET['count_all'])) {
 // Handle Fetch Notifications
 if (isset($_GET['fetch_notifications'])) {
   $lastCheck = $_GET['last_check'];
+  $user_id = $_SESSION['user_id'];
 
   // Fetch notifications for booking status updates
-  $notifications = $db->fetch_notification($lastCheck);
+  $notifications = $db->fetch_notification($lastCheck, $user_id);
 
   // Send the notifications back as a JSON response
   echo json_encode($notifications);

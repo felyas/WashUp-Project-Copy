@@ -30,8 +30,8 @@ if ($_SESSION['role'] !== 'admin') {
   <link rel="stylesheet" href="./css/palette.css">
 
   <!-- SweetAlert CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
+  <link rel="stylesheet" href="../node_modules/sweetalert2/dist/sweetalert2.min.css">
+  <script src="../node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
 
   <!-- Include Chart.js from CDN -->
   <script src="../node_modules/chart.js/dist/chart.umd.js" defer></script>
@@ -153,6 +153,11 @@ if ($_SESSION['role'] !== 'admin') {
 
       <!-- Main Content Area -->
       <main class="flex-1 p-6">
+        <!-- Toaster -->
+        <div id="toaster" class="fixed top-4 right-4 hidden text-white shadow-lg z-50">
+          <!-- Dynamic Toaster Content -->
+        </div>
+
         <div class="w-full flex flex-col justify-center mt-2 mb-4 p-4 border border-solid border-gray-200 rounded-lg ">
           <h1 class="text-lg lg:text-md font-semibold">
             Welcome back, <span><?php echo $_SESSION['first_name']; ?></span>

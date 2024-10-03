@@ -1,4 +1,4 @@
-import { handleDisplayCurrentTime, openModal } from "./dashboards-main.js";
+import { handleDisplayCurrentTime, openModal, showToaster, Modal } from "./dashboards-main.js";
 
 const bookNowBtn = document.querySelector('.js-book-now');
 const editBookingForm = document.getElementById('edit-booking-form');
@@ -6,6 +6,8 @@ const editBookingForm = document.getElementById('edit-booking-form');
 bookNowBtn.addEventListener('click', () => {
   window.location.href = './booking.php';
 })
+
+
 
 document.addEventListener("DOMContentLoaded", () => {
   handleDisplayCurrentTime();
@@ -73,7 +75,9 @@ tbody.addEventListener('click', (e) => {
     e.preventDefault();
     let targetElement = e.target.matches('a.deleteLink') ? e.target : e.target.closest('a.deleteLink');
     let id = targetElement.getAttribute('id');
-    deleteBooking(id);
+    const deleteWarningModal = new Modal('delete-modal', 'delete-confirm-modal', 'delete-close-modal');
+    deleteWarningModal.show(deleteBooking, id);
+    // deleteBooking(id);
   }
 });
 
@@ -141,20 +145,12 @@ editBookingForm.addEventListener('submit', async (e) => {
     const response = await data.text();
     //Handle response and show SweetAlert
     if (response.includes('success')) {
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Booking updated successfully!',
-        buttonsStyling: false, // Disable default button styling
-        customClass: {
-          confirmButton: 'bg-green-700 hover:bg-green-800 text-white font-semibold py-3 px-5 rounded-lg'
-        }
-      }).then(() => {
-        document.getElementById('edit-booking-btn').value = 'Save';
-        editBookingForm.reset();
-        fetchAllBookings();
-        document.querySelector('.toEditBookingModal').classList.add('hidden');
-      });
+      const successModal = new Modal('success-modal', 'success-confirm-modal', 'success-close-modal');
+      successModal.show();
+      document.getElementById('edit-booking-btn').value = 'Save';
+      editBookingForm.reset();
+      fetchAllBookings();
+      document.querySelector('.toEditBookingModal').classList.add('hidden');
     } else {
       Swal.fire({
         icon: 'error',
@@ -189,36 +185,26 @@ const bookingSummary = async (id) => {
 
 // Deleting Booking Ajax Request
 const deleteBooking = async (id) => {
-  const result = await Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you want to cancel the booking?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'Yes',
-    cancelButtonText: 'No',
-    customClass: {
-      confirmButton: 'bg-red-700 hover:bg-red-800 text-white px-5 py-3 mr-4 font-semibold rounded-lg',
-      cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-5 py-3 font-semibold rounded-lg'
-    },
-    buttonsStyling: false
+  const data = await fetch(`./backend/customer_action.php?delete=1&id=${id}`, {
+    method: 'GET',
   });
-
-  if (result.isConfirmed) {
-    const data = await fetch(`./backend/customer_action.php?delete=1&id=${id}`, {
-      method: 'GET',
-    });
-    const response = await data.text();
-    if (response.includes('success')) {
-      Swal.fire('Deleted!', 'Booking deleted successfully.', 'success');
-      fetchAllBookings();
-      fetchForPickUpCount();
-    } else {
-      Swal.fire('Error!', 'Failed to delete booking.', 'error');
-      fetchAllBookings();
-      fetchForPickUpCount();
-    }
+  const response = await data.text();
+  if (response.includes('success')) {
+    // Example: Trigger the toaster with hex values
+    const green600 = '#047857'; // Hex value for green-600
+    const green700 = '#065f46'; // Hex value for green-700
+    showToaster('Booking deleted successfully!', 'check', green600, green700);
+    fetchAllBookings();
+    fetchForPickUpCount();
+  } else {
+    // Example: Trigger the toaster with hex values
+    const red600 = '#dc2626'; // Hex value for green-600
+    const red700 = '#b91c1c'; // Hex value for green-700
+    showToaster('Something went wrong !', 'exclamation-error', red600, red700);
+    fetchAllBookings();
+    fetchForPickUpCount();
   }
-};
+}
 
 // Fetch the total number of bookings for each status: "for pick-up", "for delivery", and "complete"
 const fetchBookingCounts = async () => {
@@ -278,7 +264,7 @@ const fetchNotifications = async (lastCheckTime) => {
     setTimeout(() => {
       const currentTimestamp = new Date().toISOString(); // Use current time as last check
       fetchNotifications(currentTimestamp);
-    }, 1000); // Check every 5 seconds
+    }, 10000); // Check every 5 seconds
   } catch (error) {
     console.error('Error fetching notifications:', error);
   }

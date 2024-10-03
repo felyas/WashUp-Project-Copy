@@ -29,6 +29,9 @@ if ($_SESSION['role'] !== 'delivery') {
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/palette.css">
 
+  <!-- Include Chart.js from CDN -->
+  <script src="../node_modules/chart.js/dist/chart.umd.js" defer></script>
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -36,7 +39,7 @@ if ($_SESSION['role'] !== 'delivery') {
 
 </head>
 
-<body class="bg-seasalt min-h-screen font-poppins">
+<body class="bg-white min-h-screen font-poppins">
   <div class="flex min-h-screen">
 
     <!-- Main Content -->
@@ -45,26 +48,43 @@ if ($_SESSION['role'] !== 'delivery') {
       <header class="bg-federal shadow p-4">
         <div class="flex justify-between items-center">
           <!-- Hamburger Menu -->
-          <div id="logo" class="lg:hidden text-seasalt">
+          <div id="logo" class="lg:hidden text-white">
             <img class="w-10 h-8" src="./img/logo-white.png" alt="LOGO">
           </div>
 
-          <h1 class="text-2xl font-bold text-seasalt hidden lg:block">Delivery Dashboard</h1>
+          <h1 class="text-2xl font-bold text-white hidden lg:block">Delivery Dashboard</h1>
           <!--Notifications-->
           <div class="flex items-center justify-between lg:space-x-4 text-sm">
-            <p class="js-current-time text-seasalt"></p>
+            <p class="js-current-time text-white"></p>
             <div class="flex items-center justify-between">
               <div class="relative">
-                <button class="js-notification-button flex items-center justify-center px-4 py-2">
-                  <img src="./img/icons/notification-bell.svg" alt="notif" class="w-5 h-5">
+                <button class="js-notification-button flex items-center justify-center px-4 py-2 relative">
+                  <!-- Notification Bell Icon -->
+                  <img src="./img/icons/notification-bell.svg" alt="Notification Bell" class="w-5 h-5">
+
+                  <!-- Red Dot for New Notifications (hidden by default) -->
+                  <span class="js-notification-dot hidden absolute top-[5px] right-[14px] h-3 w-3 bg-red-600 rounded-full"></span>
                 </button>
-                <div class="js-notification hidden h-auto w-auto bg-seasalt z-10 absolute right-0 text-nowrap p-4 rounded-lg">
-                  <h1 class="text-center mb-4 text-lg font-bold">Notifications</h1>
-                  <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
-                  <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
-                  <p class="w-full mb-2">New booking request! <a href="./admin-dashboard.php" class="underline text-federal font-semibold">Check</a></p>
+
+                <!-- Notification Dropdown -->
+                <div class="js-notification hidden h-auto w-80 z-10000 absolute top-[52px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
+                  <div class="w-full p-4 flex items-center justify-between">
+                    <h1 class="text- text-lg font-semibold">Notification</h1>
+                    <p class="js-total-notifications"><!-- Dynamic Total Notification  -->0</p>
+                  </div>
+                  <hr class="w-full py-0">
+
+                  <div class="js-notification-messages p-4 w-full text-wrap">
+                    <!-- Dynamic Real-time Notification -->
+
+                    <!-- <div class="p-2 flex items-center justify-between bg-gray-200 mb-1">
+                      <p class="w-auto">Booking Status with no.34 was updated to "for delivery"</p>
+                      <button class="w-12 p-0 border-none font-bold">&#10005;</button>
+                    </div> -->
+                  </div>
                 </div>
               </div>
+
               <form action="./backend/handle_logout.php" method="POST" class="p-0 m-0">
                 <button type="submit" class="flex items-center justify-center px-4 py-2">
                   <img src="./img/icons/logout.svg" alt="Logout Icon" class="w-5 h-5">
@@ -76,196 +96,256 @@ if ($_SESSION['role'] !== 'delivery') {
       </header>
 
       <!-- Main Content Area -->
-      <main class="flex-1 p-6">
+      <main class="flex-1 p-6 relative">
+
+        <div id="toaster" class="fixed top-4 right-4 hidden text-white shadow-lg z-50">
+          <!-- Dynamic Toaster Content --> 
+        </div>
+
+
+        <div class="w-full flex flex-col justify-center mt-2 mb-4 p-4 border border-solid border-gray-200 rounded-lg ">
+          <h1 class="text-lg lg:text-md font-semibold">
+            Welcome back, <span><?php echo $_SESSION['first_name']; ?></span>
+          </h1>
+          <p class="text-gray-400 text-sm mt-2 lg:mt-1">
+            Manage your delivery tasks efficiently and stay on top of every booking, from pickup to drop-off.
+          </p>
+        </div>
+
         <!-- Grid for Booking Summaries -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
+        <div class="grid grid-cols-2 sm:grid-cols-3 gap-x-6 lg:gap-x-12 gap-y-4 mb-4">
           <!-- Pending Booking Card -->
-          <div class="lg:h-36 w-full rounded-lg bg-white shadow-lg">
-            <div class="bg-celestial rounded-t-lg h-12 p-2 flex items-center">
-              <img class="h-6 w-6 mr-2" src="./img/icons/pending.svg" alt="">
-              <p class="text-md lg:text-lg font-semibold text-seasalt flex items-center">For Pick-up</p>
-            </div>
-            <div class="p-4 flex items-center justify-center w-full pt-8">
-              <div class="flex items-center justify-center text-3xl font-bold">1</div>
+          <div class="h-36 rounded-lg bg-white shadow-md border border-solid border-gray-200 flex justify-center items-center">
+            <div class="grid grid-cols-2 lg:space-x-2">
+              <div class="flex items-center justify-center">
+                <div class="rounded-[50%] bg-sky-600 p-4 flex items-center justify-center">
+                  <img class="h-6 w-6" src="./img/icons/pending.svg" alt="">
+                </div>
+              </div>
+              <div class="flex flex-col items-center justify-center">
+                <p class="text-lg md:text-3xl font-semibold" id="js-pending-count">1<!-- total count --></p>
+                <p class="text-sm md:text-md text-wrap">Pending Booking</p>
+              </div>
             </div>
           </div>
 
           <!-- On Pick-up Booking Card -->
-          <div class="h-36 w-full rounded-lg bg-white shadow-lg">
-            <div class="bg-sunrise rounded-t-lg h-12 p-2 flex items-center">
-              <img class="h-6 w-6 mr-2" src="./img/icons/pickup.svg" alt="">
-              <p class="text-md lg:text-lg font-semibold text-seasalt">For Delivery</p>
-            </div>
-            <div class="p-4 flex items-center justify-center w-full pt-8">
-              <div class="flex items-center justify-center text-3xl font-bold">0</div>
+          <div class="h-36 rounded-lg bg-white shadow-md flex justify-center items-center border border-solid border-gray-200">
+            <div class="grid grid-cols-2 lg:space-x-2">
+              <div class="flex items-center justify-center">
+                <div class="rounded-[50%] bg-celestial p-4 flex items-center justify-center">
+                  <div class="relative">
+                    <img class="h-6 w-6" src="./img/icons/hand-holding-solid.svg" alt="">
+                    <img src="./img/icons/box.svg" class="absolute top-0 right-[5px] h-3 w-3" alt="">
+                  </div>
+                </div>
+              </div>
+              <div class="flex flex-col items-center justify-center">
+                <p class="text-lg md:text-3xl font-semibold" id="js-for-pickup">1<!-- total count --></p>
+                <p class="text-sm md:text-md text-wrap">For pickup</p>
+              </div>
             </div>
           </div>
 
           <!-- On Delivery Booking Card -->
-          <div class="h-36 w-full rounded-lg bg-white shadow-lg col-span-2 sm:col-span-1">
-            <div class="bg-green-700 rounded-t-lg h-12 p-2 flex items-center">
-              <img class="h-6 w-6 mr-2" src="./img/icons/delivery.svg" alt="">
-              <p class="text-md lg:text-lg font-semibold text-seasalt">Total Booking</p>
-            </div>
-            <div class="p-4 flex items-center justify-center w-full pt-8">
-              <div class="flex items-center justify-center text-3xl font-bold">4</div>
+          <div class="h-36 rounded-lg bg-white shadow-md flex justify-center items-center col-span-2 sm:col-span-1 border border-solid border-gray-200">
+            <div class="grid grid-cols-2 lg:space-x-2">
+              <div class="flex items-center justify-center">
+                <div class="rounded-[50%] bg-polynesian p-4 flex items-center justify-center">
+                  <img class="h-6 w-6" src="./img/icons/pickup.svg" alt="">
+                </div>
+              </div>
+              <div class="flex flex-col items-center justify-center">
+                <p class="text-lg md:text-3xl font-semibold" id="js-for-delivery">1<!-- total count --></p>
+                <p class="text-sm md:text-md text-wrap">For Delivery</p>
+              </div>
             </div>
           </div>
         </div>
 
         <!--List-->
-        <div class="h-auto grid grid-cols-1 text-sm">
-          <!-- List of On Pick-up Booking -->
-          <div class="h-auto w-full rounded-sm bg-white shadow-lg">
-            <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack">MANAGE BOOKING</p>
+        <div class="h-auto grid grid-cols-1 lg:grid-cols-4 gap-4 text-sm mb-4">
+          <!-- First div taking 3/4 of the width on large screens -->
+          <div class="col-span-4 lg:col-span-3 h-auto w-full rounded-sm bg-white px-4 py-2 border border-solid border-gray-200 shadow-lg">
+            <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
+              <p class="text-md font-semibold text-ashblack py-2">MANAGE BOOKING</p>
+              <div class="flex justify-between items-center relative">
+                <input id="js-search-bar" type="text" placeholder="Search bookings..." class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
+                <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
+                  <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
+                </button>
+              </div>
             </div>
-            <div class="overflow-x-auto min-h-[14rem]">
-              <table class="text-nowrap w-full text-left text-ashblack">
-                <thead class="bg-celestial">
+            <div class="overflow-x-auto h-auto min-h-72 px-2">
+              <table id="booking-list" class="text-nowrap w-full text-left text-ashblack border-collapse border border-solid border-gray-200">
+                <thead class="bg-gray-200">
                   <tr>
-                    <th class="px-4 py-2 font-medium text-seasalt">#</th>
-                    <th class="px-4 py-2 font-medium text-seasalt">Customer Name</th>
-                    <th class="px-4 py-2 font-medium text-seasalt">Date</th>
-                    <th class="px-4 py-2 font-medium text-seasalt">Pick-up Time</th>
-                    <th class="px-4 py-2 font-medium text-seasalt">Status</th>
-                    <th class="px-4 py-2 font-medium text-seasalt text-center">Action</th>
+                    <th data-column="id" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
+                      ID
+                      <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
+                    </th>
+                    <th data-column="fname" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
+                      FIRST NAME
+                      <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
+                    </th>
+                    <th data-column="lname" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
+                      LAST NAME
+                      <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
+                    </th>
+                    <th data-column="phone_number" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
+                      PHONE NUMBER
+                      <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
+                    </th>
+                    <th data-column="address" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
+                      ADDRESS
+                      <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
+                    </th>
+                    <!-- Adding the status dropdown filter -->
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">
+                      <select id="status-filter" class="ml-2 px-2 py-1 text-sm border border-gray-300 rounded">
+                        <option value="">Status: All</option>
+                        <option value="for pick-up">Pickup</option>
+                        <option value="for delivery">Delivery</option>
+                      </select>
+                    </th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 text-center">ACTION</th>
                   </tr>
                 </thead>
-                <tbody>
-                  <tr class="">
-                    <td class="px-4 py-2">1</td>
-                    <td class="px-4 py-2">John Doe</td>
-                    <td class="px-4 py-2">2024-08-16</td>
-                    <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Pick-up</td>
-                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                      <button id="openEditBookingModal" class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/check.svg" alt="edit">
-                      </button>
-                      <button id="openViewBookingModal" class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
-                    </td>
-                  </tr>
-                  <tr class="">
-                    <td class="px-4 py-2">1</td>
-                    <td class="px-4 py-2">John Doe</td>
-                    <td class="px-4 py-2">2024-08-16</td>
-                    <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Delivery</td>
-                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                      <button id="openEditBookingModal" class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/check.svg" alt="edit">
-                      </button>
-                      <button id="openViewBookingModal" class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
-                    </td>
-                  </tr>
-                  <tr class="">
-                    <td class="px-4 py-2">1</td>
-                    <td class="px-4 py-2">John Doe</td>
-                    <td class="px-4 py-2">2024-08-16</td>
-                    <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Delivery</td>
-                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                      <button id="openEditBookingModal" class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/check.svg" alt="edit">
-                      </button>
-                      <button id="openViewBookingModal" class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
-                    </td>
-                  </tr>
-                  <tr class="">
-                    <td class="px-4 py-2">1</td>
-                    <td class="px-4 py-2">John Doe</td>
-                    <td class="px-4 py-2">2024-08-16</td>
-                    <td class="px-4 py-2">10:00 AM</td>
-                    <td class="px-4 py-2 text-yellow-600 font-semibold">Delivery</td>
-                    <td class="min-w-[168px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                      <button id="openEditBookingModal" class="px-4 py-2 bg-green-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/check.svg" alt="edit">
-                      </button>
-                      <button id="openViewBookingModal" class="px-4 py-2 bg-blue-700 rounded-md flex-shrink-0">
-                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                      </button>
+                <tbody id="users-booking-list">
+                  <!-- Dynamic List -->
+                  <tr>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">1</td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Felix</td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Bragais</td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">09691026692</td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">2024-10-2</td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Standard 2-days</td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle font-semibold">for delivery</td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle min-w-[100px]">
+                      <div class="flex justify-center space-x-2">
+                        <a href="#" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
+                          <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+                        </a>
+                        <a href="#" class="px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition deliveryLink">
+                          <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
+                        </a>
+                        <a href="#" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition pickupLink">
+                          <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
+                        </a>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
               </table>
             </div>
+
+            <!-- Pagination Container -->
+            <div id="pagination-container" class="w-full py-2 justify-center items-center flex text-sm">
+            </div>
+          </div>
+
+          <!-- Second div taking 1/4 of the width on large screens -->
+          <div class="col-span-4 lg:col-span-1 w-auto h-auto p-4 bg-white border border-solid border-gray-200 shadow-lg">
           </div>
         </div>
 
-        <!--Prev & Next button-->
-        <div class="flex items-center justify-center mt-4 w-full space-x-2">
-          <button class="py-2 px-4 bg-federal rounded-lg text-seasalt">
-            Prev
-          </button>
-          <button class="py-2 px-4 bg-federal rounded-lg text-seasalt">
-            Next
-          </button>
-        </div>
       </main>
-
-
     </div>
   </div>
 
 
+  <!-- Warning Modal Overlay -->
+  <div id="warning-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+    <div class="bg-white px-4 py-4 rounded-md shadow-lg w-full max-w-sm flex items-center flex-col">
+      <div class="grid grid-cols-4 mb-4">
+        <!-- First child taking 1/4 of the parent's width -->
+        <div class="col-span-1 flex items-center">
+          <div class="flex justify-center items-center col-span-1 bg-[#f9d6a0] rounded-full w-16 h-16">
+            <img class="w-8 h-8" src="./img/icons/triangle-warning.svg" alt="">
+          </div>
+        </div>
+        <!-- Second child taking 3/4 of the parent's width -->
+        <div class="col-span-3">
+          <h1 id="modal-title" class="text-lg font-bold mb-2">Warning!</h1>
+          <p id="modal-message" class="text-md text-gray-500 text-wrap">Do you really want to perform this action?</p>
+        </div>
+      </div>
 
-
-  <!-- Modal (hidden by default) -->
-
-  <!-- Modal for View -->
-  <div id="toViewBookingModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
-    <div class="bg-white rounded-sm shadow-lg p-6 w-full max-w-lg">
-      <div class="flex justify-between items-center border-b pb-2">
-        <!-- Put the user's Full Name here at the top -->
-        <h2 class="text-lg font-semibold">View User's Information</h2>
-        <button id="closeViewBookingModal" class="text-gray-500 hover:text-gray-800">
-          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
+      <div class="w-full flex justify-end items-center space-x-2 text-sm font-semibold">
+        <button id="confirm-modal" class="bg-[#e69500] border-2 border-solid border-[#e69500] text-white hover:bg-[#cc8400] hover:border-[#cc8400] py-2 px-4 rounded transition">
+          Yes
+        </button>
+        <button id="close-modal" class="bg-white border-2 border-solid border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white py-2 px-4 rounded transition">
+          No
         </button>
       </div>
-      <form id="editForm" class="mt-4">
-        <div class="grid grid-cols-2 gap-2">
-          <div class="mb-4">
-            <label for="fname" class="block text-sm font-medium text-gray-700">First Name</label>
-            <input type="text" id="fname" name="fname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="First Name: " disabled>
-          </div>
-          <div class="mb-4">
-            <label for="lname" class="block text-sm font-medium text-gray-700">Last Name</label>
-            <input type="text" id="lname" name="lname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Last Name: " disabled>
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div class="mb-4">
-            <label for="pickupTime" class="block text-sm font-medium text-gray-700">Pick-up Time</label>
-            <input type="text" id="pickupTime" name="pickupTime" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Pick-up Time: " disabled>
-          </div>
-          <div class=" mb-4">
-            <label for="pickupDate" class="block text-sm font-medium text-gray-700">Pick-up Date</label>
-            <input type="text" id="pickupDate" name="pickupDate" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Pick-up Date: " disabled>
-          </div>
-        </div>
-        <div class=" mb-4">
-          <label for="address" class="block text-sm font-medium text-gray-700">Address</label>
-          <input type="text" id="address" name="address" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Address: " disabled>
-        </div>
-        <div class=" mb-4">
-          <label for="shipping_method" class="block text-sm font-medium text-gray-700">Shipping Method</label>
-          <input type="text" id="shipping_method" name="shipping_method" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Shipping Method: " disabled>
-        </div>
+    </div>
+  </div>
 
+  <!-- Modal for View -->
+  <div class="toViewBookingModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
+    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2">
+      <div class="w-full h-auto py-2 flex flex-col items-center text-nowrap text-gray-500">
+        <h4 class="text-lg font-bold">WASHUP LAUNDRY</h4>
+        <p class="text-sm">Blk 1 lot 2 morales subdivision, Calamba Laguna</p>
+        <p class="text-sm">Phone: +63 930 520 5088</p>
+      </div>
 
-        <div class=" flex justify-end">
-          <button type="button" id="closeViewBookingModal2" class="px-4 py-2 bg-gray-500 text-seasalt rounded-md mr-2">Close</button>
+      <div class="grid grid-cols-2 gap-2 mb-4 text-gray-500">
+        <div class="flex justify-start">
+          <p class="text-sm">Date: </p>
         </div>
-      </form>
+        <div class="flex justify-end">
+          <p id="created_at" class="text-sm"><!-- Dynamic Date --></p>
+        </div>
+      </div>
+
+      <div class="w-full text-ashblack text-md font-semibold mb-2">
+        <p class="justify-start">Booking Summary</p>
+      </div>
+
+      <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
+        <div class="grid grid-cols-2 gap-2">
+          <p>ID:</p>
+          <p id="display-id" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Customer Name:</p>
+          <p id="display-full-name" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Phone Number:</p>
+          <p id="display-phone-number" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Address:</p>
+          <p id="display-address" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Pick-up Date:</p>
+          <p id="display-pickup-date" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Pick-up Time:</p>
+          <p id="display-pickup-time" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Service:</p>
+          <p id="display-service-selection" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Service Type:</p>
+          <p id="display-service-type" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Suggestions:</p>
+          <p id="display-suggestions" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+      </div>
+
+      <div class="flex justify-center items-center w-full">
+        <button type="button" class="closeViewBookingModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md mr-2">Close</button>
+      </div>
     </div>
   </div>
 

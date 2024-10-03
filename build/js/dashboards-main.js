@@ -111,5 +111,63 @@ function handleDropdown() {
   });
 }
 
+// Function to call toaster
+function showToaster(message, icon, color600, color700) {
+  const toaster = document.getElementById('toaster');
+
+  // Set the styles directly using inline styles
+  toaster.innerHTML = `
+    <div style="background-color: ${color600}; border: 2px solid ${color700};" class="h-14 py-2 px-4 rounded flex items-center justify-center">
+      <div class="flex items-center justify-center space-x-2">
+        <div id="toaster-icon" style="background-color: ${color700};" class="p-2 h-8 w-8 rounded-full flex items-center justify-center">
+          <img class="w-5 h-5" src="./img/icons/${icon}.svg" alt="Check icon">
+        </div>
+        <p id="toaster-msg" class="text-sm font-semibold">${message}</p>
+      </div>
+    </div>
+  `;
+
+  toaster.classList.remove('hidden'); // Show toaster
+
+  // Hide toaster after 3 seconds
+  setTimeout(() => {
+    toaster.classList.add('hidden');
+  }, 3000);
+}
+
+class Modal {
+  constructor(modalId, confirmBtnId, closeBtnId) {
+    this.modal = document.getElementById(modalId);
+    this.confirmBtn = document.getElementById(confirmBtnId);
+    this.closeBtn = document.getElementById(closeBtnId);
+    this.currentAction = null;
+    this.bookingId = null;
+
+    this.init();
+  }
+
+  init() {
+    this.closeBtn.addEventListener('click', () => this.hide());
+    this.confirmBtn.addEventListener('click', () => this.confirm());
+  }
+
+  show(callback, id) {
+    this.currentAction = callback;
+    this.bookingId = id;
+    this.modal.classList.remove('hidden');
+  }
+
+  hide() {
+    this.modal.classList.add('hidden');
+  }
+
+  confirm() {
+    if (this.currentAction && this.bookingId) {
+      this.currentAction(this.bookingId);
+      this.hide();
+    }
+  }
+}
+
 // Export functions without calling them
-export { handleSidebar, handleDisplayCurrentTime, handleNotification, handleTdColor, openModal, handleDropdown };
+export { handleSidebar, handleDisplayCurrentTime, handleNotification, handleTdColor, openModal, handleDropdown, showToaster, Modal };

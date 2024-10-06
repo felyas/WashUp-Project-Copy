@@ -58,13 +58,35 @@ if (isset($_GET['readAll'])) {
   $output = '';
   if ($users) {
     foreach ($users as $row) {
+
+      switch ($row['role']) {
+        case 'user':
+          $roleClasses = 'bg-yellow-400 text-yellow-700'; //oks
+          break;
+        case 'admin':
+          $roleClasses = 'bg-[#A8C9D9] text-[#316988]'; // oks
+          break;
+        case 'delivery':
+          $roleClasses = 'bg-[#A1B8D4] text-[#0E4483]';
+          break;
+        default:
+          $roleClasses = 'bg-gray-400 text-gray-700';
+          break;
+      }
+
       $output .= '
         <tr class="border-b border-gray-200">
           <td class="px-4 py-2">' . $row['id'] . '</td>
           <td class="px-4 py-2">' . $row['first_name'] . '</td>
           <td class="px-4 py-2">' . $row['last_name'] . '</td>
           <td class="px-4 py-2">' . $row['email'] . '</td>
-          <td class="px-4 py-2">' . $row['role'] . '</td>
+          
+          <td class="px-4 py-2">
+            <div class="w-auto py-1 px-2 ' . $roleClasses . ' font-bold rounded-lg text-center">
+              ' . strtoupper($row['role']) . '
+            </div>
+          </td>
+
           <td class="min-w-[100px] h-auto flex items-center justify-center space-x-2 flex-grow">
             <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
               <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">

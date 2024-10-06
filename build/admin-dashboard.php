@@ -29,9 +29,9 @@ if ($_SESSION['role'] !== 'admin') {
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/palette.css">
 
-  <!-- SweetAlert CDN -->
-  <link rel="stylesheet" href="../node_modules/sweetalert2/dist/sweetalert2.min.css">
-  <script src="../node_modules/sweetalert2/dist/sweetalert2.min.js"></script>
+  <!-- FullCalendar CDN -->
+  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+
 
   <!-- Include Chart.js from CDN -->
   <script src="../node_modules/chart.js/dist/chart.umd.js" defer></script>
@@ -167,26 +167,26 @@ if ($_SESSION['role'] !== 'admin') {
           </p>
         </div>
         <!-- Grid for Booking Summaries -->
-        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-4">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
           <!-- Pending Booking Card -->
           <div class="h-36 rounded-lg bg-white shadow-md border border-solid border-gray-200 flex justify-center items-center">
-            <div class="grid grid-cols-2 lg:space-x-2">
+            <div class="grid grid-cols-2 lg:space-x-4">
               <div class="flex items-center justify-center">
                 <div class="rounded-[50%] bg-sky-600 p-4 flex items-center justify-center">
                   <img class="h-6 w-6" src="./img/icons/pending.svg" alt="">
 
                 </div>
               </div>
-              <div class="flex flex-col items-center justify-center">
+              <div class="flex flex-col items-center justify-center w-16">
                 <p class="text-lg md:text-3xl font-semibold" id="js-pending-count"><!-- total count --></p>
-                <p class="text-sm md:text-md text-wrap">Pending Booking</p>
+                <p class="text-sm md:text-md text-wrap px-2">PENDING</p>
               </div>
             </div>
           </div>
 
           <!-- For Pickup Booking Card -->
           <div class="h-36 rounded-lg bg-white shadow-md border border-solid border-gray-200 flex justify-center items-center">
-            <div class="grid grid-cols-2 lg:space-x-2">
+            <div class="grid grid-cols-2 lg:space-x-4">
               <div class="flex items-center justify-center">
                 <div class="rounded-[50%] bg-celestial p-4 flex items-center justify-center">
                   <div class="relative">
@@ -195,80 +195,50 @@ if ($_SESSION['role'] !== 'admin') {
                   </div>
                 </div>
               </div>
-              <div class="flex flex-col items-center justify-center">
+              <div class="flex flex-col items-center justify-center w-16">
                 <p class="text-lg md:text-3xl font-semibold" id="js-for-pickup-count"><!-- total count --></p>
-                <p class="text-sm md:text-md text-wrap">For Pickup</p>
+                <p class="text-sm md:text-md text-wrap px-2">PICKUP</p>
               </div>
             </div>
           </div>
 
           <!-- For Delivery Booking Card -->
           <div class="h-36 rounded-lg bg-white shadow-md border border-solid border-gray-200 flex justify-center items-center">
-            <div class="grid grid-cols-2 lg:space-x-2">
+            <div class="grid grid-cols-2 lg:space-x-4">
               <div class="flex items-center justify-center">
                 <div class="rounded-[50%] bg-polynesian p-4 flex items-center justify-center">
                   <img class="h-6 w-6" src="./img/icons/pickup.svg" alt="">
                 </div>
               </div>
-              <div class="flex flex-col items-center justify-center">
+              <div class="flex flex-col items-center justify-center w-16">
                 <p class="text-lg md:text-3xl font-semibold" id="js-for-delivery-count"><!-- total count --></p>
-                <p class="text-sm md:text-md text-wrap">For Delivery</p>
+                <p class="text-sm md:text-md text-wrap">DELIVERY</p>
               </div>
             </div>
           </div>
 
           <!-- Complete Booking Card -->
           <div class="h-36 rounded-lg bg-white shadow-md border border-solid border-gray-200 flex justify-center items-center">
-            <div class="grid grid-cols-2 lg:space-x-2">
+            <div class="grid grid-cols-2 lg:space-x-4">
               <div class="flex items-center justify-center">
                 <div class="rounded-[50%] bg-green-700 p-4 flex items-center justify-center">
                   <img class="h-6 w-6" src="./img/icons/check.svg" alt="">
                 </div>
               </div>
-              <div class="flex flex-col items-center justify-center">
+              <div class="flex flex-col items-center justify-center w-16">
                 <p class="text-lg md:text-3xl font-semibold" id="js-complete-count"><!-- total count -->24</p>
-                <p class="text-sm md:text-md text-wrap">Complete Booking</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Total Items Booking Card -->
-          <div class="h-36 rounded-lg bg-white shadow-md border border-solid border-gray-200 flex justify-center items-center">
-            <div class="grid grid-cols-2 lg:space-x-2">
-              <div class="flex items-center justify-center">
-                <div class="rounded-[50%] bg-violet-700 p-4 flex items-center justify-center">
-                  <img class="h-6 w-6" src="./img/icons/jug-detergent.svg" alt="">
-                </div>
-              </div>
-              <div class="flex flex-col items-center justify-center">
-                <p class="text-lg md:text-3xl font-semibold" id="js-total-items"><!-- total count -->24</p>
-                <p class="text-sm md:text-md text-wrap">Total Items</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Total User Booking Card -->
-          <div class="h-36 rounded-lg bg-white shadow-md border border-solid border-gray-200 flex justify-center items-center col-span-2 sm:col-span-1">
-            <div class="grid grid-cols-2 lg:space-x-2">
-              <div class="flex items-center justify-center">
-                <div class="rounded-[50%] bg-federal p-4 flex items-center justify-center">
-                  <img class="h-6 w-6" src="./img/icons/users-total.svg" alt="">
-                </div>
-              </div>
-              <div class="flex flex-col items-center justify-center">
-                <p class="text-lg md:text-3xl font-semibold" id="js-users-count"><!-- total count --></p>
-                <p class="text-sm md:text-md text-wrap"> Total Users</p>
+                <p class="text-sm md:text-md text-wrap">COMPLETE</p>
               </div>
             </div>
           </div>
         </div>
 
         <!-- Grid for Chart -->
-        <div class="w-full h-auto grid grid-cols-1 gap-4 mb-4 text-sm sm:grid-cols-2">
-          <!-- Total Booking This Month Line Chart -->
-          <div class="w-full bg-white shadow-lg border border-solid border-gray-200 rounded-sm">
-            <div class="p-2 border-solid border-b border-ashblack">
-              <p class="text-md font-semibold text-ashblack">TOTAL BOOKING THIS MONTH</p>
+        <div class="w-full h-auto grid grid-cols-1 gap-4 mb-4 text-sm md:grid-cols-2 lg:grid-cols-4">
+          <!-- Total Booking This Month Line Chart (3/4 width on large screens, 1/2 on medium, full width on small screens) -->
+          <div class="w-full bg-white shadow-lg border border-solid border-gray-200 rounded-sm lg:col-span-3 md:col-span-1">
+            <div class="p-2 bg-celestial text-white">
+              <p class="text-md font-semibold">TOTAL BOOKING THIS MONTH</p>
             </div>
             <div class="p-4">
               <!-- Set height for the canvas to control container size -->
@@ -276,10 +246,10 @@ if ($_SESSION['role'] !== 'admin') {
             </div>
           </div>
 
-          <!-- Total User Doughnut Chart -->
-          <div class="w-full bg-white shadow-lg border border-solid border-gray-200 rounded-sm">
-            <div class="p-2 border-solid border-b border-ashblack">
-              <p class="text-md font-semibold text-ashblack">TOTAL USER</p>
+          <!-- Total User Doughnut Chart (1/4 width on large screens, 1/2 on medium, full width on small screens) -->
+          <div class="w-full bg-white shadow-lg border border-solid border-gray-200 rounded-sm lg:col-span-1 md:col-span-1">
+            <div class="p-2 bg-polynesian text-white">
+              <p class="text-md font-semibold">TOTAL USER</p>
             </div>
             <div class="p-4 flex justify-center">
               <canvas id="userPerMonthChart" style="max-width: 100%; max-height: 250px; width: 100%; height: auto;"></canvas>
@@ -288,100 +258,67 @@ if ($_SESSION['role'] !== 'admin') {
         </div>
 
 
+
+
         <!-- List of Pending Booking -->
-        <div class="w-full grid grid-cols-1 text-sm">
-          <div class="h-auto w-full rounded-sm bg-white shadow-lg border border-solid border-gray-200">
-            <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack py-2">MANAGE BOOKING</p>
-              <div class="flex justify-between items-center relative">
-                <input id="search-input" type="text" placeholder="Search bookings..." class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
-                <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
-                  <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
-                </button>
+        <div class="w-full h-auto grid grid-cols-1 lg:grid-cols-2 gap-4 text-sm">
+          <!-- First Div (Pending Bookings) -->
+          <div class="h-auto w-full bg-white ">
+            <div class="shadow-lg border border-solid border-gray-200 rounded-sm">
+              <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
+                <p class="text-md font-semibold text-ashblack py-2">PENDING BOOKINGS</p>
+                <div class="flex justify-between items-center relative">
+                  <input id="search-input" type="text" placeholder="Search bookings..." class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
+                  <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
+                    <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
+                  </button>
+                </div>
+              </div>
+              <div class="overflow-x-auto h-auto min-h-72 px-2">
+                <table class="text-nowrap w-full text-left text-ashblack border-collapse border border-solid border-gray-200">
+                  <thead class="bg-gray-200">
+                    <tr>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ID</th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">CUSTOMER NAME</th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ADDRESS</th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 text-center">ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody id="js-pending-tbody">
+                    <!-- Dynamic Data -->
+                  </tbody>
+                </table>
               </div>
             </div>
-            <div class="overflow-x-auto h-auto min-h-72 px-2">
-              <table class="text-nowrap w-full text-left text-ashblack border-collapse">
-                <thead class="bg-gray-200">
-                  <tr>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ID</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">CUSTOMER NAME</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">PHONE NUMBER</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ADDRESS</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">PICK-UP DATE</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">PICK-UP TIME</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 text-center">ACTION</th>
-                  </tr>
-                </thead>
-                <tbody id="js-pending-tbody">
-                  <!-- Dynamic Data -->
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <div id="pagination-container" class="bg-white w-full p-4 mb-4 justify-center items-center flex text-sm">
-          <!-- Pagination links will be populated here -->
-        </div>
-
-
-        <!-- Grid for On Pick-up and On Delivery Booking List -->
-        <div class="h-auto grid grid-cols-1 lg:grid-cols-2 gap-4 text-sm">
-          <!-- List of On Pick-up Booking -->
-          <div class="h-auto w-full rounded-sm bg-white shadow-lg border border-solid border-gray-200">
-            <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack">LIST OF ON PICK-UP BOOKING</p>
-            </div>
-            <div class="overflow-x-auto h-60 min-h-60 px-2">
-              <table class="text-nowrap w-full text-left text-ashblack border-collapse">
-                <thead class="bg-gray-200">
-                  <tr>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">#</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">CUSTOMER NAME</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">PHONE NUMBER</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">PICK-UP DATE</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">PICK-UP TIME</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 text-center">ACTION</th>
-                  </tr>
-                </thead>
-                <tbody id="js-pickup-tbody" class="text-sm">
-                </tbody>
-              </table>
+            <div id="pagination-container" class="bg-white w-full p-4 mb-4 justify-center items-center flex text-sm">
+              <!-- Pagination links will be populated here -->
             </div>
           </div>
 
-          <!-- List of On Delivery Booking -->
-          <div class="h-auto w-full rounded-sm bg-white shadow-lg border border-solid border-gray-200">
-            <div class="h-12 p-2 rounded-t-sm flex items-center border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack">LIST OF ON-DELIVERY BOOKING</p>
-            </div>
-            <div class="overflow-x-auto h-60 min-h-60 px-2">
-              <table class="text-nowrap w-full text-left text-ashblack border-collapse">
-                <thead class="bg-gray-200">
-                  <tr>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">#</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">CUSTOMER NAME</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">PHONE NUMBER</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ADDRESS</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 text-center">ACTION</th>
-                  </tr>
-                </thead>
-                <tbody id="js-delivery-tbody" class="text-sm">
-                </tbody>
-              </table>
+          <!-- Second Div (Calendar Section) -->
+          <div class="h-auto w-full bg-white rounded-sm shadow-lg border border-solid border-gray-200">
+            <div id="calendar" class="p-4">
+              <p class="text-md font-semibold text-ashblack py-2">Calendar Section</p>
+              <!-- Calendar goes here -->
             </div>
           </div>
         </div>
+
+
+
+
       </main>
 
     </div>
   </div>
 
-
+  <?php
+  include('./modal.php');
+  ?>
 
 
   <!-- Modal for View -->
-  <div class="toViewBookingModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
+  <div class="toViewBookingModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20 p-2">
     <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2">
       <div class="w-full h-auto py-2 flex flex-col items-center text-nowrap text-gray-500">
         <h4 class="text-lg font-bold">WASHUP LAUNDRY</h4>

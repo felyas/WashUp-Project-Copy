@@ -189,9 +189,9 @@ document.addEventListener("DOMContentLoaded", () => {
       fetchBookingCounts();
     } else {
       // Example: Trigger the toaster with hex values
-      const green600 = '#d95f5f'; // Hex value for green-600
+      const red600 = '#d95f5f'; // Hex value for red-600
       const red700 = '#c93c3c'; // Hex value for green-700
-      showToaster('Something went wrong !', 'exclamation-error', green600, red700);
+      showToaster('Something went wrong !', 'exclamation-error', red600, red700);
     }
   }
 

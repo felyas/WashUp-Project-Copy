@@ -1,4 +1,4 @@
-import { handleSidebar, handleDisplayCurrentTime, handleTdColor, openModal, handleDropdown } from "./dashboards-main.js";
+import { handleSidebar, handleDisplayCurrentTime, handleTdColor, openModal, handleDropdown, showToaster, Modal } from "./dashboards-main.js";
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -41,33 +41,6 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initial Fetch
   fetchAllPendingBooking();
 
-
-
-
-  const pickupTbody = document.getElementById('js-pickup-tbody');
-  // Fetch All For Pick-up Booking Ajax Request
-  const fetchAllForPickupBooking = async () => {
-    const data = await fetch('./backend/admin_action.php?readPickup=1', {
-      method: 'GET',
-    });
-    const response = await data.text();
-    pickupTbody.innerHTML = response;
-
-  }
-  fetchAllForPickupBooking();
-
-  const deliveryTbody = document.getElementById('js-delivery-tbody');
-  // Fetch All Delivery Booking Ajax Request
-  const fetchAllDeliveryBooking = async () => {
-    const data = await fetch('./backend/admin_action.php?readDelivery=1', {
-      method: 'GET',
-    });
-    const response = await data.text();
-    deliveryTbody.innerHTML = response;
-  }
-  fetchAllDeliveryBooking();
-
-
   const tbodyList = document.querySelectorAll('tbody');
   tbodyList.forEach(tbody => {
     // View Booking Ajax Request
@@ -87,7 +60,8 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         let targetElement = e.target.matches('a.admitLink') ? e.target : e.target.closest('a.admitLink');
         let id = targetElement.getAttribute('id');
-        admitBooking(id);
+        const admitWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
+        admitWarningModal.show(admitBooking, id);
       }
 
       // Target the deniedLink
@@ -95,7 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         let targetElement = e.target.matches('a.deniedLink') ? e.target : e.target.closest('a.deniedLink');
         let id = targetElement.getAttribute('id');
-        deniedBooking(id);
+        const deniedWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
+        deniedWarningModal.show(deniedBooking, id);
       }
     });
   });
@@ -126,17 +101,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     const response = await data.text();
     if (response.includes('success')) {
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Booking admited successfully!',
-        buttonsStyling: false, // Disable default button styling
-        customClass: {
-          confirmButton: 'bg-green-700 hover:bg-green-800 text-white font-semibold py-3 px-5 rounded-lg'
-        }
-      }).then(() => {
-        window.location.href = './admin-dashboard.php';
-      });
+      const green600 = '#047857';
+      const green700 = '#065f46';
+      showToaster('Booking admitted successfully !', 'check', green600, green700);
+      fetchAllPendingBooking();
+      fetchCount();
     }
   }
 
@@ -148,17 +117,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     const response = await data.text();
     if (response.includes('success')) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Denied',
-        text: 'Booking denied successfully!',
-        buttonsStyling: false, // Disable default button styling
-        customClass: {
-          confirmButton: 'bg-gray-700 hover:bg-gray-800 text-white font-semibold py-3 px-5 rounded-lg'
-        }
-      }).then(() => {
-        window.location.href = './admin-dashboard.php';
-      });
+      const green600 = '#047857';
+      const green700 = '#065f46';
+      showToaster('Booking denied !', 'check', green600, green700);
+      fetchAllPendingBooking();
+      fetchCount();
     }
   }
 
@@ -174,16 +137,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('js-complete-count').innerHTML = response.completeCount;
   }
   fetchCount();
-
-  // Fetch the Total Number of Users for Card Ajax Request
-  const fetchUserCount = async () => {
-    const data = await fetch(`./backend/admin_action.php?count_user_total=1`, {
-      method: 'GET',
-    });
-    const response = await data.json();
-    document.getElementById('js-users-count').innerHTML = response.usersCount;
-  }
-  fetchUserCount();
 
   // Long polling function for fetching new booking requests
   const fetchNewBookings = async () => {
@@ -277,6 +230,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const months = data.map(item => item.month);
     const totalUsers = data.map(item => item.total_users);
 
+    // Get the context for the canvas
+    const ctx = document.getElementById('userPerMonthChart').getContext('2d');
+
     // Create the chart using Chart.js
     const userPerMonthChart = new Chart(ctx, {
       type: 'doughnut',
@@ -285,12 +241,26 @@ document.addEventListener("DOMContentLoaded", () => {
         datasets: [{
           label: 'Total Users Per Month',
           data: totalUsers, // Y-axis data (total users)
-          backgroundColor: 'rgba(54, 162, 235, 0.6)',
-          borderColor: 'rgba(54, 162, 235, 1)',
+          backgroundColor: [
+            'rgba(2, 132, 199, 0.6)',   // #0284c7
+            'rgba(3, 105, 161, 0.6)',   // #0369a1
+            'rgba(14, 68, 131, 0.6)',   // #0E4483
+            'rgba(59, 125, 163, 0.6)',  // #3b7da3
+            'rgba(9, 15, 77, 0.6)',
+          ], // Customize colors for each section
           borderWidth: 1
         }]
       },
       options: {
+        plugins: {
+          legend: {
+            position: 'bottom', // Position the labels horizontally at the bottom
+            labels: {
+              boxWidth: 20, // Control the size of the colored box next to the labels
+              padding: 15,  // Add space between the labels
+            }
+          }
+        },
         scales: {
           y: {
             beginAtZero: true,
@@ -302,6 +272,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   };
+
 
   // Call the function to fetch data and render the chart
   fetchUserPerMonthData();
@@ -328,8 +299,7 @@ document.addEventListener("DOMContentLoaded", () => {
         datasets: [{
           label: 'Total Bookings',
           data: totals,
-          backgroundColor: 'rgba(75, 192, 192, 0.6)',
-          borderColor: 'rgba(75, 192, 192, 1)',
+          backgroundColor: 'rgba(2, 132, 199, 0.6)',
           borderWidth: 1,
         }]
       },
@@ -347,13 +317,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   };
-
-  // Call the function to fetch data and render the chart
   fetchBookingData();
 
-
-
-
+  // Calendar Section
+  
 });
 
 

@@ -28,11 +28,8 @@ if (isset($_GET['readPending'])) {
         <tr class="border-b border-gray-200">
           <td class="px-4 py-2">' . $row['id'] . '</td>
           <td class="px-4 py-2 text-nowrap">' . $row['fname'] . ' ' . $row['lname'] . '</td>
-          <td class="px-4 py-2 text-nowrap">' . $row['phone_number'] . '</td>
           <td class="px-4 py-2 text-nowrap">' . $row['address'] . '</td>
-          <td class="px-4 py-2 text-nowrap">' . $row['pickup_date'] . '</td>
-          <td class="px-4 py-2 text-nowrap">' . $row['pickup_time'] . '</td>
-          <td class="min-w-[168px] flex items-center justify-center space-x-2 flex-grow">
+          <td class="min-w-[150px] flex items-center justify-center space-x-2 flex-grow">
             <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
               <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
             </a>
@@ -223,4 +220,52 @@ if (isset($_GET['fetchUsersPerMonth'])) {
 if (isset($_GET['fetchBookingData'])) {
   $bookingData = $db->fetchBookingData();
   echo json_encode($bookingData); // Return the JSON-encoded data
+}
+
+// Load all events
+if (isset($_GET['load'])) {
+  $events = $db->loadEvents();
+  echo json_encode($events);
+  exit();
+}
+
+// Add new event
+if (isset($_GET['add'])) {
+  $data = json_decode(file_get_contents("php://input"));
+  
+  $title = $data->title;
+  $start = $data->start;
+  $end = $data->end;
+
+  $eventAdded = $db->addEvent($title, $start, $end);
+  if($eventAdded) {
+    echo $util->showMessage('success', 'Event added successfully!');
+    exit();
+  }
+}
+
+// Update event
+if (isset($_GET['update'])) {
+  $data = json_decode(file_get_contents("php://input"));
+  
+  $id = $data->id;
+  $start = $data->start;
+  $end = $data->end;
+
+  $updatedEvent = $db->updateEvent($id, $start, $end);
+  if($updatedEvent) {
+    echo $util->showMessage('success', 'Event updated successfully!');
+    exit();
+  }
+}
+
+// Delete event
+if (isset($_GET['delete'])) {
+  $id = $_GET['id'];
+  
+  $deletedEvent = $db->deleteEvent($id);
+  if($deletedEvent) {
+    echo $util->showMessage('success', 'Event deleted successfully');
+    exit();
+  }
 }

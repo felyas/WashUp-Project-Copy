@@ -31,13 +31,43 @@ if (isset($_GET['readAll'])) {
   $output = '';
   if ($bookings) {
     foreach ($bookings as $row) {
+      // Determine the color classes based on the status
+      $statusClasses = '';
+      switch ($row['status']) {
+        case 'pending':
+          $statusClasses = 'bg-yellow-400 text-yellow-700'; //oks
+          break;
+        case 'for pick-up':
+          $statusClasses = 'bg-[#A8C9D9] text-[#316988]'; // oks
+          break;
+        case 'on process':
+          $statusClasses = 'bg-[#A1B8D4] text-[#0E4483]';
+          break;
+        case 'for delivery':
+          $statusClasses = 'bg-[#B3CCE6] text-[#0E4483]'; // oks
+          break;
+        case 'isreceive':
+          $statusClasses = 'bg-orange-400 text-orange-700'; // oks
+          break;
+        case 'complete':
+          $statusClasses = 'bg-green-500 text-green-800'; // oks
+          break;
+        default:
+          $statusClasses = 'bg-gray-400 text-gray-700';
+          break;
+      }
+
       $output .= '
         <tr class="border-b border-gray-200">
           <td class="px-4 py-2">' . $row['id'] . '</td>
           <td class="px-4 py-2">' . $row['fname'] . ' ' . $row['lname'] . '</td>
           <td class="px-4 py-2">' . $row['phone_number'] . '</td>
           <td class="px-4 py-2">' . $row['address'] . '</td>
-          <td class="px-4 py-2">' . $row['status'] . '</td>
+          <td class="px-4 py-2">
+            <div class="w-auto py-1 px-2 ' . $statusClasses . ' font-bold rounded-lg text-center">
+              ' . strtoupper($row['status']) . '
+            </div>
+          </td>
           <td class="min-w-[150px] h-auto flex items-center justify-center space-x-2 flex-grow">
             <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
               <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
@@ -105,6 +135,7 @@ if (isset($_GET['readAll'])) {
   }
 }
 
+
 // handle View Booking Summary Ajax Request
 if (isset($_GET['view'])) {
   $id = $_GET['id'];
@@ -117,7 +148,15 @@ if (isset($_GET['done'])) {
   $id = $_GET['id'];
 
   if ($db->done($id)) {
-    echo $util->showMessage('success', 'Booking status updated successfully');
+    echo $util->showMessage('successs', 'Booking status updated successfully');
   }
+}
 
+// Handle Denied Booking Summary Ajax Request
+if (isset($_GET['denied'])) {
+  $id = $_GET['id'];
+
+  if ($db->deniedBooking($id)) {
+    echo $util->showMessage('success', 'Booking denied !');
+  }
 }

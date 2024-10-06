@@ -1,4 +1,4 @@
-import { handleSidebar, handleDisplayCurrentTime, openModal, handleDropdown } from "./dashboards-main.js";
+import { handleSidebar, handleDisplayCurrentTime, openModal, handleDropdown, showToaster, Modal } from "./dashboards-main.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   handleSidebar();
@@ -93,28 +93,8 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       let targetElement = e.target.matches('a.doneProcessLink') ? e.target : e.target.closest('a.doneProcessLink');
       let id = targetElement.getAttribute('id');
-
-      // SweetAlert confirmation pop-up
-      Swal.fire({
-        title: 'Are you sure?',
-        text: "Do you really want to perform this action?",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#3085d6',
-        cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes, proceed!',
-        cancelButtonText: 'No',
-        buttonsStyling: false,
-        customClass: {
-          confirmButton: 'bg-green-700 hover:bg-green-800 text-white font-semibold py-3 px-5 rounded-lg mr-2',
-          cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-5 rounded-lg'
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          // If the user confirms, call the done function
-          done(id);
-        }
-      });
+      const confirmationWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
+      confirmationWarningModal.show(done, id);
     }
 
 
@@ -123,7 +103,8 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       let targetElement = e.target.matches('a.admitLink') ? e.target : e.target.closest('a.admitLink');
       let id = targetElement.getAttribute('id');
-      adminBooking(id);
+      const admitWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
+      admitWarningModal.show(admitBooking, id);
     }
 
     // Target the deniedLink
@@ -131,7 +112,8 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       let targetElement = e.target.matches('a.deniedLink') ? e.target : e.target.closest('a.deniedLink');
       let id = targetElement.getAttribute('id');
-      deniedBooking(id);
+      const admitWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
+      admitWarningModal.show(deniedBooking, id);
     }
 
   })
@@ -160,37 +142,17 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     const response = await data.text();
     if (response.includes('success')) {
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Booking status updated successfully!',
-        buttonsStyling: false,
-        customClass: {
-          confirmButton: 'bg-green-700 hover:bg-green-800 text-white font-semibold py-3 px-5 rounded-lg'
-        }
-      }).then(() => {
-        window.location.href = './booking-details.php';
-      });
+      const green600 = '#047857';
+      const green700 = '#065f46';
+      showToaster('Status updated successfully !', 'check', green600, green700);
+      fetchAll();
     } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Something went wrong!',
-        buttonsStyling: false, // Disable default button styling
-        customClass: {
-          confirmButton: 'bg-gray-700 hover:bg-gray-800 text-white font-semibold py-3 px-5 rounded-lg'
-        }
-      });
+      const red600 = '#dc2626'; // Hex value for green-600
+      const red700 = '#b91c1c'; // Hex value for green-700
+      showToaster('Something went wrong !', 'exclamation-error', red600, red700);
+      fetchAll();
     }
   }
-
-
-
-
-
-
-
-
 
   function notificationCopy() {
     // Long polling function for fetching new booking requests
@@ -272,44 +234,40 @@ document.addEventListener("DOMContentLoaded", () => {
   notificationCopy();
 
   // Admit Booking and Update Status to For Pick-Up Ajax Request.
-  const adminBooking = async (id) => {
+  const admitBooking = async (id) => {
     const data = await fetch(`./backend/admin_action.php?admit=1&id=${id}`, {
       method: 'GET',
     });
     const response = await data.text();
     if (response.includes('success')) {
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: 'Booking admited successfully!',
-        buttonsStyling: false, // Disable default button styling
-        customClass: {
-          confirmButton: 'bg-green-700 hover:bg-green-800 text-white font-semibold py-3 px-5 rounded-lg'
-        }
-      }).then(() => {
-        window.location.href = './booking-details.php';
-      });
+      const green600 = '#047857';
+      const green700 = '#065f46';
+      showToaster('Booking admitted successfully !', 'check', green600, green700);
+      fetchAll();
+    } else {
+      const red600 = '#dc2626';
+      const red700 = '#b91c1c';
+      showToaster('Something went wrong !', 'exclamation-error', red600, red700);
+      fetchAll();
     }
   }
 
   // Denied Booking and Update Status to For Pick-Up Ajax Request.
   const deniedBooking = async (id) => {
-    const data = await fetch(`./backend/admin_action.php?denied=1&id=${id}`, {
+    const data = await fetch(`./backend/booking-details_action.php?denied=1&id=${id}`, {
       method: 'GET',
     });
     const response = await data.text();
     if (response.includes('success')) {
-      Swal.fire({
-        icon: 'error',
-        title: 'Denied',
-        text: 'Booking denied successfully!',
-        buttonsStyling: false, // Disable default button styling
-        customClass: {
-          confirmButton: 'bg-gray-700 hover:bg-gray-800 text-white font-semibold py-3 px-5 rounded-lg'
-        }
-      }).then(() => {
-        window.location.href = './booking-details.php';
-      });
+      const green600 = '#047857';
+      const green700 = '#065f46';
+      showToaster('Booking denied !', 'check', green600, green700);
+      fetchAll();
+    } else {
+      const red600 = '#dc2626';
+      const red700 = '#b91c1c';
+      showToaster('Something went wrong !', 'exclamation-error', red600, red700);
+      fetchAll();
     }
   }
 

@@ -142,7 +142,7 @@ if ($_SESSION['role'] !== 'delivery') {
               </div>
               <div class="flex flex-col items-center justify-center">
                 <p class="text-lg md:text-3xl font-semibold" id="js-for-pickup">1<!-- total count --></p>
-                <p class="text-sm md:text-md text-wrap">For pickup</p>
+                <p class="text-sm md:text-md text-wrap px-2 sm:px-0">For pickup</p>
               </div>
             </div>
           </div>
@@ -255,7 +255,7 @@ if ($_SESSION['role'] !== 'delivery') {
 
 
   <!-- Warning Modal Overlay -->
-  <div id="warning-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+  <div id="warning-modal" class="hidden p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
     <div class="bg-white px-4 py-4 rounded-md shadow-lg w-full max-w-sm flex items-center flex-col">
       <div class="grid grid-cols-4 mb-4">
         <!-- First child taking 1/4 of the parent's width -->
@@ -283,7 +283,7 @@ if ($_SESSION['role'] !== 'delivery') {
   </div>
 
   <!-- Modal for View -->
-  <div class="toViewBookingModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
+  <div class="toViewBookingModal p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
     <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2">
       <div class="w-full h-auto py-2 flex flex-col items-center text-nowrap text-gray-500">
         <h4 class="text-lg font-bold">WASHUP LAUNDRY</h4>

@@ -40,14 +40,44 @@ if (isset($_GET['read'])) {
   $output = '';
   if ($booking) {
     foreach ($booking as $row) {
+      // Determine the color classes based on the status
+      $statusClasses = '';
+      switch ($row['status']) {
+        case 'pending':
+          $statusClasses = 'bg-yellow-400 text-yellow-700'; //oks
+          break;
+        case 'for pick-up':
+          $statusClasses = 'bg-[#A8C9D9] text-[#316988]'; // oks
+          break;
+        case 'on process':
+          $statusClasses = 'bg-[#A1B8D4] text-[#0E4483]';
+          break;
+        case 'for delivery':
+          $statusClasses = 'bg-[#B3CCE6] text-[#0E4483]'; // oks
+          break;
+        case 'isreceive':
+          $statusClasses = 'bg-orange-400 text-orange-700'; // oks
+          break;
+        case 'complete':
+          $statusClasses = 'bg-green-500 text-green-800'; // oks
+          break;
+        default:
+          $statusClasses = 'bg-gray-400 text-gray-700';
+          break;
+      }
+
       $output .= '
-        <tr>
+        <tr class="border-b border-gray-200">
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['id'] . '</td>
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['fname'] . ' ' . $row['lname'] . '</td>
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['created_at'] . '</td>
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['service_selection'] . '</td>
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['service_type'] . '</td>
-          <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle font-semibold">' . $row['status'] . '</td>
+          <td class="px-4 py-2">
+            <div class="w-auto py-1 px-2 ' . $statusClasses . ' font-bold rounded-lg text-center">
+              ' . strtoupper($row['status']) . '
+            </div>
+          </td>
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
             <div class="flex justify-center space-x-2 min-w-[150px]">';
 

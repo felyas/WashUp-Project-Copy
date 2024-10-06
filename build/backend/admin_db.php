@@ -170,4 +170,37 @@ class Database extends Config
 
     return $result;
   }
+
+  // Load all events
+  public function loadEvents()
+  {
+    $sql = 'SELECT * FROM events';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  // Add new event
+  public function addEvent($title, $start, $end)
+  {
+    $sql = "INSERT INTO events (title, start_event, end_event) VALUES (?, ?, ?)";
+    $stmt = $this->conn->prepare($sql);
+    return $stmt->execute([$title, $start, $end]);
+  }
+
+  // Update event
+  public function updateEvent($id, $start, $end)
+  {
+    $sql = "UPDATE events SET start_event = ?, end_event = ? WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
+    return $stmt->execute([$start, $end, $id]);
+  }
+
+  // Delete event
+  public function deleteEvent($id)
+  {
+    $sql = "DELETE FROM events WHERE id = ?";
+    $stmt = $this->conn->prepare($sql);
+    return $stmt->execute([$id]);
+  }
 }

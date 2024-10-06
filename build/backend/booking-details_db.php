@@ -89,5 +89,14 @@ class Database extends Config
 
     return true;
   }
+
+  // DELETE BOOKING REQUEST FROM DATABASE
+  public function deniedBooking($id) {
+    $sql = 'DELETE FROM booking WHERE id = :id';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['id' => $id]);
+
+    return true;
+  }
   
 }

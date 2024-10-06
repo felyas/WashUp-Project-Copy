@@ -159,6 +159,7 @@ class Modal {
 
   hide() {
     this.modal.classList.add('hidden');
+    this.bookingId = null; 
   }
 
   confirm() {

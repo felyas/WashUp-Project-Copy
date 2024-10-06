@@ -26,10 +26,6 @@ if ($_SESSION['role'] !== 'admin') {
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/palette.css">
 
-  <!-- SweetAlert CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
-
   <!-- Include Chart.js from CDN -->
   <script src="../node_modules/chart.js/dist/chart.umd.js" defer></script>
 
@@ -170,11 +166,11 @@ if ($_SESSION['role'] !== 'admin') {
           <!-- List of On Pick-up Booking -->
           <div class="w-full grid grid-cols-1 text-sm">
             <div class="h-auto w-full rounded-sm bg-white shadow-lg border border-solid border-gray-200">
-              <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
-                <p class="text-md font-semibold text-ashblack py-2">MANAGE BOOKING</p>
+              <div class="h-auto px-2 py-4 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
+                <p class="text-md font-semibold text-ashblack">MANAGE BOOKING</p>
               </div>
-              <div class="overflow-x-auto h-auto min-h-72 px-2">
-                <table class="text-nowrap w-full text-left text-ashblack border-collapse">
+              <div class="overflow-x-auto h-auto min-h-72 p-2 pt-0">
+                <table class="text-nowrap w-full text-left text-ashblack border-collapse border border-solid border-gray-200">
                   <thead class="bg-gray-200">
                     <tr>
                       <th data-column="id" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
@@ -225,35 +221,11 @@ if ($_SESSION['role'] !== 'admin') {
 
 
 
-  <!-- Warning Modal Overlay -->
-  <div id="warning-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-    <div class="bg-white px-4 py-4 rounded-md shadow-lg w-full max-w-sm flex items-center flex-col">
-      <div class="grid grid-cols-4 mb-4">
-        <!-- First child taking 1/4 of the parent's width -->
-        <div class="col-span-1 flex items-center">
-          <div class="flex justify-center items-center col-span-1 bg-[#f9d6a0] rounded-full w-16 h-16">
-            <img class="w-8 h-8" src="./img/icons/triangle-warning.svg" alt="">
-          </div>
-        </div>
-        <!-- Second child taking 3/4 of the parent's width -->
-        <div class="col-span-3">
-          <h1 id="modal-title" class="text-lg font-bold mb-2">Warning!</h1>
-          <p id="modal-message" class="text-md text-gray-500 text-wrap">Do you really want to perform this action?</p>
-        </div>
-      </div>
+ 
+  <?php
+  include './modal.php';
+  ?>
 
-      <div class="w-full flex justify-end items-center space-x-2 text-sm font-semibold">
-        <button id="confirm-modal" class="bg-[#e69500] border-2 border-solid border-[#e69500] text-white hover:bg-[#cc8400] hover:border-[#cc8400] py-2 px-4 rounded transition">
-          Yes
-        </button>
-        <button id="close-modal" class="bg-white border-2 border-solid border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white py-2 px-4 rounded transition">
-          No
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Modal (hidden by default) -->
   <!-- Modal for View -->
   <div class="toViewBookingModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
     <div class="bg-white shadow-lg p-4 w-full max-w-lg rounded-3xl m-2">

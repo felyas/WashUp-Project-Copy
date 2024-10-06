@@ -29,13 +29,6 @@ if ($_SESSION['role'] !== 'admin') {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <!-- SweetAlert CDN -->
-  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11" defer></script>
-
-  <!-- Include Chart.js from CDN -->
-  <script src="../node_modules/chart.js/dist/chart.umd.js" defer></script>
-
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -153,6 +146,11 @@ if ($_SESSION['role'] !== 'admin') {
 
       <!-- Main Content Area -->
       <main class="flex-1 p-6 flex items-center justify-center">
+        <!-- Toaster -->
+        <div id="toaster" class="fixed top-4 right-4 hidden text-white shadow-lg z-50">
+          <!-- Dynamic Toaster Content -->
+        </div>
+
         <div class="flex flex-col box-border text-ashblack p-4 items-center border border-solid border-gray-200 shadow-lg">
           <p class="text-3xl my-4 font-semibold">Create an Account</p>
 
@@ -183,7 +181,7 @@ if ($_SESSION['role'] !== 'admin') {
               </div>
               <div class="flex flex-col">
                 <label for="Role" class="block text-sm font-medium text-gray-500">Role</label>
-                <select id="status-filter" name="role" class="mt-1 px-2 py-1 w-full text-sm border h-full border-gray-300 rounded">
+                <select id="status-filter" name="role" class="top-0 mt-1 px-2 py-1 w-full text-sm border h-full border-gray-300 rounded">
                   <option value="admin">Admin</option>
                   <option value="delivery">Delivery Man</option>
                 </select>
@@ -210,29 +208,29 @@ if ($_SESSION['role'] !== 'admin') {
     </div>
   </div>
 
-  <!-- Warning Modal Overlay -->
-  <div id="warning-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+  <!-- Error Modal Overlay -->
+  <div id="error-modal" class="hidden p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
     <div class="bg-white px-4 py-4 rounded-md shadow-lg w-full max-w-sm flex items-center flex-col">
       <div class="grid grid-cols-4 mb-4">
         <!-- First child taking 1/4 of the parent's width -->
         <div class="col-span-1 flex items-center">
-          <div class="flex justify-center items-center col-span-1 bg-[#f9d6a0] rounded-full w-16 h-16">
-            <img class="w-8 h-8" src="./img/icons/triangle-warning.svg" alt="">
+          <div class="flex justify-center items-center col-span-1 bg-red-500 rounded-full w-16 h-16">
+            <img class="w-8 h-8" src="./img/icons/circle-error.svg" alt="">
           </div>
         </div>
         <!-- Second child taking 3/4 of the parent's width -->
         <div class="col-span-3">
-          <h1 id="modal-title" class="text-lg font-bold mb-2">Warning!</h1>
-          <p id="modal-message" class="text-md text-gray-500 text-wrap">Do you really want to perform this action?</p>
+          <h1 id="modal-title" class="text-lg font-bold mb-2 text-red-600">Error !</h1>
+          <p id="modal-message" class="text-md text-gray-500 text-wrap">Please complete all required fields !</p>
         </div>
       </div>
 
       <div class="w-full flex justify-end items-center space-x-2 text-sm font-semibold">
-        <button id="confirm-modal" class="bg-[#e69500] border-2 border-solid border-[#e69500] text-white hover:bg-[#cc8400] hover:border-[#cc8400] py-2 px-4 rounded transition">
+        <button id="error-confirm-modal" class="hidden bg-red-600 border-2 border-solid border-red-600 text-white hover:bg-red-700 hover:border-red-700 py-2 px-4 rounded transition">
           Yes
         </button>
-        <button id="close-modal" class="bg-white border-2 border-solid border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white py-2 px-4 rounded transition">
-          No
+        <button id="error-close-modal" class="bg-red-600 border-2 border-solid border-red-600 text-white hover:bg-red-700 hover:border-red-700 py-2 px-4 rounded transition">
+          Ok
         </button>
       </div>
     </div>

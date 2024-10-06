@@ -87,10 +87,24 @@ class Database extends Config
   }
 
   // Delete Item from Database
-  public function deleteItem($product_id) {
+  public function deleteItem($product_id)
+  {
     $sql = 'DELETE FROM inventory WHERE product_id = :product_id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute(['product_id' => $product_id]);
+
+    return true;
+  }
+
+  // Update Item Status in Database
+  public function updateItemStatus($product_id, $status)
+  {
+    $sql = 'UPDATE inventory SET status = :status WHERE product_id = :product_id';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'status' => $status,
+      'product_id' => $product_id,
+    ]);
 
     return true;
   }

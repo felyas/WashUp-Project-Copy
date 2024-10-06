@@ -1,4 +1,4 @@
-import { handleSidebar, handleDisplayCurrentTime, openModal, handleDropdown } from "./dashboards-main.js";
+import { handleSidebar, handleDisplayCurrentTime, openModal, handleDropdown, showToaster, Modal } from "./dashboards-main.js";
 
 
 handleSidebar();
@@ -9,20 +9,8 @@ openModal('addModalTrigger', 'toAddItemModal', 'closeAddItemModal', 'closeAddIte
 
 const addItemForm = document.getElementById('add-items-form');
 const editItemForm = document.getElementById('update-items-form');
-
-// Reusable SweetAlert Function
-const showAlert = (icon, title, text, confirmButtonClass = 'bg-gray-500 hover:bg-gray-600') => {
-  return Swal.fire({
-    icon: icon,
-    title: title,
-    text: text,
-    confirmButtonText: 'OK',
-    customClass: {
-      confirmButton: `${confirmButtonClass} text-white px-5 py-3 font-semibold rounded-lg`
-    },
-    buttonsStyling: false
-  });
-};
+const addItemBtn = document.getElementById('add-item-btn');
+const editItemBtn = document.getElementById('edit-booking-btn');
 
 // Handle the input validation from add items
 function validateForm(form) {
@@ -45,70 +33,6 @@ function validateForm(form) {
 }
 validateForm(addItemForm);
 validateForm(editItemForm);
-
-// Add New Booking Ajax Request
-addItemForm.addEventListener('submit', async (e) => {
-  e.preventDefault();
-
-  const formData = new FormData(addItemForm);
-  formData.append('add', 1);
-
-  // Form validation
-  if (addItemForm.checkValidity() === false) {
-    e.stopPropagation();
-
-    // Add validation error handling
-    [...addItemForm.elements].forEach((input) => {
-      const feedback = input.nextElementSibling;
-
-      if (input.tagName === 'INPUT' && (input.type === 'text')) {
-        if (!input.checkValidity()) {
-          input.classList.add('border-red-500');
-          feedback.classList.remove('hidden');
-        } else {
-          input.classList.remove('border-red-500');
-          feedback.classList.add('hidden');
-        }
-      }
-    });
-
-    // Show validation error using the reusable function
-    if (!Swal.isVisible()) {
-      showAlert('error', 'Validation Error', 'Please fill out all required fields correctly.');
-    }
-
-    return false;
-  } else {
-    document.getElementById('add-item-btn').value = 'Please Wait...';
-
-    const data = await fetch('./backend/inventory_action.php', {
-      method: 'POST',
-      body: formData,
-    });
-
-    const response = await data.text();
-
-    // Handle success or error response
-    if (response.includes('success')) {
-      showAlert('success', 'Success', 'Item added successfully!', 'bg-green-700 hover:bg-green-800').then(() => {
-        document.getElementById('add-item-btn').value = 'Add';
-        addItemForm.reset();
-        document.querySelector('.toAddItemModal').classList.add('hidden');
-
-        // Remove validation classes after reset
-        [...addItemForm.elements].forEach((input) => {
-          if (input.tagName === 'INPUT') {
-            input.classList.remove('border-green-700', 'border-red-500');
-          }
-        });
-
-        fetchAll();
-      });
-    } else {
-      showAlert('error', 'Error', 'Something went wrong!', 'bg-gray-700 hover:bg-gray-800');
-    }
-  }
-});
 
 document.addEventListener("DOMContentLoaded", () => {
   const tbody = document.getElementById('js-inventory-tbody');
@@ -180,6 +104,70 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initial fetch
   fetchAll();
 
+  // Add New Booking Ajax Request
+  addItemForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(addItemForm);
+    formData.append('add', 1);
+
+    // Form validation
+    if (addItemForm.checkValidity() === false) {
+      e.stopPropagation();
+
+      // Add validation error handling
+      [...addItemForm.elements].forEach((input) => {
+        const feedback = input.nextElementSibling;
+
+        if (input.tagName === 'INPUT' && (input.type === 'text')) {
+          if (!input.checkValidity()) {
+            input.classList.add('border-red-500');
+            feedback.classList.remove('hidden');
+          } else {
+            input.classList.remove('border-red-500');
+            feedback.classList.add('hidden');
+          }
+        }
+      });
+      const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
+      errorWarningModal.show();
+      return false;
+
+    } else {
+      addItemBtn.value = 'Please Wait...';
+
+      const data = await fetch('./backend/inventory_action.php', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const response = await data.text();
+
+      // Handle success or error response
+      if (response.includes('success')) {
+        fetchAll();
+        const green600 = '#047857';
+        const green700 = '#065f46';
+        showToaster('Item added successfully!', 'check', green600, green700);
+        addItemBtn.value = 'Add';
+        addItemForm.reset();
+        document.querySelector('.toAddItemModal').classList.add('hidden');
+
+        // Remove validation classes after reset
+        [...addItemForm.elements].forEach((input) => {
+          if (input.tagName === 'INPUT') {
+            input.classList.remove('border-green-700', 'border-red-500');
+          }
+        });
+      } else {
+        const red600 = '#dc2626';
+        const red700 = '#b91c1c';
+        showToaster('Something went wrong !', 'exclamation-error', red600, red700);
+        fetchAll();
+      }
+    }
+  });
+
   //Targeting anchor tags from tbody
   tbody.addEventListener('click', (e) => {
     if (e.target && (e.target.matches('a.editLink') || e.target.closest('a.editLink'))) {
@@ -194,7 +182,8 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       let targetElement = e.target.matches('a.deleteLink') ? e.target : e.target.closest('a.deleteLink');
       let id = targetElement.getAttribute('id');
-      deleteItem(id);
+      const deleteWarningModal = new Modal('delete-modal', 'delete-confirm-modal', 'delete-close-modal');
+      deleteWarningModal.show(deleteItem, id);
     }
   });
 
@@ -219,7 +208,7 @@ document.addEventListener("DOMContentLoaded", () => {
     formData.append('update', 1);
 
     // Immediately update the button text to indicate the form is being processed
-    document.getElementById('edit-booking-btn').value = 'Please Wait...';
+    editItemBtn.value = 'Please Wait...';
 
     // Send the form data via POST to the backend
     const data = await fetch('./backend/inventory_action.php', {
@@ -231,52 +220,45 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Handle success or error response
     if (response.includes('success')) {
-      showAlert('success', 'Success', 'Item updated successfully!', 'bg-green-700 hover:bg-green-800').then(() => {
-        document.getElementById('edit-booking-btn').value = 'Save';
-        editItemForm.reset();
-        document.querySelector('.toEditItemModal').classList.add('hidden');
+      const green600 = '#047857';
+      const green700 = '#065f46';
+      showToaster('Item updated successfully!', 'check', green600, green700);
+      editItemBtn.value = 'Save';
+      editItemForm.reset();
+      document.querySelector('.toEditItemModal').classList.add('hidden');
 
-        // Call the function to refresh or display updated data
-        fetchAll();
-      });
+      // Call the function to refresh or display updated data
+      fetchAll();
     } else {
-      showAlert('error', 'Error', 'Something went wrong!', 'bg-gray-700 hover:bg-gray-800');
+      const red600 = '#dc2626';
+      const red700 = '#b91c1c';
+      showToaster('Something went wrong !', 'exclamation-error', red600, red700);
     }
+    fetchAll();
   });
 
   // Delete Item Ajax Request
   const deleteItem = async (id) => {
-    const result = await Swal.fire({
-      title: 'Are you sure?',
-      text: 'Do you want to delete this item?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'Yes',
-      cancelButtonText: 'No',
-      customClass: {
-        confirmButton: 'bg-red-700 hover:bg-red-800 text-white px-5 py-3 mr-4 font-semibold rounded-lg',
-        cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-5 py-3 font-semibold rounded-lg'
-      },
-      buttonsStyling: false
+    const data = await fetch(`./backend/inventory_action.php?delete=1&product_id=${id}`, {
+      method: 'GET',
     });
+    const response = await data.text();
 
-    if (result.isConfirmed) {
-      const data = await fetch(`./backend/inventory_action.php?delete=1&product_id=${id}`, {
-        method: 'GET',
-      });
-      const response = await data.text();
-
-      if (response.includes('success')) {
-        await showAlert('success', 'Deleted!', 'Item deleted successfully.', 'bg-green-700 hover:bg-green-800');
-        fetchAll();
-      } else {
-        await showAlert('error', 'Error!', 'Failed to delete item.', 'bg-red-700 hover:bg-red-800');
-      }
+    if (response.includes('success')) {
+      const green600 = '#047857';
+      const green700 = '#065f46';
+      showToaster('Item deleted successfully!', 'check', green600, green700);
+      fetchAll();
+    } else {
+      const red600 = '#dc2626';
+      const red700 = '#b91c1c';
+      showToaster('Something went wrong !', 'exclamation-error', red600, red700);
+      fetchAll();
     }
   };
 
 
-  
+
 });
 
 

@@ -1,38 +1,10 @@
-import { handleSidebar, handleDisplayCurrentTime, openModal, handleDropdown } from "./dashboards-main.js";
+import { handleSidebar, handleDisplayCurrentTime, openModal, handleDropdown, showToaster, Modal } from "./dashboards-main.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   handleSidebar();
   handleDisplayCurrentTime();
   handleDropdown();
   openModal('viewModalTrigger', 'toViewUsersModal', 'closeViewUsesrModal', 'closeViewUsersModal2');
-
-  // Preload SweetAlert
-  Swal.fire({
-    title: 'Initializing...',
-    text: 'Please wait...',
-    showConfirmButton: false,
-    timer: 10,
-    willOpen: () => {
-      Swal.showLoading();
-    },
-    willClose: () => {
-      Swal.hideLoading();
-    }
-  }).then(() => {
-    Swal.close();
-  });
-
-  // Reusable SweetAlert Function (moved outside of DOMContentLoaded for global access)
-  window.showAlert = (icon, title, text, confirmButtonClass = 'bg-gray-500 hover:bg-gray-600') => {
-    return Swal.fire({
-      icon, title, text,
-      confirmButtonText: 'OK',
-      customClass: {
-        confirmButton: `${confirmButtonClass} text-white px-5 py-3 font-semibold rounded-lg`
-      },
-      buttonsStyling: false
-    });
-  };
 
   const tbody = document.getElementById('js-users-tbody');
   const paginationContainer = document.getElementById('pagination-container');
@@ -122,56 +94,63 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initial fetch
   fetchAll();
 
+  
   // User Details and Delete functionality
-  tbody.addEventListener('click', async (e) => {
-    const targetLink = e.target.closest('a');
-    if (!targetLink || isFetching) return;
+  tbody.addEventListener('click', (e) => {
+    if (e.target && (e.target.matches('a.editLink') || e.target.closest('a.editLink'))) {
+      e.preventDefault();
+      let targetElement = e.target.matches('a.editLink') ? e.target : e.target.closest('a.editLink');
+      let id = targetElement.getAttribute('id');
+      editUser(id);
+    }
 
-    e.preventDefault();
-    const id = targetLink.getAttribute('id');
+    // View Booking Ajax Request
+    if (e.target && (e.target.matches('a.viewLink') || e.target.closest('a.viewLink'))) {
+      e.preventDefault();
+      let targetElement = e.target.matches('a.viewLink') ? e.target : e.target.closest('a.viewLink');
+      let id = targetElement.getAttribute('id');
+      userInfo(id);
+    }
 
-    if (targetLink.classList.contains('viewLink')) {
-      try {
-        const response = await fetch(`./backend/account_action.php?view=1&id=${id}`);
-        const data = await response.json();
-        document.getElementById('js-user-id').textContent = data.id;
-        document.getElementById('display-full-name').textContent = `${data.first_name} ${data.last_name}`;
-        document.getElementById('display-email').textContent = data.email;
-        document.getElementById('display-role').textContent = data.role;
-      } catch (error) {
-        console.error('Error fetching user details:', error);
-        showAlert('error', 'Error', 'Failed to fetch user details. Please try again.');
-      }
-    } else if (targetLink.classList.contains('deleteLink')) {
-      const result = await Swal.fire({
-        title: 'Are you sure?',
-        text: 'Do you want to delete this user?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'No',
-        customClass: {
-          confirmButton: 'bg-red-700 hover:bg-red-800 text-white px-5 py-3 mr-4 font-semibold rounded-lg',
-          cancelButton: 'bg-gray-500 hover:bg-gray-600 text-white px-5 py-3 font-semibold rounded-lg'
-        },
-        buttonsStyling: false
-      });
-
-      if (result.isConfirmed) {
-        try {
-          const response = await fetch(`./backend/account_action.php?delete=1&id=${id}`);
-          const data = await response.text();
-          if (data.includes('success')) {
-            await showAlert('success', 'Deleted!', 'User deleted successfully.', 'bg-green-700 hover:bg-green-800');
-            fetchAll();
-          } else {
-            throw new Error('Failed to delete user');
-          }
-        } catch (error) {
-          console.error('Error deleting user:', error);
-          await showAlert('error', 'Error!', 'Failed to delete user. Please try again.', 'bg-red-700 hover:bg-red-800');
-        }
-      }
+    // Delete Booking Ajax Request
+    if (e.target && (e.target.matches('a.deleteLink') || e.target.closest('a.deleteLink'))) {
+      e.preventDefault();
+      let targetElement = e.target.matches('a.deleteLink') ? e.target : e.target.closest('a.deleteLink');
+      let id = targetElement.getAttribute('id');
+      const deleteWarningModal = new Modal('delete-user-modal', 'deleteUser-confirm-modal', 'deleteUser-close-modal');
+      deleteWarningModal.show(deleteUser, id);
     }
   });
+
+  // Function to View User Info Ajax Request
+  const userInfo = async (id) => {
+    const data = await fetch(`./backend/account_action.php?view=1&id=${id}`, {
+      method: 'GET',
+    });
+    const response = await data.json();
+    console.log(response);
+    
+    document.getElementById('js-user-id').textContent = response.id;
+    document.getElementById('display-full-name').textContent = `${response.first_name} ${response.last_name}`;
+    document.getElementById('display-email').textContent = response.email;
+    document.getElementById('display-role').textContent = response.role;
+  }
+
+  const deleteUser = async (id) => {
+    const data = await fetch(`./backend/account_action.php?delete=1&id=${id}`, {
+      method: 'GET',
+    });
+    const response = await data.text();
+    if (response.includes('success')) {
+      const green600 = '#047857';
+      const green700 = '#065f46';
+      showToaster('User deleted successfully!', 'check', green600, green700);
+      fetchAll();
+    } else {
+      const red600 = '#dc2626'; // Hex value for green-600
+      const red700 = '#b91c1c'; // Hex value for green-700
+      showToaster('Something went wrong !', 'exclamation-error', red600, red700);
+    }
+  }
+
 });

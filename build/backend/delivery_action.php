@@ -26,6 +26,21 @@ if (isset($_GET['readAll'])) {
   $output = '';
   if ($bookings) {
     foreach ($bookings as $row) {
+
+      // Determine the color classes based on the status
+      $statusClasses = '';
+      switch ($row['status']) {
+        case 'for pick-up':
+          $statusClasses = 'bg-[#A8C9D9] text-[#316988]'; // oks
+          break;
+        case 'for delivery':
+          $statusClasses = 'bg-[#B3CCE6] text-[#0E4483]'; // oks
+          break;
+        default:
+          $statusClasses = 'bg-gray-400 text-gray-700';
+          break;
+      }
+
       $output .= '
                   <tr>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['id'] . '</td>
@@ -33,7 +48,11 @@ if (isset($_GET['readAll'])) {
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['lname'] . '</td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['phone_number'] . '</td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['address'] . '</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle font-semibold">' . $row['status'] . '</td>
+                    <td class="px-4 py-2">
+                      <div class="w-auto py-1 px-2 ' . $statusClasses . ' font-bold rounded-lg text-center">
+                        ' . strtoupper($row['status']) . '
+                      </div>
+                    </td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle min-w-[150px]">
                       <div class="flex justify-center space-x-2">
                         <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
@@ -110,7 +129,7 @@ if (isset($_GET['view'])) {
 if (isset($_GET['update-pickup'])) {
   $id = $_GET['id'];
 
-  if($db->updatePickup($id)) {
+  if ($db->updatePickup($id)) {
     echo $util->showMessage('success', 'Status updated successfully');
   }
 }
@@ -119,7 +138,7 @@ if (isset($_GET['update-pickup'])) {
 if (isset($_GET['update-delivery'])) {
   $id = $_GET['id'];
 
-  if($db->updateDelivery($id)) {
+  if ($db->updateDelivery($id)) {
     echo $util->showMessage('success', 'Status updated successfully');
   }
 }

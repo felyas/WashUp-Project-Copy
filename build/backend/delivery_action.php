@@ -158,3 +158,9 @@ if (isset($_GET['count_all'])) {
     'deliveryCount' => $deliveryCount,
   ]);
 }
+
+// Handle fetch events Ajax Request
+if (isset($_GET['fetch_events'])) {
+  $events = $db->fetchAllEvents();
+  echo json_encode($events);
+}

@@ -77,69 +77,6 @@ if (isset($_GET['readPending'])) {
   ]);
 }
 
-
-
-// Handle Fetch All For Pickup Booking Ajax Request
-if (isset($_GET['readPickup'])) {
-  $forPickupBooking = $db->fetchPickup();
-  $output = '';
-  if ($forPickupBooking) {
-    foreach ($forPickupBooking as $row) {
-      $output .= '
-                  <tr class="border-b border-gray-200">
-                    <td class="px-4 py-2">' . $row['id'] . '</td>
-                    <td class="px-4 py-2 text-nowrap">' . $row['fname'] . ' ' . $row['lname'] . '</td>
-                    <td class="px-4 py-2 text-nowrap">' . $row['phone_number'] . '</td>
-                    <td class="px-4 py-2 text-nowrap">' . $row['pickup_date'] . '</td>
-                    <td class="px-4 py-2 text-nowrap">' . $row['pickup_time'] . '</td>
-                    <td class="min-w-[100px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                      <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
-                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
-                      </a>
-                    </td>
-                  </tr>
-      ';
-    }
-    echo $output;
-  } else {
-    echo '<tr>
-            <td colspan="7" class="text-center py-4 text-gray-200">
-              No For Pick-Up Booking Found in the Database!
-            </td>
-          </tr>';
-  }
-}
-
-// Handle Fetch All For Delivery Booking Ajax Request
-if (isset($_GET['readDelivery'])) {
-  $deliveryBooking = $db->fetchDelivery();
-  $output = '';
-  if ($deliveryBooking) {
-    foreach ($deliveryBooking as $row) {
-      $output .= '
-                  <tr class="border-b border-gray-200">
-                    <td class="px-4 py-2 text-nowrap">' . $row['id'] . '</td>
-                    <td class="px-4 py-2 text-nowrap">' . $row['fname'] . ' ' . $row['lname'] . '</td>
-                    <td class="px-4 py-2 text-nowrap">' . $row['phone_number'] . '</td>
-                    <td class="px-4 py-2 text-nowrap">' . $row['address'] . '</td>
-                    <td class="min-w-[100px] h-auto flex items-center justify-center space-x-2 flex-grow">
-                      <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
-                        <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
-                      </a>
-                    </td>
-                  </tr>
-      ';
-    }
-    echo $output;
-  } else {
-    echo '<tr>
-            <td colspan="7" class="text-center py-4 text-gray-200">
-              No For Pick-Up Booking Found in the Database!
-            </td>
-          </tr>';
-  }
-}
-
 // Handle View Booking Ajax Request
 if (isset($_GET['view'])) {
   $id = $_GET['id'];
@@ -222,50 +159,43 @@ if (isset($_GET['fetchBookingData'])) {
   echo json_encode($bookingData); // Return the JSON-encoded data
 }
 
-// Load all events
-if (isset($_GET['load'])) {
-  $events = $db->loadEvents();
+// Handle fetch events Ajax Request
+if (isset($_GET['fetch_events'])) {
+  $events = $db->fetchAllEvents();
   echo json_encode($events);
-  exit();
 }
 
-// Add new event
-if (isset($_GET['add'])) {
-  $data = json_decode(file_get_contents("php://input"));
-  
-  $title = $data->title;
-  $start = $data->start;
-  $end = $data->end;
+// Handle Add Event Ajax Request
+if (isset($_GET['add_event'])) {
+  $data = json_decode(file_get_contents('php://input'), true);
 
-  $eventAdded = $db->addEvent($title, $start, $end);
-  if($eventAdded) {
-    echo $util->showMessage('success', 'Event added successfully!');
-    exit();
+  $title = $data['title'];
+  $start = $data['start'];
+  $end = $data['end'];
+
+  // Insert the new event into the database
+  $event_id = $db->addEvent($title, $start, $end);
+
+  if ($event_id) {
+    echo json_encode(['success' => true, 'event_id' => $event_id]);
+  } else {
+    echo json_encode(['success' => false, 'message' => 'Failed to add event.']);
   }
 }
 
-// Update event
-if (isset($_GET['update'])) {
-  $data = json_decode(file_get_contents("php://input"));
-  
-  $id = $data->id;
-  $start = $data->start;
-  $end = $data->end;
+// Handle Delete Event Ajax Request
+if (isset($_GET['delete_event'])) {
+  $event_id = $_GET['event_id'];
 
-  $updatedEvent = $db->updateEvent($id, $start, $end);
-  if($updatedEvent) {
-    echo $util->showMessage('success', 'Event updated successfully!');
-    exit();
+  // Call the function to delete the event from the database
+  $isDeleted = $db->deleteEvent($event_id);
+
+  if ($isDeleted) {
+    echo json_encode(['success' => true]);
+  } else {
+    echo json_encode(['success' => false, 'message' => 'Failed to delete event.']);
   }
 }
 
-// Delete event
-if (isset($_GET['delete'])) {
-  $id = $_GET['id'];
-  
-  $deletedEvent = $db->deleteEvent($id);
-  if($deletedEvent) {
-    echo $util->showMessage('success', 'Event deleted successfully');
-    exit();
-  }
-}
+
+

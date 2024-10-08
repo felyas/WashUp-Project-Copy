@@ -30,7 +30,8 @@ if ($_SESSION['role'] !== 'admin') {
   <link rel="stylesheet" href="./css/palette.css">
 
   <!-- FullCalendar CDN -->
-  <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js'></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+
 
 
   <!-- Include Chart.js from CDN -->
@@ -296,9 +297,8 @@ if ($_SESSION['role'] !== 'admin') {
           </div>
 
           <!-- Second Div (Calendar Section) -->
-          <div class="h-auto w-full bg-white rounded-sm shadow-lg border border-solid border-gray-200">
+          <div class="w-full h-80 bg-white rounded-sm shadow-lg border border-solid border-gray-200">
             <div id="calendar" class="p-4">
-              <p class="text-md font-semibold text-ashblack py-2">Calendar Section</p>
               <!-- Calendar goes here -->
             </div>
           </div>
@@ -379,6 +379,59 @@ if ($_SESSION['role'] !== 'admin') {
       </div>
     </div>
   </div>
+
+  <!-- Add New Event Modal -->
+  <form id="add-event-form" novalidate class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20 p-2">
+    <div class="bg-white shadow-lg w-full max-w-lg rounded-3xl m-2">
+      <!-- Header Section -->
+      <div class="p-4 w-full flex items-center justify-start bg-celestial">
+        <img class="w-6 h-6 mr-2" src="./img/icons/calendar.svg" alt="Calendar Icon">
+        <h3 id="form-title" class="text-lg text-white font-semibold">Add Event</h3>
+      </div>
+
+
+      <!-- Form Section -->
+      <div class="p-4">
+        <div class="flex flex-col mb-4">
+          <label for="event-title" class="text-sm font-semibold text-gray-500">Event Title:</label>
+          <input type="text" name="event_title" id="event-title" required class="mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200" placeholder="e.g., 50% off">
+          <div class="text-red-500 text-sm hidden">Event Title is required!</div> <!-- Feedback -->
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col mb-4">
+            <label for="event-start" class="text-sm font-semibold text-gray-500">Start Date:</label>
+            <input type="date" name="event_start" id="event-start" required class="mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200">
+            <div class="text-red-500 text-sm hidden">Start Date is required!</div> <!-- Feedback -->
+          </div>
+
+          <div class="flex flex-col mb-4">
+            <label for="event-end" class="text-sm font-semibold text-gray-500">End Date:</label>
+            <input type="date" name="event_end" id="event-end" required class="mt-1 p-2 border border-gray-300 rounded-md focus:outline-none focus:ring focus:ring-indigo-200">
+            <div class="text-red-500 text-sm hidden">End Date is required!</div> <!-- Feedback -->
+          </div>
+
+          <!-- Hidden field to store event ID -->
+          <div class="flex flex-col mb-4 hidden">
+            <label for="event-end" class="text-sm font-semibold text-gray-500">End Date:</label>
+            <input type="hidden" id="event-id" name="event_id">
+            <div class="text-red-500 text-sm hidden">ID is required!</div> <!-- Feedback -->
+          </div>
+          
+        </div>
+
+        <div class="flex items-center justify-end mt-6 space-x-2">
+          <button type="submit" id="save-event" class="px-4 py-2 bg-celestial hover:bg-[#2a5e7a] text-white rounded-md">Save Event</button>
+          <button type="button" id="cancel-event" class="px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </form>
+
+
+
+
+
 
   <script type="module" src="./js/admin-dashboard.js"></script>
 </body>

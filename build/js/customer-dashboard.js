@@ -306,6 +306,55 @@ document.addEventListener('click', async (e) => {
   }
 });
 
+// Calendar Section
+const fetchEvents = async () => {
+  const response = await fetch('./backend/customer_action.php?fetch_events=1', {
+    method: 'GET',
+  });
+  const events = await response.json();
+  return events.map(event => ({
+    id: event.event_id,
+    title: event.event_name,
+    start: event.event_start_date,
+    end: event.event_end_date
+  }));
+};
+const calendarEl = document.getElementById('calendar');
+const calendar = new FullCalendar.Calendar(calendarEl, {
+  initialView: 'listWeek',
+  height: '100%',
+  events: fetchEvents,
+  buttonText: {
+    today: 'Today',
+    listWeek: 'Week List',
+    listDay: 'Day List'
+  }, headerToolbar: {
+    start: 'title',  // Title will be on the left
+    center: '',      // Center will be empty
+    end: 'today,prev,next' // Today, Prev, and Next buttons on the right
+  },
+  views: {
+    listWeek: {                    // Week view
+      titleFormat: {              // Format for week view
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'          // e.g., 'Sep 13 2009'
+      }
+    }
+  },
+  // Add eventRender function to style the title
+  eventDidMount: function (info) {
+    // Select the title element and apply inline styles
+    const titleElement = document.querySelector('.fc-toolbar-title');
+    if (titleElement) {
+      titleElement.style.fontSize = '1rem'; // Adjust the font size as needed
+      titleElement.style.fontWeight = 'bold'; // Adjust weight if desired
+    }
+  },
+});
+
+calendar.render();
+
 
 
 

@@ -155,11 +155,15 @@ class Database extends Config
     $stmt->execute(['id' => $notificationId]);
   }
 
-  //Future use, for admin side to change the status and also update the is_read flag
-  // public function update_booking_status($bookingId, $newStatus)
-  // {
-  //   $sql = 'UPDATE booking SET status = :status, is_read = 0, status_updated_at = NOW() WHERE id = :id';
-  //   $stmt = $this->conn->prepare($sql);
-  //   $stmt->execute(['id' => $bookingId, 'status' => $newStatus]);
-  // }
+  //CAlENDAR READ ALL
+  public function fetchAllEvents()
+  {
+    $sql = 'SELECT * FROM calendar_event_master';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return $result;
+  }
+
 }

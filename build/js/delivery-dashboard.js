@@ -3,34 +3,6 @@ import { handleDisplayCurrentTime, openModal, showToaster, Modal } from "./dashb
 handleDisplayCurrentTime();
 openModal('viewModalTrigger', 'toViewBookingModal', 'closeViewBookingModal', 'closeViewBookingModal2');
 
-// Get the modal and the close button
-// const modal = document.getElementById('warning-modal');
-// const confirmModalBtn = document.getElementById('confirm-modal');
-// const closeModalBtn = document.getElementById('close-modal');
-// let currentAction = null; // To store the action function
-// let bookingId = null; // To store the booking ID
-
-// // Function to show the modal with callback and booking ID
-// function showModal(callback, id) {
-//   currentAction = callback; // Store the action to execute when 'Yes' is clicked
-//   bookingId = id; // Store the booking ID
-//   modal.classList.remove('hidden'); // Show the modal
-// }
-
-// // Function to hide the modal
-// closeModalBtn.addEventListener('click', () => {
-//   modal.classList.add('hidden'); // Hide the modal
-// });
-
-// // Function to execute the action when 'Yes' is clicked
-// confirmModalBtn.addEventListener('click', () => {
-//   if (currentAction && bookingId) {
-//     currentAction(bookingId); // Call the stored action function with booking ID
-//     modal.classList.add('hidden'); // Hide the modal after confirmation
-//   }
-// });
-
-
 document.addEventListener("DOMContentLoaded", () => {
   const tbody = document.getElementById('users-booking-list');
   const paginationContainer = document.getElementById('pagination-container');
@@ -212,5 +184,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
   fetchBookingCounts();
+
+  // Calendar Section
+  const fetchEvents = async () => {
+    const response = await fetch('./backend/delivery_action.php?fetch_events=1', {
+      method: 'GET',
+    });
+    const events = await response.json();
+    return events.map(event => ({
+      id: event.event_id,
+      title: event.event_name,
+      start: event.event_start_date,
+      end: event.event_end_date
+    }));
+  };
+  const calendarEl = document.getElementById('calendar');
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'listWeek',
+    height: '100%',
+    events: fetchEvents,
+    buttonText: {
+      today: 'Today',
+      listWeek: 'Week List',
+      listDay: 'Day List'
+    }, headerToolbar: {
+      start: 'title',  // Title will be on the left
+      center: '',      // Center will be empty
+      end: 'today,prev,next' // Today, Prev, and Next buttons on the right
+    },
+    views: {
+      listWeek: {                    // Week view
+        titleFormat: {              // Format for week view
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'          // e.g., 'Sep 13 2009'
+        }
+      }
+    },
+    // Add eventRender function to style the title
+    eventDidMount: function (info) {
+      // Select the title element and apply inline styles
+      const titleElement = document.querySelector('.fc-toolbar-title');
+      if (titleElement) {
+        titleElement.style.fontSize = '1rem'; // Adjust the font size as needed
+        titleElement.style.fontWeight = 'bold'; // Adjust weight if desired
+      }
+    },
+  });
+  calendar.render();
 
 });

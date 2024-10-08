@@ -29,6 +29,10 @@ if ($_SESSION['role'] !== 'delivery') {
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/palette.css">
 
+  <!-- FullCalendar CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+  <link rel="stylesheet" href="./css/customer-calendar.css">
+
   <!-- Include Chart.js from CDN -->
   <script src="../node_modules/chart.js/dist/chart.umd.js" defer></script>
 
@@ -99,7 +103,7 @@ if ($_SESSION['role'] !== 'delivery') {
       <main class="flex-1 p-6 relative">
 
         <div id="toaster" class="fixed top-4 right-4 hidden text-white shadow-lg z-50">
-          <!-- Dynamic Toaster Content --> 
+          <!-- Dynamic Toaster Content -->
         </div>
 
 
@@ -164,7 +168,7 @@ if ($_SESSION['role'] !== 'delivery') {
         </div>
 
         <!--List-->
-        <div class="h-auto grid grid-cols-1 lg:grid-cols-4 gap-4 text-sm mb-4">
+        <div class="h-auto grid grid-cols-1 lg:grid-cols-4 gap-2 text-sm mb-4">
           <!-- First div taking 3/4 of the width on large screens -->
           <div class="col-span-4 lg:col-span-3 h-auto w-full rounded-sm bg-white px-4 py-2 border border-solid border-gray-200 shadow-lg">
             <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
@@ -218,8 +222,7 @@ if ($_SESSION['role'] !== 'delivery') {
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Felix</td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Bragais</td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">09691026692</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">2024-10-2</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Standard 2-days</td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Address Example</td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle font-semibold">for delivery</td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle min-w-[100px]">
                       <div class="flex justify-center space-x-2">
@@ -245,9 +248,13 @@ if ($_SESSION['role'] !== 'delivery') {
           </div>
 
           <!-- Second div taking 1/4 of the width on large screens -->
-          <div class="col-span-4 lg:col-span-1 w-auto h-auto p-4 bg-white border border-solid border-gray-200 shadow-lg">
+          <div class="col-span-4 h-80 lg:col-span-1 w-auto bg-white border border-solid border-gray-200 shadow-lg p-2">
+            <div id="calendar">
+              <!-- Calendar goes here -->
+            </div>
           </div>
         </div>
+
 
       </main>
     </div>

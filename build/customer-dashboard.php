@@ -29,6 +29,10 @@ if ($_SESSION['role'] !== 'user') {
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/palette.css">
 
+  <!-- FullCalendar CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+  <link rel="stylesheet" href="./css/customer-calendar.css">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -169,56 +173,58 @@ if ($_SESSION['role'] !== 'user') {
 
 
         <!--List-->
-        <div class="h-auto grid grid-cols-1 lg:grid-cols-4 gap-4 text-sm mb-4">
+        <div class="h-auto grid grid-cols-1 lg:grid-cols-4 gap-2 text-sm mb-4">
           <!-- First div taking 3/4 of the width on large screens -->
-          <div class="col-span-4 lg:col-span-3 h-auto w-full rounded-sm bg-white px-4 py-2 border border-solid border-gray-200 shadow-lg">
-            <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack py-2">MANAGE BOOKING</p>
-              <div class="flex justify-between items-center relative">
-                <input id="search-input" type="text" placeholder="Search bookings..." class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
-                <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
-                  <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
-                </button>
+          <div class="col-span-4 lg:col-span-3 h-auto w-full rounded-sm px-4">
+            <div class="bg-white border border-solid border-gray-200 shadow-lg pb-2"> <!-- Outer container -->
+              <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center"> <!-- Added border-b for a clean separation -->
+                <p class="text-md font-semibold text-ashblack py-2">MANAGE BOOKING</p>
+                <div class="flex justify-between items-center relative">
+                  <input id="search-input" type="text" placeholder="Search bookings..." class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
+                  <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
+                    <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
+                  </button>
+                </div>
               </div>
-            </div>
-            <div class="overflow-x-auto h-auto px-2">
-              <table id="booking-list" class="text-nowrap w-full text-left text-ashblack border-collapse border border-solid border-gray-200">
-                <thead class="bg-gray-200">
-                  <tr>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ID</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">FULL NAME</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">BOOKING DATE</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">SERVICE</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">SERVICE TYPE</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">STATUS</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack text-center border-b border-gray-200">ACTION</th>
-                  </tr>
-                </thead>
-                <tbody id="users-booking-list">
-                  <!-- Dynamic List -->
-                  <tr>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">1</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Felix Bragais</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">2024-10-2</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Wash</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Standard 2-days</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle font-semibold">for delivery</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
-                      <div class="flex justify-center space-x-2">'
-                        <a href="#" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
-                          <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                        </a>
-                        <a href="#" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
-                          <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
-                        </a>
-                        <a href="#" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
-                          <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+              <div class="overflow-x-auto h-auto px-2">
+                <table id="booking-list" class="text-nowrap w-full text-left text-ashblack border-collapse border border-solid border-gray-200">
+                  <thead class="bg-gray-200">
+                    <tr>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ID</th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">FULL NAME</th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">BOOKING DATE</th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">SERVICE</th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">SERVICE TYPE</th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">STATUS</th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack text-center border-b border-gray-200">ACTION</th>
+                    </tr>
+                  </thead>
+                  <tbody id="users-booking-list">
+                    <!-- Dynamic List -->
+                    <tr>
+                      <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">1</td>
+                      <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Felix Bragais</td>
+                      <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">2024-10-2</td>
+                      <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Wash</td>
+                      <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Standard 2-days</td>
+                      <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle font-semibold">for delivery</td>
+                      <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
+                        <div class="flex justify-center space-x-2">
+                          <a href="#" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
+                            <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
+                          </a>
+                          <a href="#" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
+                            <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
+                          </a>
+                          <a href="#" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
+                            <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+                          </a>
+                        </div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
 
             <!-- Pagination Container -->
@@ -226,8 +232,12 @@ if ($_SESSION['role'] !== 'user') {
             </div>
           </div>
 
+
           <!-- Second div taking 1/4 of the width on large screens -->
-          <div class="col-span-4 lg:col-span-1 w-auto h-auto p-4 bg-white border border-solid border-gray-200 shadow-lg">
+          <div class="col-span-4 lg:col-span-1 w-auto h-80 bg-white border border-solid border-gray-200 shadow-lg">
+            <div id="calendar" class="p-2">
+              <!-- Calendar goes here -->
+            </div>
           </div>
         </div>
 

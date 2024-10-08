@@ -214,11 +214,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-
-
-
-
-
   const ctx = document.getElementById('userPerMonthChart').getContext('2d');
 
   // Fetch user data per month and render chart
@@ -319,8 +314,185 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   fetchBookingData();
 
+
+
+
+
+
+
   // Calendar Section
-  
+  const fetchEvents = async () => {
+    const response = await fetch('./backend/admin_action.php?fetch_events=1', {
+      method: 'GET',
+    });
+    const events = await response.json();
+    return events.map(event => ({
+      id: event.event_id,
+      title: event.event_name,
+      start: event.event_start_date,
+      end: event.event_end_date
+    }));
+  };
+
+  // Modal initialization
+  const deleteWarningModal = new Modal('delete-event-modal', 'deleteEvent-confirm-modal', 'deleteEvent-close-modal');
+
+  // Delete Event Handler (using the modal)
+  const handleEventDelete = async (eventId) => {
+    // Show modal instead of default confirm dialog
+    deleteWarningModal.show(async (id) => {
+      const response = await fetch(`./backend/admin_action.php?delete_event=1&event_id=${id}`, {
+        method: 'DELETE'
+      });
+      const result = await response.json();
+
+      if (result.success) {
+        // Remove the event from the calendar UI
+        const event = calendar.getEventById(id);
+        if (event) {
+          event.remove();  // Remove from the calendar view
+        }
+
+        const red600 = '#dc2626';
+        const red700 = '#b91c1c';
+        showToaster('Event deleted successfully!', 'trash', red600, red700);
+      } else {
+        alert('Failed to delete event.');
+      }
+    }, eventId);
+  };
+
+  const calendarEl = document.getElementById('calendar');
+  const addEventForm = document.getElementById('add-event-form');
+  const eventStart = document.getElementById('event-start');
+  const eventEnd = document.getElementById('event-end');
+
+  // Handle the input validation for Add Event Form
+  function validateEventForm(form) {
+    form.addEventListener('input', (e) => {
+      const target = e.target;
+      const feedback = target.nextElementSibling;
+
+      if (target.tagName === 'INPUT') {
+        if (target.checkValidity()) {
+          target.classList.remove('border-red-500');
+          target.classList.add('border-green-700'); // Change border to green
+          feedback.classList.add('hidden');
+        } else {
+          target.classList.remove('border-green-700');
+          target.classList.add('border-red-500'); // Change border to red if invalid
+          feedback.classList.remove('hidden');
+        }
+      }
+    });
+  }
+  validateEventForm(addEventForm);
+
+  const calendar = new FullCalendar.Calendar(calendarEl, {
+    initialView: 'dayGridMonth',
+    height: '100%',
+    events: fetchEvents, // Pass the function reference, not the result
+    eventColor: '#3b7da3',
+    eventTextColor: '#ffffff',
+    buttonText: {
+      today: 'Today',
+      month: 'Month',
+      week: 'Week',
+      day: 'Day'
+    },
+    dateClick: function (info) {
+      // Show the add event form when a date is clicked
+      addEventForm.classList.remove('hidden');
+      eventStart.value = info.dateStr; // Corrected here
+      eventEnd.value = info.dateStr; // Set end date to the same as start date
+    },
+    // Handle event click for deletion
+    eventClick: function (info) {
+      handleEventDelete(info.event.id);
+    }
+  });
+
+  // Add Event Form submission
+  addEventForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    if (addEventForm.checkValidity() === false) {
+      e.stopPropagation();
+      [...addEventForm.elements].forEach((input) => {
+        const feedback = input.nextElementSibling;
+        if (input.tagName === 'INPUT') {
+          if (!input.checkValidity()) {
+            input.classList.add('border-red-500');
+            feedback.classList.remove('hidden');
+          } else {
+            input.classList.remove('border-red-500');
+            feedback.classList.add('hidden');
+          }
+        }
+      });
+      const red600 = '#dc2626';
+      const red700 = '#b91c1c';
+      showToaster('Fill the required input !', 'exclamation-error', red600, red700);
+      return false;
+    } else {
+      const title = document.getElementById('event-title').value;
+      const start = document.getElementById('event-start').value;
+      const end = document.getElementById('event-end').value;
+
+      const data = await fetch('./backend/admin_action.php?add_event=1', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, start, end }),
+      });
+
+      const response = await data.json();
+      if (response.success) {
+        calendar.addEvent({
+          id: response.event_id,
+          title: title,
+          start: start,
+          end: end
+        });
+
+        const green600 = '#047857';
+        const green700 = '#065f46';
+        showToaster('Event added successfully!', 'check', green600, green700);
+
+        // Reset and hide the form
+        addEventForm.reset();
+        addEventForm.classList.add('hidden');
+
+        // Remove validation classes after reset
+        [...addEventForm.elements].forEach((input) => {
+          if (input.tagName === 'INPUT') {
+            input.classList.remove('border-green-700', 'border-red-500');
+            const feedback = input.nextElementSibling;
+            if (feedback) feedback.classList.add('hidden'); // Hide feedback after reset
+          }
+        });
+      }
+    }
+  });
+
+  // Cancel Button
+  document.getElementById('cancel-event').addEventListener('click', () => {
+    addEventForm.reset();
+    [...addEventForm.elements].forEach(input => {
+      if (input.tagName === 'INPUT') {
+        input.classList.remove('border-red-500', 'border-green-700');
+        const feedback = input.nextElementSibling;
+        if (feedback && feedback.classList.contains('text-red-500')) {
+          feedback.classList.add('hidden');
+        }
+      }
+    });
+    addEventForm.classList.add('hidden');
+  });
+
+  calendar.render();
+
+
+
 });
 
 

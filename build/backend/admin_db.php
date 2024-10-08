@@ -35,29 +35,6 @@ class Database extends Config
     return $result['total'];
   }
 
-
-  // Fetch All For Pickup Booking From Database
-  public function fetchPickup()
-  {
-    $sql = "SELECT * FROM booking where status = 'for pick-up'";
-    $stmt = $this->conn->prepare($sql);
-    $stmt->execute();
-    $result = $stmt->fetchAll();
-
-    return $result;
-  }
-
-  // Fetch All For Delivery Booking From Database
-  public function fetchDelivery()
-  {
-    $sql = "SELECT * FROM booking where status = 'for delivery'";
-    $stmt = $this->conn->prepare($sql);
-    $stmt->execute();
-    $result = $stmt->fetchAll();
-
-    return $result;
-  }
-
   // Fetch User Specific Booking From Database
   public function readOne($id)
   {
@@ -171,36 +148,34 @@ class Database extends Config
     return $result;
   }
 
-  // Load all events
-  public function loadEvents()
+  //CAlENDAR CRUD OPERATION
+  public function fetchAllEvents()
   {
-    $sql = 'SELECT * FROM events';
+    $sql = 'SELECT * FROM calendar_event_master';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute();
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return $result;
   }
 
-  // Add new event
   public function addEvent($title, $start, $end)
   {
-    $sql = "INSERT INTO events (title, start_event, end_event) VALUES (?, ?, ?)";
+    $sql = 'INSERT INTO calendar_event_master (event_name, event_start_date, event_end_date) VALUES (:title, :start, :end)';
     $stmt = $this->conn->prepare($sql);
-    return $stmt->execute([$title, $start, $end]);
+    $stmt->execute(['title' => $title, 'start' => $start, 'end' => $end]);
+
+    // Return the ID of the newly created event
+    return $this->conn->lastInsertId();
   }
 
-  // Update event
-  public function updateEvent($id, $start, $end)
-  {
-    $sql = "UPDATE events SET start_event = ?, end_event = ? WHERE id = ?";
-    $stmt = $this->conn->prepare($sql);
-    return $stmt->execute([$start, $end, $id]);
-  }
+  public function deleteEvent($event_id)
+{
+  $sql = 'DELETE FROM calendar_event_master WHERE event_id = :event_id';
+  $stmt = $this->conn->prepare($sql);
+  return $stmt->execute(['event_id' => $event_id]);
+}
 
-  // Delete event
-  public function deleteEvent($id)
-  {
-    $sql = "DELETE FROM events WHERE id = ?";
-    $stmt = $this->conn->prepare($sql);
-    return $stmt->execute([$id]);
-  }
+
+  
 }

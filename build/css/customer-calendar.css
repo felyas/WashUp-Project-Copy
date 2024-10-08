@@ -1,0 +1,19 @@
+/* Change header title font size */
+.fc-toolbar h6 {
+  font-size: 1.5rem; /* Adjust as needed */
+}
+
+/* Style header buttons */
+.fc-button {
+  font-size: 1rem; /* Adjust font size */
+  padding: 10px 15px; /* Adjust padding */
+  background-color: #3b7da3; /* Change background color */
+  color: white; /* Change text color */
+  border: none; /* Remove default border */
+  border-radius: 5px; /* Adjust border radius */
+}
+
+/* Add hover effect for buttons */
+.fc-button:hover {
+  background-color: #2b5e76; /* Darker color on hover */
+}

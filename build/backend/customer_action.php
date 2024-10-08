@@ -200,3 +200,9 @@ if (isset($_GET['mark_as_read'])) {
   // Send a success response
   echo json_encode(['success' => true]);
 }
+
+// Handle fetch events Ajax Request
+if (isset($_GET['fetch_events'])) {
+  $events = $db->fetchAllEvents();
+  echo json_encode($events);
+}

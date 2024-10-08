@@ -114,4 +114,14 @@ class Database extends Config
     return $result['count'];
   }
 
+  //CAlENDAR READ ALL
+  public function fetchAllEvents()
+  {
+    $sql = 'SELECT * FROM calendar_event_master';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return $result;
+  }
 }

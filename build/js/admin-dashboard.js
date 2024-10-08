@@ -156,10 +156,22 @@ document.addEventListener("DOMContentLoaded", () => {
         // Append each notification to the container
         notifications.forEach(notification => {
           const notificationElement = document.createElement('div');
-          notificationElement.classList.add('p-2', 'flex', 'items-center', 'justify-between', 'bg-gray-200', 'mb-1');
+          notificationElement.classList.add('flex', 'items-center', 'justify-between', 'bg-gray-200', 'mb-1');
           notificationElement.innerHTML = `
-          <p class="w-auto">New booking request received (ID: ${notification.id})</p>
-          <button class="w-12 p-0 border-none font-bold js-notification-close" data-id="${notification.id}">&#10005;</button>
+          <div class="flex items-center p-4 bg-blue-100 border border-blue-200 rounded-lg shadow-md">
+            <img src="./img/about-bg1.png" alt="Notification Image" class="w-12 h-12 mr-4 rounded-full">
+            <div class="flex-1">
+              <p class="text-sm">
+                New booking request received 
+                <span class="font-semibold text-celestial">
+                  (ID: ${notification.id})
+                </span>
+              </p>
+            </div>
+            <button class="w-12 p-0 border-none font-bold js-notification-close" data-id="${notification.id}">
+              &#10005;
+            </button>
+          </div>
         `;
           notificationContainer.appendChild(notificationElement);
         });

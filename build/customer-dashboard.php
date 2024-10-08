@@ -67,14 +67,14 @@ if ($_SESSION['role'] !== 'user') {
                 </button>
 
                 <!-- Notification Dropdown -->
-                <div class="js-notification hidden h-auto w-80 z-10000 absolute top-[52px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
+                <div class="js-notification hidden h-auto w-96 z-10000 absolute top-[52px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
                   <div class="w-full p-4 flex items-center justify-between">
                     <h1 class="text- text-lg font-semibold">Notification</h1>
                     <p class="js-total-notifications"><!-- Dynamic Total Notification  -->0</p>
                   </div>
                   <hr class="w-full py-0">
 
-                  <div class="js-notification-messages p-4 w-full text-wrap">
+                  <div class="js-notification-messages p-2 w-full text-wrap">
                     <!-- Dynamic Real-time Notification -->
 
                     <!-- <div class="p-2 flex items-center justify-between bg-gray-200 mb-1">

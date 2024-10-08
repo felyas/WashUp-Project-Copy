@@ -69,7 +69,8 @@ class Database extends Config
   }
 
   // VIEW 1 ROW FROM DATABASE
-  public function viewSummary ($id) {
+  public function viewSummary($id)
+  {
     $sql = 'SELECT * FROM booking WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute(['id' => $id]);
@@ -79,33 +80,35 @@ class Database extends Config
   }
 
   // UPDATE PICKUP STATUS FROM DATABASE
-  public function updatePickup($id) {
+  public function updatePickup($id)
+  {
     $sql = 'UPDATE booking SET status = :status, is_read = :is_read WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
       'status' => 'on process',
-      'is_read' => 0,            
-      'id' => $id      
+      'is_read' => 0,
+      'id' => $id
     ]);
 
     return true;
   }
 
   // UPDATE PICKUP STATUS FROM DATABASE
-  public function updateDelivery($id) {
+  public function updateDelivery($id)
+  {
     $sql = 'UPDATE booking SET status = :status, is_read = :is_read WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
       'status' => 'is receive',
-      'is_read' => 0,            
-      'id' => $id      
+      'is_read' => 0,
+      'id' => $id
     ]);
 
     return true;
   }
 
   // Count the Total Based on Status from Database
-  public function countByStatus( $status)
+  public function countByStatus($status)
   {
     $sql = 'SELECT COUNT(*) as count FROM booking WHERE status = :status';
     $stmt = $this->conn->prepare($sql);
@@ -123,5 +126,30 @@ class Database extends Config
     $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     return $result;
+  }
+
+  // Fetch deliveries with status 'for pick-up' or 'for delivery' and delivery_is_read = 0
+  public function fetch_new_deliveries()
+  {
+    $sql = 'SELECT id, status, created_at 
+            FROM booking 
+            WHERE delivery_is_read = 0 
+              AND (status = "for pick-up" OR status = "for delivery") 
+            ORDER BY id DESC';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+
+    // Fetch all relevant delivery notifications
+    $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    return $notifications;
+  }
+
+  // Mark delivery notification as read
+  public function mark_delivery_as_read($deliveryId)
+  {
+    $sql = 'UPDATE booking SET delivery_is_read = 1 WHERE id = :id';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['id' => $deliveryId]);
   }
 }

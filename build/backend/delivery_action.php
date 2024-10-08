@@ -164,3 +164,24 @@ if (isset($_GET['fetch_events'])) {
   $events = $db->fetchAllEvents();
   echo json_encode($events);
 }
+
+// Handle Fetch New Delivery Notifications
+if (isset($_GET['fetch_new_deliveries'])) {
+
+  // Fetch deliveries where the status is either 'for pick-up' or 'for delivery'
+  $notifications = $db->fetch_new_deliveries();
+
+  // Send the notifications back as a JSON response
+  echo json_encode($notifications);
+}
+
+// Handle marking delivery as read (admin viewed notification)
+if (isset($_GET['mark_delivery_read'])) {
+  $deliveryId = $_GET['id'];
+
+  // Mark the specific delivery as read by the admin
+  $db->mark_delivery_as_read($deliveryId);
+
+  // Send a success response
+  echo json_encode(['success' => true]);
+}

@@ -17,11 +17,15 @@ if (isset($_GET['readAll'])) {
   $order = isset($_GET['order']) ? $_GET['order'] : 'desc';
   $query = isset($_GET['query']) ? $_GET['query'] : '';
   $status = isset($_GET['status']) ? $_GET['status'] : '';
+  $date = isset($_GET['date']) && $_GET['date'] !== '' ? $_GET['date'] : null;
 
   // Get filtered and paginated items
-  $bookings = $db->readAll($start, $limit, $column, $order, $query, $status);
-  $totalRows = $db->getTotalRows($query, $status);
+  $bookings = $db->readAll($start, $limit, $column, $order, $query, $status, $date);
+  $totalRows = $db->getTotalRows($query, $status, $date);
   $totalPages = ceil($totalRows / $limit);
+
+  // Get unique dates for the filter
+  $dates = $db->getUniqueDates();
 
   $output = '';
   if ($bookings) {
@@ -108,6 +112,7 @@ if (isset($_GET['readAll'])) {
     echo json_encode([
       'bookings' => $output,
       'pagination' => $paginationOutput,
+      'dates' => $dates,
     ]);
   } else {
     echo json_encode([

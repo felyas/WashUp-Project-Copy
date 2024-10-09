@@ -26,18 +26,46 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
-  // Fetch All items with pagination, search, and sorting
+  // Fetch All items with pagination, search, sorting, and filtering
+  const dateFilter = document.getElementById('date-filter');
+  let currentDateFilter = '';
   const fetchAll = async (page = 1, column = 'id', order = 'desc', query = '') => {
     const searchQuery = searchInput.value.trim() || query;
     const statusQuery = status || statusFilter.value; // Get status from dropdown or passed value
+    const dateQuery = currentDateFilter;
 
-    const data = await fetch(`./backend/delivery_action.php?readAll=1&page=${page}&column=${column}&order=${order}&query=${searchQuery}&status=${statusQuery}`, {
+    const data = await fetch(`./backend/delivery_action.php?readAll=1&page=${page}&column=${column}&order=${order}&query=${searchQuery}&status=${statusQuery}&date=${dateQuery}`, {
       method: 'GET',
     });
     const response = await data.json();
     tbody.innerHTML = response.bookings;
     paginationContainer.innerHTML = response.pagination;
+
+    // Populate date filter options
+    if (response.dates) {
+      populateDateFilter(response.dates);
+    }
   }
+
+  const populateDateFilter = (dates) => {
+    let options = '<option value="">Date: All</option>';
+    dates.forEach(date => {
+      const selected = date === currentDateFilter ? 'selected' : '';
+      options += `<option value="${date}" ${selected}>${formatDate(date)}</option>`;
+    });
+    dateFilter.innerHTML = options;
+  }
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString('en-US', options);
+  }
+
+  dateFilter.addEventListener('change', () => {
+    currentDateFilter = dateFilter.value;
+    fetchAll(1); // Reset to first page when changing filter
+  });
 
   // Handle Column Sorting 
   document.querySelectorAll('.sortable').forEach(th => {

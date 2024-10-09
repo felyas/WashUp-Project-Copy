@@ -6,66 +6,78 @@ class Database extends Config
 {
 
   // FETCH ROWS WHO HAS A STATUS OF 'FOR PICK-UP' & 'FOR DELIVERY'
-  public function readAll($start, $limit, $column, $order, $query, $status)
+  public function readAll($start, $limit, $column, $order, $query, $status, $date)
   {
-    $searchQuery = '%' . $query . '%'; // Adding wildcards for search
-    $statusCondition = $status ? 'AND status = :status' : ''; // Check if status filter is applied
+    $searchQuery = '%' . $query . '%';
+    $statusCondition = $status ? 'AND status = :status' : '';
+    $dateCondition = $date ? 'AND DATE(pickup_date) = :date' : '';
 
-    // Constructing the SQL query to search and order results
     $sql = "SELECT * FROM booking 
         WHERE (fname LIKE :query OR lname LIKE :query OR phone_number LIKE :query OR service_type LIKE :query OR address LIKE :query)
         AND status IN ('for pick-up', 'for delivery')
         $statusCondition
+        $dateCondition
         ORDER BY $column $order 
         LIMIT :start, :limit";
 
-    // Preparing the SQL statement
     $stmt = $this->conn->prepare($sql);
 
-    // Binding values for the search query, pagination start point, and limit
     $stmt->bindValue(':query', $searchQuery, PDO::PARAM_STR);
     if ($status) {
       $stmt->bindValue(':status', $status, PDO::PARAM_STR);
+    }
+    if ($date) {
+      $stmt->bindValue(':date', $date, PDO::PARAM_STR);
     }
     $stmt->bindValue(':start', $start, PDO::PARAM_INT);
     $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
 
-    // Executing the query
     $stmt->execute();
 
-    // Fetching the result as an associative array
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
   // COUNT TOTAL ROWS FOR PAGINATION BASED ON THE SEARCH QUERY AND STATUS
-  public function getTotalRows($query, $status)
+  public function getTotalRows($query, $status, $date)
   {
-    $searchQuery = '%' . $query . '%'; // Wildcards for search
-    $statusCondition = $status ? 'AND status = :status' : ''; // Status condition
+    $searchQuery = '%' . $query . '%';
+    $statusCondition = $status ? 'AND status = :status' : '';
+    $dateCondition = $date ? 'AND DATE(pickup_date) = :date' : '';
 
-    // SQL to count the total number of matching rows
     $sql = "SELECT COUNT(*) as total FROM booking 
-            WHERE (fname LIKE :query OR lname LIKE :query OR phone_number LIKE :query  OR service_type LIKE :query)
+            WHERE (fname LIKE :query OR lname LIKE :query OR phone_number LIKE :query OR service_type LIKE :query)
             AND status IN ('for pick-up', 'for delivery')
-            $statusCondition";
+            $statusCondition
+            $dateCondition";
 
-    // Preparing the statement
     $stmt = $this->conn->prepare($sql);
 
-    // Binding the search query value
     $stmt->bindValue(':query', $searchQuery, PDO::PARAM_STR);
     if ($status) {
       $stmt->bindValue(':status', $status, PDO::PARAM_STR);
     }
+    if ($date) {
+      $stmt->bindValue(':date', $date, PDO::PARAM_STR);
+    }
 
-    // Executing the query
     $stmt->execute();
 
-    // Fetching the total number of rows
     $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Return the total number of rows
     return $row['total'];
+  }
+
+  // Date From Claude
+  public function getUniqueDates()
+  {
+    $sql = "SELECT DISTINCT DATE(pickup_date) as unique_date FROM booking 
+            WHERE status IN ('for pick-up', 'for delivery') 
+            ORDER BY pickup_date";
+
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_COLUMN);
   }
 
   // VIEW 1 ROW FROM DATABASE

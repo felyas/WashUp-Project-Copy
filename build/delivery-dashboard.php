@@ -212,6 +212,12 @@ if ($_SESSION['role'] !== 'delivery') {
                         <option value="for delivery">Delivery</option>
                       </select>
                     </th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">
+                      <select id="date-filter" class="ml-2 px-2 py-1 text-sm border border-gray-300 rounded">
+                        <option value="">Date: All</option>
+                        <!-- Options will be populated dynamically -->
+                      </select>
+                    </th>
                     <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 text-center">ACTION</th>
                   </tr>
                 </thead>

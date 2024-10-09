@@ -420,6 +420,36 @@ if ($_SESSION['role'] !== 'user') {
     </div>
   </div>
 
+  <!-- Modal for Confirmation -->
+  <div class="toConfirmReceiveModal p-2 fixed inset-0 hidden bg-gray-900 bg-opacity-50 flex justify-center items-center z-20">
+    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2">
+      <div class="w-full h-auto py-2 flex flex-col items-center text-nowrap text-gray-500">
+        <div class="relative">
+          <div class="w-44 h-44 p-4 rounded-full border-8 border-solid border-federal flex items-center justify-center">
+            <img class="w-32 h-28" src="./img/original-logo.png" alt="">
+          </div>
+
+          <div class="absolute top-0 right-0 bg-white rounded-full">
+            <img class="w-16 h-16 rounded-full object-cover" src="./img/check-federal.svg" alt="">
+          </div>
+
+        </div>
+        <h1 class="text-2xl text-federal font-bold mb-4">Washup Laundry</h1>
+
+        <p class="text-md text-gray-500">Did you receive your laundry with an ID of <span id="bookingId-text"></span>?</p>
+      </div>
+
+      <form action="" class="w-full flex justify-center items-center space-x-4">
+        <input id="bookingId-input" class="hidden" type="text"> <!-- Include the booking ID here -->
+
+        <input id="confirmYes" class="transition py-2 px-4 bg-federal hover:bg-[#070c3f] rounded-md text-white font-semibold cursor-pointer" type="button" value="Yes!">
+        <button id="confirmNo" class="transition py-2 px-4 bg-gray-700 hover:bg-gray-600 rounded-md text-white font-semibold" type="button">Not Yet</button>
+      </form>
+    </div>
+  </div>
+
+
+
   <script type="module" src="./js/customer-dashboard.js"></script>
 </body>
 

@@ -21,6 +21,7 @@ const tbody = document.getElementById('users-booking-list');
 const paginationContainer = document.getElementById('pagination-container');
 const searchInput = document.getElementById('search-input');
 
+let modalShown = false; // Flag to track if modal has been shown
 // Fetch All Bookings with Pagination and Search
 const fetchAllBookings = async (page = 1) => {
   const searchQuery = searchInput.value.trim();
@@ -30,7 +31,55 @@ const fetchAllBookings = async (page = 1) => {
   const data = await response.json();
 
   tbody.innerHTML = data.rows;
-  paginationContainer.innerHTML = data.pagination; // Pagination displayed here
+  paginationContainer.innerHTML = data.pagination;
+
+  if (!modalShown) {
+    const isReceiveRow = document.querySelector('tr[data-status="is receive"]');
+    if (isReceiveRow) {
+      const bookingId = isReceiveRow.getAttribute('data-id');
+
+      // console.log(`I think it woks ${bookingId}`);
+      const isReceiveModal = document.querySelector('.toConfirmReceiveModal');
+      isReceiveModal.classList.remove('hidden');
+      document.getElementById('bookingId-text').innerText = bookingId;
+      document.getElementById('bookingId-input').value = bookingId;
+
+      const confirmYesBtn = document.getElementById('confirmYes');
+      const confirmNoBtn = document.getElementById('confirmNo');
+
+      confirmYesBtn.addEventListener('click', async () => {
+        const data = await fetch(`./backend/customer_action.php?confirmYes=1&id=${bookingId}`, {
+          method: 'GET',
+        });
+        const response = await data.text();
+        console.log(response);
+        if (response.includes('success')) {
+          isReceiveModal.classList.add('hidden');
+          fetchAllBookings();
+          const green600 = '#047857'; 
+          const green700 = '#065f46'; 
+          showToaster('Booking is completed, thank you so much!', 'check', green600, green700);
+        }
+      })
+
+      confirmNoBtn.addEventListener('click', async () => {
+        const data = await fetch(`./backend/customer_action.php?confirmNo=1&id=${bookingId}`, {
+          method: 'GET',
+        });
+        const response = await data.text();
+        console.log(response)
+        if(response.includes('success')) {
+          isReceiveModal.classList.add('hidden');
+          fetchAllBookings();
+          const blue600 = '#0E4483'; 
+          const blue700 = '#60A5FA'; 
+          showToaster("We're sorry, we'll work on it right away!", 'check', blue600, blue700);
+        }
+      })
+
+      modalShown = true;
+    }
+  }
 };
 
 // Search Input Event Listener
@@ -271,7 +320,7 @@ const fetchNotifications = async (lastCheckTime) => {
     setTimeout(() => {
       const currentTimestamp = new Date().toISOString(); // Use current time as last check
       fetchNotifications(currentTimestamp);
-    }, 10000); // Check every 5 seconds
+    }, 10000); // Check every 10 seconds
   } catch (error) {
     console.error('Error fetching notifications:', error);
   }

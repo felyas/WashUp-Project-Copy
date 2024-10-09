@@ -67,7 +67,7 @@ if (isset($_GET['read'])) {
       }
 
       $output .= '
-        <tr class="border-b border-gray-200">
+        <tr class="border-b border-gray-200" data-status="' . $row['status'] . '" data-id="' . $row['id'] . '">
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['id'] . '</td>
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['fname'] . ' ' . $row['lname'] . '</td>
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['created_at'] . '</td>
@@ -205,4 +205,22 @@ if (isset($_GET['mark_as_read'])) {
 if (isset($_GET['fetch_events'])) {
   $events = $db->fetchAllEvents();
   echo json_encode($events);
+}
+
+// Handle isReceive Confirm Yes Ajax Request 
+if(isset($_GET['confirmYes'])) {
+  $id = $_GET['id'];
+
+  if($db->updateToComplete($id)) {
+    echo $util->showMessage('success', 'Booking status updated successfully!');
+  }
+}
+
+// Handle isReceive Confirm No Ajax Request 
+if(isset($_GET['confirmNo'])) {
+  $id = $_GET['id'];
+
+  if($db->updateToDeliveryAgain($id)){
+    echo $util->showMessage('success', 'Booking status put back to for delivery successfully!');
+  }
 }

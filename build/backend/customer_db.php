@@ -166,4 +166,30 @@ class Database extends Config
     return $result;
   }
 
+  // UPDATE THE STATUS FROM 'is receive' TO 'complete' INTO DATABASE
+  public function updateToComplete($id) {
+    $sql = 'UPDATE booking SET status = :status, is_read = :is_read WHERE id = :id ';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'status' => 'complete',
+      'is_read' => 0,
+      'id' => $id
+    ]);
+
+    return true;
+  }
+
+  // PUT BACK THE STATUS FROM 'is receive' TO 'for delivery' INTO DATABASE
+  public function updateToDeliveryAgain($id) {
+    $sql = 'UPDATE booking SET status = :status, is_read = :is_read, delivery_is_read = :delivery_is_read WHERE id = :id ';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'status' => 'for delivery',
+      'is_read' => 0,
+      'delivery_is_read' => 0,
+      'id' => $id
+    ]);
+
+    return true;
+  }
 }

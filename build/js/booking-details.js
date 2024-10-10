@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   handleDisplayCurrentTime();
   handleDropdown();
   openModal('viewModalTrigger', 'toViewBookingModal', 'closeViewBookingModal', 'closeViewBookingModal2');
+  openModal('kiloModalTrigger', 'toUpdateKiloModal', 'closeUpdateKiloModal', 'closeUpdateKiloModal2');
 
   const tbody = document.getElementById('js-list-tbody');
   const paginationContainer = document.getElementById('pagination-container');
@@ -116,6 +117,14 @@ document.addEventListener("DOMContentLoaded", () => {
       admitWarningModal.show(deniedBooking, id);
     }
 
+    // Target the Update Kilo
+    if (e.target && (e.target.matches('a.kiloLink') || e.target.closest('a.kiloLink'))) {
+      e.preventDefault();
+      let targetElement = e.target.matches('a.kiloLink') ? e.target : e.target.closest('a.kiloLink');
+      let id = targetElement.getAttribute('id');
+      // console.log(id);
+      customerInfo(id);
+    }
   })
 
   // Fetch Booking Details Ajax Request
@@ -282,6 +291,252 @@ document.addEventListener("DOMContentLoaded", () => {
       fetchAll();
     }
   }
+
+  // Uploading Image and Updating Inventory Ajax Request
+  const maxInputs = 3;
+  let itemCount = 1; // Initial count is 1 because the first set of fields already exists
+  const addItemButton = document.getElementById('add-item');
+  const itemContainer = document.getElementById('item-quantity-container');
+
+  // Function to add new item and quantity inputs
+  function addItem() {
+    if (itemCount < maxInputs) {
+      itemCount++;
+
+      // Create a new div for item and quantity, with relative positioning for the delete button
+      const newItemDiv = document.createElement('div');
+      newItemDiv.classList.add('relative', 'grid', 'grid-cols-2', 'gap-4', 'p-2', 'border', 'border-solid', 'border-gray-200', 'rounded-md', 'shadow-sm');
+      newItemDiv.setAttribute('id', `item-set-${itemCount}`);
+
+      // Create a div for the first column (Item Used label and input)
+      const itemDiv = document.createElement('div');
+
+      // Create the input for item name
+      const itemLabel = document.createElement('label');
+      itemLabel.setAttribute('for', `item${itemCount}`);
+      itemLabel.classList.add('block', 'text-sm', 'font-medium', 'text-gray-500');
+      itemLabel.textContent = 'Item Used';
+
+      const itemInput = document.createElement('input');
+      itemInput.setAttribute('type', 'text');
+      itemInput.setAttribute('id', `item${itemCount}`);
+      itemInput.setAttribute('name', `item${itemCount}`); // Unique name
+      itemInput.setAttribute('placeholder', 'e.g., Detergent');
+      itemInput.setAttribute('required', '');
+      itemInput.classList.add('mt-1', 'block', 'w-full', 'border-gray-300', 'rounded-sm', 'py-2', 'px-2', 'border', 'border-solid', 'border-ashblack');
+
+      // Error message for item input
+      const itemError = document.createElement('div');
+      itemError.classList.add('text-red-500', 'text-sm', 'hidden');
+      itemError.textContent = 'Item is required!';
+
+      // Append label, input, and error to the item div
+      itemDiv.appendChild(itemLabel);
+      itemDiv.appendChild(itemInput);
+      itemDiv.appendChild(itemError);
+
+      // Create a div for the second column (Quantity label and input)
+      const quantityDiv = document.createElement('div');
+
+      // Create the input for quantity
+      const quantityLabel = document.createElement('label');
+      quantityLabel.setAttribute('for', `quantity${itemCount}`);
+      quantityLabel.classList.add('block', 'text-sm', 'font-medium', 'text-gray-500');
+      quantityLabel.textContent = 'Quantity';
+
+      const quantityInput = document.createElement('input');
+      quantityInput.setAttribute('type', 'number');
+      quantityInput.setAttribute('id', `quantity${itemCount}`);
+      quantityInput.setAttribute('name', `quantity${itemCount}`); // Unique name
+      quantityInput.setAttribute('placeholder', 'e.g., 2');
+      quantityInput.setAttribute('required', '');
+      quantityInput.classList.add('mt-1', 'block', 'w-full', 'border-gray-300', 'rounded-sm', 'py-2', 'px-2', 'border', 'border-solid', 'border-ashblack');
+
+      // Error message for quantity input
+      const quantityError = document.createElement('div');
+      quantityError.classList.add('text-red-500', 'text-sm', 'hidden');
+      quantityError.textContent = 'Quantity is required!';
+
+      // Append label, input, and error to the quantity div
+      quantityDiv.appendChild(quantityLabel);
+      quantityDiv.appendChild(quantityInput);
+      quantityDiv.appendChild(quantityError);
+
+      // Create delete button wrapper div
+      const deleteButtonDiv = document.createElement('div');
+      deleteButtonDiv.classList.add('absolute', 'h-5', 'w-5', 'flex', 'items-center', 'justify-center', 'top-1', 'right-1', 'px-2', 'py-1', 'bg-red-700', 'rounded-full', 'cursor-pointer'); // Apply padding and background color
+
+      // Create delete button with image
+      const deleteButton = document.createElement('button');
+      deleteButton.innerHTML = '<img class="w-3 h-3" src="./img/icons/x.svg" alt="">';
+      deleteButton.classList.add('text-red-500', 'hover:text-red-700', 'bg-transparent', 'font-bold');
+
+      // Set the onclick event handler for the delete button
+      deleteButtonDiv.onclick = () => {
+        itemContainer.removeChild(newItemDiv);
+        itemCount--;
+
+        // Show the "Add More Items" button if items are fewer than the limit
+        if (itemCount < maxInputs) {
+          addItemButton.style.display = 'block';
+        }
+      };
+
+      // Append itemDiv and quantityDiv to the newItemDiv
+      newItemDiv.appendChild(itemDiv);
+      newItemDiv.appendChild(quantityDiv);
+      deleteButtonDiv.appendChild(deleteButton);
+
+      // Append the new div to the container
+      itemContainer.appendChild(newItemDiv);
+      // Append the wrapper div to the new item div
+      newItemDiv.appendChild(deleteButtonDiv);
+
+      // Hide "Add More Items" button if the limit is reached
+      if (itemCount === maxInputs) {
+        addItemButton.style.display = 'none';
+      }
+    }
+  }
+
+  // Attach event listener to the "Add More Items" button
+  addItemButton.addEventListener('click', addItem);
+
+
+  const customerInfo = async (id) => {
+    const data = await fetch(`./backend/booking-details_action.php?customer-info=1&id=${id}`, {
+      method: 'GET',
+    });
+    const response = await data.json();
+    document.getElementById('display-id-info').innerText = response.id;
+    document.getElementById('display-full-name-info').innerText = response.fname + ' ' + response.lname;
+    document.getElementById('display-phone-number-info').innerText = response.phone_number;
+  }
+
+  const updateKiloForm = document.getElementById('upload-kilo-form');
+  const updateKiloBtn = document.getElementById('update-kilo-button');
+
+  // Handle the input validation for update kilo form
+  updateKiloForm.addEventListener('input', (e) => {
+    const target = e.target;
+    const feedback = target.nextElementSibling;
+
+    if (target.tagName === 'INPUT') {
+      if (target.checkValidity()) {
+        target.classList.remove('border-red-500');
+        target.classList.add('border-green-700');
+        feedback.classList.add('hidden');
+      } else {
+        target.classList.remove('border-green-700');
+        target.classList.add('border-red-500');
+        feedback.classList.remove('hidden');
+      }
+    }
+  });
+
+  // Handle form submission
+  updateKiloForm.addEventListener('submit', async (e) => {
+    e.preventDefault(); // Prevent the form from submitting
+
+    const bookingId = document.getElementById('display-id-info').innerText;
+    const formData = new FormData(updateKiloForm);
+    formData.append('updatekilo', 1);
+    formData.append('bookingId', bookingId);
+
+    // Form validation
+    if (updateKiloForm.checkValidity() === false) {
+      e.stopPropagation();
+
+      // Add validation error handling
+      [...updateKiloForm.elements].forEach((input) => {
+        const feedback = input.nextElementSibling;
+
+        if (input.tagName === 'INPUT' && (input.type === 'text' || input.type === 'number')) {
+          if (!input.checkValidity()) {
+            input.classList.add('border-red-500');
+            feedback.classList.remove('hidden');
+          } else {
+            input.classList.remove('border-red-500');
+            feedback.classList.add('hidden');
+          }
+        }
+      });
+      // Show error modal if validation fails
+      const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
+      errorWarningModal.show();
+      return false; // Stop form submission
+
+    } else {
+      // If validation passes
+      updateKiloBtn.value = 'Please Wait...';
+
+      const data = await fetch('./backend/booking-details_action.php', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const response = await data.json();
+      console.log(response);
+      if (response.status === 'success') {
+        updateKiloBtn.value = 'Submit';
+        const green600 = '#047857';
+        const green700 = '#065f46';
+        showToaster('Inventory updated successfully!', 'check', green600, green700);
+        updateKiloForm.reset();
+        document.querySelector('.toUpdateKiloModal').classList.add('hidden');
+
+        // Remove validation classes after reset
+        [...addItemForm.elements].forEach((input) => {
+          if (input.tagName === 'INPUT') {
+            input.classList.remove('border-green-700', 'border-red-500');
+          }
+        });
+        
+      } else if (response.status = 'out of stock') {
+        const red600 = '#dc2626';
+        const red700 = '#b91c1c';
+        showToaster(`${response.message}`, 'exclamation-error', red600, red700);
+        updateKiloBtn.value = 'Submit';
+        updateKiloForm.reset();
+        document.querySelector('.toUpdateKiloModal').classList.add('hidden');
+        
+        [...addItemForm.elements].forEach((input) => {
+          if (input.tagName === 'INPUT') {
+            input.classList.remove('border-green-700', 'border-red-500');
+          }
+        });
+
+      } else if (response.status = 'insufficient') {
+        const blue600 = '#0E4483';
+        const blue700 = '#60A5FA';
+        showToaster(`${response.message}`, 'exclamation-error', blue600, blue700);
+        updateKiloBtn.value = 'Submit';
+        updateKiloForm.reset();
+        document.querySelector('.toUpdateKiloModal').classList.add('hidden');
+        
+        [...addItemForm.elements].forEach((input) => {
+          if (input.tagName === 'INPUT') {
+            input.classList.remove('border-green-700', 'border-red-500');
+          }
+        });
+      } else {
+        const red600 = '#dc2626';
+        const red700 = '#b91c1c';
+        showToaster('Something went wrong !', 'exclamation-error', red600, red700);
+        updateKiloBtn.value = 'Submit';
+        updateKiloForm.reset();
+        document.querySelector('.toUpdateKiloModal').classList.add('hidden');
+        
+        [...addItemForm.elements].forEach((input) => {
+          if (input.tagName === 'INPUT') {
+            input.classList.remove('border-green-700', 'border-red-500');
+          }
+        });
+      }
+
+    }
+  });
+
 
 });
 

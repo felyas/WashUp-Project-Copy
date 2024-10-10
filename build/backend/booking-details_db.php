@@ -98,5 +98,51 @@ class Database extends Config
 
     return true;
   }
+
+  public function customerInfo($id) {
+    $sql = 'SELECT * FROM booking WHERE id = :id';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['id' => $id ]);
+    $result = $stmt->fetch();
+
+    return $result;
+  }
+
+  public function updateInventory($item, $quantity) {
+    $sql = 'UPDATE inventory
+            SET quantity = quantity - :quantity
+            WHERE product_name = :product_name';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'quantity' => $quantity,
+      'product_name' => $item,
+    ]);
+
+    return true;
+  }
+
+  public function updateKiloAndItems($id, $kilo, $items) {
+    $sql = 'UPDATE booking
+            SET kilo = :kilo, item_used = :item_used
+            WHERE id = :id';
+    $stmt = $this->conn->prepare($sql);
+    $itemUsed = json_encode($items);
+    $stmt->execute([
+      'kilo' => $kilo,
+      'item_used' => $itemUsed,
+      'id' => $id,
+    ]);
+
+    return true;
+  }
+
+  public function getItemQuantity($item) {
+    $sql = 'SELECT quantity FROM inventory WHERE product_name = :product_name';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['product_name' => $item]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $result ? $result['quantity'] : 0;
+  }
   
 }

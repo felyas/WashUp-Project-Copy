@@ -94,8 +94,17 @@ if (isset($_GET['readAll'])) {
                 <!-- Hourglass icon -->
                 <img class="w-4 h-4" src="./img/icons/hourglass-end-solid.svg" alt="edit">
               </div>
+            </a>
+            <a href="#" id="' . $row['id'] . '" class="kiloModalTrigger px-3 py-2 bg-[#090f4d] hover:bg-[#1a2479] rounded-md transition kiloLink">
+              <div class="relative">
+                <!-- Circle-check icon, positioned at the top -->
+                <img class="absolute -top-1 -right-3 transform -translate-x-1/2 w-3 h-3" src="./img/icons/circle-check-solid.svg" alt="process done">
+                <!-- Hourglass icon -->
+                <img class="w-4 h-4" src="./img/icons/jug-detergent.svg" alt="edit">
+              </div>
             </a>';
       }
+
 
       $output .= '
           </td>
@@ -159,4 +168,74 @@ if (isset($_GET['denied'])) {
   if ($db->deniedBooking($id)) {
     echo $util->showMessage('success', 'Booking denied !');
   }
+}
+
+// CUSTOMER INFO AJAX REQUEST
+if (isset($_GET['customer-info'])) {
+  $id = $_GET['id'];
+  $customerInfo = $db->customerInfo($id);
+  echo json_encode($customerInfo);
+}
+
+if (isset($_POST['updatekilo'])) {
+  $id = $util->testInput($_POST['bookingId']);
+  $kilo = $util->testInput($_POST['kilo']);
+
+  $items = [];
+
+  // First, validate all items and quantities before processing
+  for ($i = 1; $i <= 3; $i++) {
+    if (isset($_POST["item{$i}"]) && isset($_POST["quantity{$i}"])) {
+      $item = $util->testInput($_POST["item{$i}"]);
+      $quantity = $util->testInput($_POST["quantity{$i}"]);
+
+      $currentStock = $db->getItemQuantity($item);
+
+      // Check if the item is out of stock
+      if ($currentStock <= 0) {
+        echo json_encode([
+          'status' => 'out of stock',
+          'item' => $item,
+          'message' => "Item $item is out of stock.",
+        ]);
+        exit();
+      }
+
+      // Check if the requested quantity exceeds the current stock
+      if ($currentStock < $quantity) {
+        echo json_encode([
+          'status' => 'insufficient',
+          'item' => $item,
+          'message' => "Item $item has insufficient stock. Current stock: $currentStock",
+        ]);
+        exit();
+      }
+
+      // Add item to list if it passes validation
+      $items[] = [
+        'item' => $item,
+        'quantity' => $quantity,
+      ];
+    }
+  }
+
+  // If all items are valid, then proceed to update the inventory and booking
+  foreach ($items as $itemData) {
+    $item = $itemData['item'];
+    $quantity = $itemData['quantity'];
+
+    // Update inventory after validation
+    $db->updateInventory($item, $quantity);
+  }
+
+  // Insert kilo and items used into booking table
+  $db->updateKiloAndItems($id, $kilo, $items);
+
+  // Return success message
+  echo json_encode([
+    'status' => 'success',
+    'message' => 'Booking and inventory updated successfully',
+    'items' => $items,
+  ]);
+  exit();
 }

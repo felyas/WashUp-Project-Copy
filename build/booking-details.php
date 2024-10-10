@@ -117,7 +117,7 @@ if ($_SESSION['role'] !== 'admin') {
                 </button>
 
                 <!-- Notification Dropdown -->
-                <div class="js-notification hidden h-auto w-96 z-10000 absolute top-[52px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
+                <div class="js-notification hidden h-auto w-96 z-50 absolute top-[52px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
                   <div class="w-full p-4 flex items-center justify-between">
                     <h1 class="text- text-lg font-semibold">Notification</h1>
                     <p class="js-total-notifications"><!-- Dynamic Total Notification  -->0</p>
@@ -148,7 +148,7 @@ if ($_SESSION['role'] !== 'admin') {
       <!-- Main Content Area -->
       <main class="flex-1 p-6 flex flex-col items-center justify-center">
         <!-- Toaster -->
-        <div id="toaster" class="fixed top-4 right-4 hidden text-white shadow-lg z-50">
+        <div id="toaster" class="fixed top-4 right-4 hidden text-white shadow-lg z-50 max-w-72 sm:max-w-max text-wrap sm:text-nowrap">
           <!-- Dynamic Toaster Content -->
         </div>
 
@@ -221,7 +221,7 @@ if ($_SESSION['role'] !== 'admin') {
 
 
 
- 
+
   <?php
   include './modal.php';
   ?>
@@ -288,6 +288,98 @@ if ($_SESSION['role'] !== 'admin') {
       </div>
     </div>
   </div>
+
+
+
+  <!-- <p class="text-md font-semibold mb-2 text-gray-500">Upload Image</p> -->
+            <!-- <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-2">
+              <input type="file" id="file-upload" class="hidden" required>
+              <div class="text-red-500 text-center text-sm hidden">Image is required!</div>
+              <label for="file-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
+                <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
+                <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
+              </label>
+            </div> -->
+  <!-- Modal for Upload Kilo -->
+  <div class="toUpdateKiloModal hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-20">
+    <div class="bg-white shadow-lg rounded-3xl m-2">
+      <div class="flex items-center py-6 px-4 bg-federal text-white text-lg font-semibold rounded-t-3xl">
+        <h1 id="#top">Update the kilo</h1>
+      </div>
+      <div class="p-4 h-auto w-full overflow-y-auto max-h-64">
+        <div class="w-full text-ashblack text-md font-semibold mb-2">
+          <p class="justify-start">Booking info</p>
+        </div>
+
+        <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
+        <div class="grid grid-cols-2 gap-2">
+            <p>ID:</p>
+            <p id="display-id-info" class="justify-end flex"><!-- dynamic data --></p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <p>Customer Name:</p>
+            <p id="display-full-name-info" class="justify-end flex"><!-- dynamic data --></p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <p>Phone Number:</p>
+            <p id="display-phone-number-info" class="justify-end flex"><!-- dynamic data --></p>
+          </div>
+        </div>
+
+        <form action="" id="upload-kilo-form" novalidate>
+          <!-- Image Upload Section -->
+          <div class="flex flex-col items-center justify-center mb-4">
+
+
+            <!-- Laundry Kilo Section -->
+            <div class="w-full">
+              <label for="kilo" class="block text-sm font-medium text-gray-500">Laundry Kilo</label>
+              <input required type="number" id="kilo" name="kilo" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., 5" value="0">
+              <div class="text-red-500 text-sm hidden">Laundry kilo is required!</div>
+            </div>
+          </div>
+
+          <!-- Dynamic Item and Quantity Section -->
+          <div class="flex flex-col items-center mb-4">
+            <p class="text-md font-semibold mb-2 text-gray-500">Items Used and Quantity</p>
+
+            <div id="item-quantity-container" class="space-y-4 w-full">
+              <!-- Initial input set already in the HTML -->
+              <div class="grid grid-cols-2 gap-4 border border-solid border-gray-200 p-2 shadow-sm rounded-md" id="item-set-1">
+                <div>
+                  <label for="item-1" class="block text-sm font-medium text-gray-500">Item Used</label>
+                  <input type="text" id="item-1" name="item1" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., Detergent" required>
+                  <div class="text-red-500 text-sm hidden">Item is required!</div>
+                </div>
+                <div>
+                  <label for="quantity-1" class="block text-sm font-medium text-gray-500">Quantity</label>
+                  <input type="number" id="quantity-1" name="quantity1" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., 2" required>
+                  <div class="text-red-500 text-sm hidden">Quantity is required!</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Button to Add More Items -->
+            <div class="flex justify-end w-full">
+              <button type="button" id="add-item" class="mt-4 px-3 py-2  bg-gray-500 hover:bg-gray-700 text-white rounded-md">
+                <img class="w-5 h-5" src="./img/icons/add.svg" alt="">
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-center space-x-2">
+            <input id="update-kilo-button" type="submit" class="flex justify-center items-center px-4 py-2 bg-federal hover:bg-[#1a2479] text-white rounded-md mr-2" value="Submit">
+            <button type="button" class="closeUpdateKiloModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md mr-2">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
 
 
 

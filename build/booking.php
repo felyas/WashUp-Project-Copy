@@ -110,8 +110,7 @@ if (!isset($_SESSION['user_id'])) {
 
       <form id="add-booking-form" class="w-full px-6 border border-solid bg-white shadow-lg" novalidate>
         <div class="w-full">
-          <p class="pb-2 pt-6 text-md font-semibold">Checkout Details</p
-            </div>
+          <p class="pb-2 pt-6 text-md font-semibold">Checkout Details</p>
           <div class="grid grid-cols-2 gap-x-4 mb-2 align-top">
             <div class="grid grid-cols-1 justify-start">
               <label for="fname" class="text-sm text-gray-500">First Name</label>
@@ -144,15 +143,19 @@ if (!isset($_SESSION['user_id'])) {
           <div class="grid grid-cols-2 gap-x-4 mb-2">
             <div class="grid grid-cols-1 justify-start">
               <label for="pickup-date" class="text-sm text-gray-500">Pick-up Date</label>
-              <input type="date" name="pickup_date" class="p-2 border border-ashblack rounded-md" required>
+              <input type="date" id="pickup-date" name="pickup_date" class="p-2 border border-ashblack rounded-md" required>
               <div class="text-red-500 text-sm hidden">Pick-up date is required!</div>
             </div>
             <div class="grid grid-cols-1 justify-start">
               <label for="pickup-time" class="text-sm text-gray-500">Pick-up Time</label>
-              <input type="time" name="pickup_time" class="p-2 border border-ashblack rounded-md" required>
+              <select id="pickup-time" name="pickup_time" class="p-2 border border-ashblack rounded-md max-h-12 overflow-auto" required>
+                <!-- Options will be dynamically populated by JavaScript -->
+              </select>
+
               <div class="text-red-500 text-sm hidden">Pick-up time is required!</div>
             </div>
           </div>
+
           <div class="h-12 sm:h-8 w-full px-2 bg-orange-100 border-orange-500 border border-solid text-orange-800 flex items-center rounded-full text-sm font-semibold mb-2">
             <img class="h-4 w-4" src="./img/icons/danger-icon.svg" alt="">
             <p class="ml-2">Pick-up hours are only available until 6pm</p>
@@ -242,7 +245,7 @@ if (!isset($_SESSION['user_id'])) {
           <div class="w-full">
             <input type="submit" id="add-booking-btn" value="Submit" class="bg-green-700 hover:bg-green-800 py-2 px-4 w-full text-white rounded-lg mb-6 cursor-pointer">
           </div>
-
+        </div>
       </form>
 
     </section>

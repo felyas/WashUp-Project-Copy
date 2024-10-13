@@ -68,7 +68,7 @@ if (isset($_GET['readAll'])) {
               ' . strtoupper($row['status']) . '
             </div>
           </td>
-          <td class="min-w-[150px] h-auto flex items-center justify-center space-x-2 flex-grow">
+          <td class="min-w-[150px] h-auto flex items-center justify-start space-x-2 flex-grow">
             <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
               <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
             </a>';

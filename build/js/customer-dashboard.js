@@ -56,8 +56,8 @@ const fetchAllBookings = async (page = 1) => {
         if (response.includes('success')) {
           isReceiveModal.classList.add('hidden');
           fetchAllBookings();
-          const green600 = '#047857'; 
-          const green700 = '#065f46'; 
+          const green600 = '#047857';
+          const green700 = '#065f46';
           showToaster('Booking is completed, thank you so much!', 'check', green600, green700);
         }
       })
@@ -68,11 +68,11 @@ const fetchAllBookings = async (page = 1) => {
         });
         const response = await data.text();
         console.log(response)
-        if(response.includes('success')) {
+        if (response.includes('success')) {
           isReceiveModal.classList.add('hidden');
           fetchAllBookings();
-          const blue600 = '#0E4483'; 
-          const blue700 = '#60A5FA'; 
+          const blue600 = '#0E4483';
+          const blue700 = '#60A5FA';
           showToaster("We're sorry, we'll work on it right away!", 'check', blue600, blue700);
         }
       })

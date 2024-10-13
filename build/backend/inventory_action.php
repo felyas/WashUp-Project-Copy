@@ -96,7 +96,7 @@ if (isset($_GET['readAll'])) {
                       ' . strtoupper($row['status']) . '
                     </div>
                   </td>
-                  <td class="min-w-[100px] h-auto flex items-center justify-center space-x-2 flex-grow">
+                  <td class="min-w-[100px] h-auto flex items-center justify-start space-x-2 flex-grow">
                       <a href="#" id="' . htmlspecialchars($row['product_id']) . '" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
                           <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
                       </a>

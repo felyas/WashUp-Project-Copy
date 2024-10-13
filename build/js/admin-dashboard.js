@@ -412,6 +412,24 @@ document.addEventListener("DOMContentLoaded", () => {
       week: 'Week',
       day: 'Day'
     },
+    views: {
+      listWeek: {                    // Week view
+        titleFormat: {              // Format for week view
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric'          // e.g., 'Sep 13 2009'
+        }
+      }
+    },
+    // Add eventRender function to style the title
+    eventDidMount: function (info) {
+      // Select the title element and apply inline styles
+      const titleElement = document.querySelector('.fc-toolbar-title');
+      if (titleElement) {
+        titleElement.style.fontSize = '1rem'; // Adjust the font size as needed
+        titleElement.style.fontWeight = 'bold'; // Adjust weight if desired
+      }
+    },
     dateClick: function (info) {
       // Show the add event form when a date is clicked
       addEventForm.classList.remove('hidden');

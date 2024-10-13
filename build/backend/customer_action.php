@@ -79,7 +79,10 @@ if (isset($_GET['read'])) {
             </div>
           </td>
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
-            <div class="flex justify-center space-x-2 min-w-[150px]">';
+            <div class="flex justify-start space-x-2 min-w-[150px]">
+              <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
+                <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+              </a>';
 
       // Action buttons based on status
       if ($row['status'] == 'pending') {
@@ -93,9 +96,6 @@ if (isset($_GET['read'])) {
       }
 
       $output .= '
-          <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
-            <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-          </a>
           </div>
         </td>
       </tr>';

@@ -196,7 +196,7 @@ if ($_SESSION['role'] !== 'admin') {
                         <option value="critical">Critial</option>
                       </select>
                     </th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 text-center">ACTION</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ACTION</th>
                   </tr>
                 </thead>
 
@@ -239,11 +239,11 @@ if ($_SESSION['role'] !== 'admin') {
             <p>Product Name:</p>
             <p id="display-product-name" class=" flex">Zonrox<!-- dynamic data --></p>
           </div>
-          <div class="grid grid-cols-2 gap-2">
+          <div class="grid grid-cols-2 gap-2 mb-2">
             <p>Bar Code:</p>
             <p id="display-bar-code" class=" flex">115824<!-- dynamic data --></p>
           </div>
-          <div class="grid grid-cols-2 gap-2">
+          <div class="grid grid-cols-2 gap-2 pt-4">
             <div>
               <label for="quantity" class="block text-sm font-medium text-gray-500">Max Qty</label>
               <p id="display-max-qty" class="flex text-sm">100<!-- dynamic data --></p>

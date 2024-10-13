@@ -254,7 +254,7 @@ if ($_SESSION['role'] !== 'delivery') {
           </div>
 
           <!-- Second div taking 1/4 of the width on large screens -->
-          <div class="col-span-4 h-80 lg:col-span-1 w-auto bg-white border border-solid border-gray-200 shadow-lg p-2">
+          <div class="col-span-4 lg:col-span-1 w-auto bg-white border border-solid border-gray-200 shadow-lg p-2">
             <div id="calendar">
               <!-- Calendar goes here -->
             </div>

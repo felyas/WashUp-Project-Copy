@@ -200,7 +200,7 @@ if ($_SESSION['role'] !== 'admin') {
                           <option value="complete">Complete</option>
                         </select>
                       </th>
-                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 text-center">ACTION</th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ACTION</th>
                     </tr>
                   </thead>
 

@@ -57,6 +57,7 @@ if (isset($_GET['readAll'])) {
                         ' . strtoupper($row['status']) . '
                       </div>
                     </td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['pickup_date'] . '</td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle min-w-[150px]">
                       <div class="flex justify-center space-x-2">
                         <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">

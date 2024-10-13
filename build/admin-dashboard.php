@@ -282,7 +282,7 @@ if ($_SESSION['role'] !== 'admin') {
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ID</th>
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">CUSTOMER NAME</th>
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ADDRESS</th>
-                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 text-center">ACTION</th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ACTION</th>
                     </tr>
                   </thead>
                   <tbody id="js-pending-tbody">
@@ -297,7 +297,7 @@ if ($_SESSION['role'] !== 'admin') {
           </div>
 
           <!-- Second Div (Calendar Section) -->
-          <div class="w-full h-80 bg-white rounded-sm shadow-lg border border-solid border-gray-200">
+          <div class="w-full bg-white rounded-sm shadow-lg border border-solid border-gray-200">
             <div id="calendar" class="p-4">
               <!-- Calendar goes here -->
             </div>

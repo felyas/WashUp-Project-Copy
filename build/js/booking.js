@@ -9,33 +9,54 @@ backToDashboardBtn.addEventListener('click', () => {
   window.location.href = './customer-dashboard.php';
 });
 
-// Function: Format time to 12-hour format with AM/PM
-const formatTime = (date) => {
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  const period = hours >= 12 ? 'PM' : 'AM';
-  const formattedHours = hours % 12 || 12;
-  const formattedMinutes = String(minutes).padStart(2, '0');
-  return `${formattedHours}:${formattedMinutes} ${period}`;
-};
+// Function to set the minimum date and display the current date in the pick-up date input
+function setMinDate() {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const dd = String(today.getDate()).padStart(2, '0');
+  const currentDate = `${yyyy}-${mm}-${dd}`;
 
-// Function: Set current date and time in the input fields
-const setCurrentDateTime = () => {
-  const now = new Date();
-  const pickupDateInput = document.querySelector('input[name="pickup_date"]');
-  const pickupTimeInput = document.querySelector('input[name="pickup_time"]');
+  const dateInput = document.getElementById('pickup-date');
 
-  // Set current date and time + 30 minutes
-  pickupDateInput.value = now.toISOString().split('T')[0];
-  now.setMinutes(now.getMinutes() + 30);
-  pickupTimeInput.value = now.toTimeString().substring(0, 5); // Format time
-};
+  // Set both min and value attributes to today's date
+  dateInput.setAttribute('min', currentDate);
+  dateInput.setAttribute('value', currentDate);
+}
+
+// Function to generate 20-minute interval time options from 8:00 AM to 9:00 PM
+function populateTimeOptions() {
+  const selectTime = document.getElementById('pickup-time');
+  const startTime = 8 * 60; // 8:00 AM in minutes
+  const endTime = 21 * 60; // 9:00 PM in minutes
+  const interval = 20; // 20 minutes
+
+  for (let time = startTime; time <= endTime; time += interval) {
+    const hours = Math.floor(time / 60);
+    const minutes = time % 60;
+
+    const isPM = hours >= 12;
+    const displayHours = hours % 12 || 12; // Convert to 12-hour format
+    const displayMinutes = minutes.toString().padStart(2, '0');
+    const ampm = isPM ? 'PM' : 'AM';
+
+    const timeFormatted = `${displayHours}:${displayMinutes} ${ampm}`;
+
+    const option = document.createElement('option');
+    option.value = timeFormatted; // Set the value to the same format as the text
+    option.textContent = timeFormatted; // Set the text content
+
+    selectTime.appendChild(option);
+  }
+}
+
 
 const addBookingForm = document.getElementById('add-booking-form');
 const addBookingBtn = document.getElementById('add-booking-btn');
 // Initialize date/time when the page loads
 document.addEventListener("DOMContentLoaded", () => {
-  setCurrentDateTime();
+  setMinDate();
+  populateTimeOptions();
 
   // Handle the input validation from add bookings
   addBookingForm.addEventListener('input', (e) => {
@@ -108,10 +129,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // Disable the submit button to prevent further clicks
         addBookingBtn.disabled = true;
         addBookingBtn.classList.add('opacity-50', 'cursor-not-allowed'); // Optionally change the button style
+        window.location.href = './customer-dashboard.php';
 
-        setTimeout(() => {
-          window.location.href = './customer-dashboard.php';
-        }, 500);
       } else {
         const red600 = '#d95f5f';
         const red700 = '#c93c3c';

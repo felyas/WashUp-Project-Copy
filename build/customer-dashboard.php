@@ -196,7 +196,7 @@ if ($_SESSION['role'] !== 'user') {
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">SERVICE</th>
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">SERVICE TYPE</th>
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">STATUS</th>
-                      <th class="px-4 py-2 font-medium text-sm text-ashblack text-center border-b border-gray-200">ACTION</th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ACTION</th>
                     </tr>
                   </thead>
                   <tbody id="users-booking-list">
@@ -234,7 +234,7 @@ if ($_SESSION['role'] !== 'user') {
 
 
           <!-- Second div taking 1/4 of the width on large screens -->
-          <div class="col-span-4 lg:col-span-1 w-auto h-80 bg-white border border-solid border-gray-200 shadow-lg">
+          <div class="col-span-4 lg:col-span-1 w-auto bg-white border border-solid border-gray-200 shadow-lg">
             <div id="calendar" class="p-2">
               <!-- Calendar goes here -->
             </div>

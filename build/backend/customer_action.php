@@ -142,12 +142,10 @@ if (isset($_POST['update'])) {
   $id = $util->testInput($_POST['id']);
   $fname = $util->testInput($_POST['fname']);
   $lname = $util->testInput($_POST['lname']);
-  $pickup_date = $util->testInput($_POST['pickup_date']);
-  $pickup_time = $util->testInput($_POST['pickup_time']);
   $phone_number = $util->testInput($_POST['phone_number']);
   $address = $util->testInput($_POST['address']);
 
-  if ($db->updateBooking($id, $fname, $lname, $pickup_date, $pickup_time, $phone_number, $address)) {
+  if ($db->updateBooking($id, $fname, $lname, $phone_number, $address)) {
     echo $util->showMessage('success', 'Booking updated successfully');
   }
 }
@@ -208,19 +206,26 @@ if (isset($_GET['fetch_events'])) {
 }
 
 // Handle isReceive Confirm Yes Ajax Request 
-if(isset($_GET['confirmYes'])) {
+if (isset($_GET['confirmYes'])) {
   $id = $_GET['id'];
 
-  if($db->updateToComplete($id)) {
+  if ($db->updateToComplete($id)) {
     echo $util->showMessage('success', 'Booking status updated successfully!');
   }
 }
 
 // Handle isReceive Confirm No Ajax Request 
-if(isset($_GET['confirmNo'])) {
+if (isset($_GET['confirmNo'])) {
   $id = $_GET['id'];
 
-  if($db->updateToDeliveryAgain($id)){
+  if ($db->updateToDeliveryAgain($id)) {
     echo $util->showMessage('success', 'Booking status put back to for delivery successfully!');
   }
+}
+
+// Handle fetching unavailable times for a specific date
+if (isset($_GET['get_unavailable_times'])) {
+  $date = $_GET['date'];
+  $unavailableTimes = $db->getUnavailableTimesForDate($date);
+  echo json_encode($unavailableTimes);
 }

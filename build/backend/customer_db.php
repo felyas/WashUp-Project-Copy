@@ -88,16 +88,14 @@ class Database extends Config
 
 
   // Update Specific Booking From Database
-  public function updateBooking($id, $fname, $lname, $pickup_date, $pickup_time, $phone_number, $address)
+  public function updateBooking($id, $fname, $lname, $phone_number, $address)
   {
-    $sql = 'UPDATE booking SET fname = :fname, lname = :lname, pickup_date = :pickup_date, pickup_time = :pickup_time, phone_number = :phone_number, address = :address WHERE id = :id';
+    $sql = 'UPDATE booking SET fname = :fname, lname = :lname, phone_number = :phone_number, address = :address WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
       'id' => $id,
       'fname' => $fname,
       'lname' => $lname,
-      'pickup_date' => $pickup_date,
-      'pickup_time' => $pickup_time,
       'phone_number' => $phone_number,
       'address' => $address,
     ]);
@@ -166,8 +164,9 @@ class Database extends Config
     return $result;
   }
 
-  // UPDATE THE STATUS FROM 'is receive' TO 'complete' INTO DATABASE
-  public function updateToComplete($id) {
+  // UPDATE THE STATUS FROM 'delivered' TO 'complete' INTO DATABASE
+  public function updateToComplete($id)
+  {
     $sql = 'UPDATE booking SET status = :status, is_read = :is_read WHERE id = :id ';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
@@ -180,7 +179,8 @@ class Database extends Config
   }
 
   // PUT BACK THE STATUS FROM 'is receive' TO 'for delivery' INTO DATABASE
-  public function updateToDeliveryAgain($id) {
+  public function updateToDeliveryAgain($id)
+  {
     $sql = 'UPDATE booking SET status = :status, is_read = :is_read, delivery_is_read = :delivery_is_read WHERE id = :id ';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
@@ -192,4 +192,16 @@ class Database extends Config
 
     return true;
   }
+
+  // Fetch unavailable times for a specific date
+  public function getUnavailableTimesForDate($date)
+  {
+    $sql = 'SELECT pickup_time FROM booking WHERE pickup_date = :pickup_date';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['pickup_date' => $date]);
+    $result = $stmt->fetchAll(PDO::FETCH_COLUMN); // Fetch only the pickup_time column
+    return $result;
+  }
+
+
 }

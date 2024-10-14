@@ -66,7 +66,7 @@ if (isset($_GET['readAll'])) {
       // If status is 'for pick-up', append pickupLink
       if ($row['status'] === 'for pick-up') {
         $output .= '
-            <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-[#3b7da3] hover:bg-[#316988] rounded-md transition pickupLink">
+            <a href="#" id="' . $row['id'] . '" class="updateKiloTrigger px-3 py-2 bg-[#3b7da3] hover:bg-[#316988] rounded-md transition pickupLink">
               <div class="relative">
                 <img class="absolute -top-1 -right-3 transform -translate-x-1/2 w-3 h-3" src="./img/icons/circle-check-solid.svg" alt="process done">
                 <img class="w-4 h-4" src="./img/icons/box.svg" alt="edit">
@@ -190,4 +190,56 @@ if (isset($_GET['mark_delivery_read'])) {
 
   // Send a success response
   echo json_encode(['success' => true]);
+}
+
+// Handle Update Kilo Info Ajax Request
+if (isset($_GET['info-for-kilo-update'])) {
+  $id = $_GET['id'];
+  $view = $db->viewSummary($id);
+
+  echo json_encode($view);
+}
+
+if (isset($_POST['add-kilo'])) {
+  $id = $util->testInput($_POST['booking_id']);
+  $kilo = $util->testInput($_POST['kilo']);
+
+  // Handle file upload
+  $target_dir = "uploads/";
+  $target_file = $target_dir . basename($_FILES["file-upload"]["name"]);
+  $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+
+  // Validate file as an image
+  if(getimagesize($_FILES["file-upload"]["tmp_name"]) !== false ){
+    // Move uploaded file to target directory
+    if(move_uploaded_file($_FILES["file-upload"]["tmp_name"], $target_file)) {
+      // Update booking in the database
+      $result = $db->updateKiloAndProof($id, $kilo, $target_file);
+
+      if($result === true) {
+        echo json_encode([
+          'status' => 'success',
+          'message' => 'Kilo and image updated successfully!'
+        ]);
+      } else {
+        echo json_encode([
+          'status' => 'error',
+          'message' => 'Failed to update booking!'
+        ]);
+      }
+
+    } else {
+      echo json_encode([
+        'status' => 'error',
+        'message' => 'Error uploading image!'
+      ]);
+    }
+
+  } else {
+    echo json_encode([
+      'status' => 'error',
+      'message' => 'File is not valid image!'
+    ]);
+  }
+  exit();
 }

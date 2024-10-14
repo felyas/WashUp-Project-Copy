@@ -486,7 +486,7 @@ document.addEventListener("DOMContentLoaded", () => {
         document.querySelector('.toUpdateKiloModal').classList.add('hidden');
 
         // Remove validation classes after reset
-        [...addItemForm.elements].forEach((input) => {
+        [...updateKiloForm.elements].forEach((input) => {
           if (input.tagName === 'INPUT') {
             input.classList.remove('border-green-700', 'border-red-500');
           }
@@ -500,7 +500,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateKiloForm.reset();
         document.querySelector('.toUpdateKiloModal').classList.add('hidden');
         
-        [...addItemForm.elements].forEach((input) => {
+        [...updateKiloForm.elements].forEach((input) => {
           if (input.tagName === 'INPUT') {
             input.classList.remove('border-green-700', 'border-red-500');
           }
@@ -514,7 +514,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateKiloForm.reset();
         document.querySelector('.toUpdateKiloModal').classList.add('hidden');
         
-        [...addItemForm.elements].forEach((input) => {
+        [...updateKiloForm.elements].forEach((input) => {
           if (input.tagName === 'INPUT') {
             input.classList.remove('border-green-700', 'border-red-500');
           }
@@ -527,7 +527,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateKiloForm.reset();
         document.querySelector('.toUpdateKiloModal').classList.add('hidden');
         
-        [...addItemForm.elements].forEach((input) => {
+        [...updateKiloForm.elements].forEach((input) => {
           if (input.tagName === 'INPUT') {
             input.classList.remove('border-green-700', 'border-red-500');
           }

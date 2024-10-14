@@ -21,12 +21,13 @@ function setMinDate() {
 
   // Set both min and value attributes to today's date
   dateInput.setAttribute('min', currentDate);
-  dateInput.setAttribute('value', currentDate);
 }
 
-// Function to generate 20-minute interval time options from 8:00 AM to 9:00 PM
-function populateTimeOptions() {
+// Function to generate 20-minute interval time options from 8:00 AM to 9:00 PM, with unavailable times disabled
+function populateTimeOptions(unavailableTimes = []) {
   const selectTime = document.getElementById('pickup-time');
+  selectTime.innerHTML = ''; // Clear previous options
+
   const startTime = 8 * 60; // 8:00 AM in minutes
   const endTime = 21 * 60; // 9:00 PM in minutes
   const interval = 20; // 20 minutes
@@ -43,8 +44,14 @@ function populateTimeOptions() {
     const timeFormatted = `${displayHours}:${displayMinutes} ${ampm}`;
 
     const option = document.createElement('option');
-    option.value = timeFormatted; // Set the value to the same format as the text
-    option.textContent = timeFormatted; // Set the text content
+    option.value = timeFormatted;
+    option.textContent = timeFormatted;
+
+    // Disable the option if it's in the unavailable times array
+    if (unavailableTimes.includes(timeFormatted)) {
+      option.disabled = true; // Disable the option if it's already booked
+      option.textContent += ' (Unavailable)'; // Append (Unavailable) to the text
+    }
 
     selectTime.appendChild(option);
   }
@@ -57,6 +64,15 @@ const addBookingBtn = document.getElementById('add-booking-btn');
 document.addEventListener("DOMContentLoaded", () => {
   setMinDate();
   populateTimeOptions();
+
+  document.getElementById('pickup-date').addEventListener('change', async function () {
+    const selectedDate = this.value; // Get the selected date
+    if (selectedDate) {
+      const response = await fetch(`./backend/customer_action.php?get_unavailable_times=1&date=${selectedDate}`);
+      const unavailableTimes = await response.json(); // Fetch unavailable times from the backend
+      populateTimeOptions(unavailableTimes); // Populate time options with unavailable times disabled
+    }
+  });
 
   // Handle the input validation from add bookings
   addBookingForm.addEventListener('input', (e) => {
@@ -138,90 +154,5 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
   });
-
-  function notificationCopy() {
-    // Long polling function for fetching notifications
-    const fetchNotifications = async (lastCheckTime) => {
-      try {
-        const response = await fetch(`./backend/customer_action.php?fetch_notifications=1&last_check=${lastCheckTime}`);
-        const notifications = await response.json();
-
-        const notificationContainer = document.querySelector('.js-notification-messages');
-        const notificationDot = document.querySelector('.js-notification-dot'); // Red dot element
-        const totalNotificationsElement = document.querySelector('.js-total-notifications'); // Total notifications element
-
-        // If there are new notifications, display them
-        if (notifications.length > 0) {
-          // Clear existing messages
-          notificationContainer.innerHTML = '';
-
-          // Append each notification to the container
-          notifications.forEach(notification => {
-            const notificationElement = document.createElement('div');
-            notificationElement.classList.add('p-2', 'flex', 'items-center', 'justify-between', 'bg-gray-200', 'mb-1');
-            notificationElement.innerHTML = `
-          <p class="w-auto">Booking #${notification.id} status updated to "${notification.status}"</p>
-          <button class="w-12 p-0 border-none font-bold js-notification-close" data-id="${notification.id}">&#10005;</button>
-        `;
-            notificationContainer.appendChild(notificationElement);
-          });
-
-          // Update total notification count
-          totalNotificationsElement.textContent = notifications.length;
-          notificationDot.classList.remove('hidden');
-          // Calling other function to update the UI
-          fetchAllBookings();
-          fetchBookingCounts();
-        } else {
-          notificationDot.classList.add('hidden');
-        }
-
-        // Continue long polling after 5 seconds
-        setTimeout(() => {
-          const currentTimestamp = new Date().toISOString(); // Use current time as last check
-          fetchNotifications(currentTimestamp);
-        }, 10000); // Check every 5 seconds
-      } catch (error) {
-        console.error('Error fetching notifications:', error);
-      }
-    };
-
-    // Initial call to start long polling
-    let initialTimestamp = new Date().toISOString(); // Start with the current time
-    fetchNotifications(initialTimestamp);
-
-    // Toggle notification dropdown visibility on bell icon click
-    document.querySelector('.js-notification-button').addEventListener('click', () => {
-      const notificationDropdown = document.querySelector('.js-notification');
-      const notificationDot = document.querySelector('.js-notification-dot');
-
-      // Show or hide the notification dropdown
-      notificationDropdown.classList.toggle('hidden');
-
-      // Hide the red dot once notifications are viewed
-      if (!notificationDropdown.classList.contains('hidden')) {
-        notificationDot.classList.add('hidden'); // Hide the red dot
-      }
-    });
-
-    // Handle closing individual notifications
-    document.addEventListener('click', async (e) => {
-      if (e.target.classList.contains('js-notification-close')) {
-        const notificationId = e.target.getAttribute('data-id');
-        e.target.parentElement.remove(); // Remove notification from UI
-
-        // Send a request to the server to mark this notification as read
-        const response = await fetch(`./backend/customer_action.php?mark_as_read=1&id=${notificationId}`);
-        const data = await response.json();
-
-        if (data.success) {
-          console.log('Notification marked as read.');
-        } else {
-          console.error('Failed to mark notification as read.');
-        }
-      }
-    });
-  }
-  notificationCopy();
 });
 

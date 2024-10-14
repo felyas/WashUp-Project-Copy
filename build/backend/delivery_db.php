@@ -111,7 +111,7 @@ class Database extends Config
     $sql = 'UPDATE booking SET status = :status, is_read = :is_read WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
-      'status' => 'is receive',
+      'status' => 'delivered',
       'is_read' => 0,
       'id' => $id
     ]);
@@ -164,4 +164,21 @@ class Database extends Config
     $stmt = $this->conn->prepare($sql);
     $stmt->execute(['id' => $deliveryId]);
   }
+
+  // Update Kilo and Proof of Kilo for an Existing Booking
+  public function updateKiloAndProof($id, $kilo, $image_path) {
+    $sql = 'UPDATE booking SET kilo = :kilo, image_proof = :image_path WHERE id = :id';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'kilo' => $kilo,
+      'image_path' => $image_path,
+      'id' => $id,
+    ]);
+    $result = $stmt->rowCount() > 0;
+    
+    return $result;
+  }
+
+
+
 }

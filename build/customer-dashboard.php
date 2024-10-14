@@ -329,18 +329,6 @@ if ($_SESSION['role'] !== 'user') {
             <div class="text-red-500 text-sm hidden">Last name is required!</div>
           </div>
         </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div class="mb-4">
-            <label for="pickup_date" class="block text-sm font-medium text-gray-500">Pick-up Date</label>
-            <input type="date" id="pickup_date" name="pickup_date" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Pick-up Date: ">
-            <div class="text-red-500 text-sm hidden">Pick-up date is required!</div>
-          </div>
-          <div class="mb-4">
-            <label for="pickup_time" class="block text-sm font-medium text-gray-500">Pick-up Time</label>
-            <input type="time" id="pickup_time" name="pickup_time" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Pick-up Time: ">
-            <div class="text-red-500 text-sm hidden">Pick-up time is required!</div>
-          </div>
-        </div>
         <div class="mb-4">
           <label for="phone_number" class="block text-sm font-medium text-gray-500">Phone Number</label>
           <input type="text" id="phone_number" name="phone_number" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., +63 912 345 6789">

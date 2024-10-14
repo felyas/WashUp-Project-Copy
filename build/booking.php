@@ -114,12 +114,12 @@ if (!isset($_SESSION['user_id'])) {
           <div class="grid grid-cols-2 gap-x-4 mb-2 align-top">
             <div class="grid grid-cols-1 justify-start">
               <label for="fname" class="text-sm text-gray-500">First Name</label>
-              <input type="text" name="fname" class="p-2 border border-ashblack rounded-md" placeholder="Felix" required>
+              <input type="text" name="fname" class="p-2 border border-ashblack rounded-md" value="<?= $_SESSION['first_name'] ?? '' ?>" required>
               <div class="text-red-500 text-sm hidden">First name is required!</div>
             </div>
             <div class="grid grid-cols-1 justify-start">
               <label for="lname" class="text-sm text-gray-500">Last Name</label>
-              <input type="text" name="lname" class="p-2 border border-ashblack rounded-md" placeholder="Bragais" required>
+              <input type="text" name="lname" class="p-2 border border-ashblack rounded-md" value="<?= $_SESSION['last_name'] ?? '' ?>" required>
               <div class="text-red-500 text-sm hidden">Last name is required!</div>
             </div>
           </div>
@@ -151,7 +151,6 @@ if (!isset($_SESSION['user_id'])) {
               <select id="pickup-time" name="pickup_time" class="p-2 border border-ashblack rounded-md max-h-12 overflow-auto" required>
                 <!-- Options will be dynamically populated by JavaScript -->
               </select>
-
               <div class="text-red-500 text-sm hidden">Pick-up time is required!</div>
             </div>
           </div>

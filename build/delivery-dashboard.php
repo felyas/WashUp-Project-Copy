@@ -266,6 +266,8 @@ if ($_SESSION['role'] !== 'delivery') {
     </div>
   </div>
 
+  <?php include('./modal.php')  ?>
+
 
   <!-- Warning Modal Overlay -->
   <div id="warning-modal" class="hidden p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
@@ -297,7 +299,7 @@ if ($_SESSION['role'] !== 'delivery') {
 
   <!-- Modal for View -->
   <div class="toViewBookingModal p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
-    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2">
+    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2 max-h-96 overflow-y-auto">
       <div class="w-full h-auto py-2 flex flex-col items-center text-nowrap text-gray-500">
         <h4 class="text-lg font-bold">WASHUP LAUNDRY</h4>
         <p class="text-sm">Blk 1 lot 2 morales subdivision, Calamba Laguna</p>
@@ -354,10 +356,108 @@ if ($_SESSION['role'] !== 'delivery') {
           <p>Suggestions:</p>
           <p id="display-suggestions" class="justify-end flex"><!-- dynamic data --></p>
         </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Kilo: </p>
+          <p id="display-kilo" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Proof Image:</p>
+          <div class="justify-end flex">
+            <img id="display-proof-image" class="w-16 h-16 object-cover cursor-pointer hidden" src="" alt="Proof Image"> <!-- Initially hidden -->
+            <p id="proof-image-message" class="text-gray-500 hidden"></p>
+          </div>
+        </div>
+
+
       </div>
 
       <div class="flex justify-center items-center w-full">
         <button type="button" class="closeViewBookingModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md mr-2">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for displaying the larger image -->
+  <div class="fixed p-2 inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-30" id="imageModal">
+    <div class="bg-white shadow-lg p-4 rounded-lg">
+      <button id="closeImageModal" class="px-2 py-1 bg-gray-500 hover:bg-gray-700 text-white rounded-md"><img class="w-5 h-5" src="./img/icons/x.svg" alt=""></button>
+      <img id="modal-image" class="w-full max-w-md h-auto mt-2" src="" alt="Large Proof Image">
+    </div>
+  </div>
+
+
+
+  <!-- <p class="text-md font-semibold mb-2 text-gray-500">Upload Image</p> -->
+  <!-- <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-2">
+              <input type="file" id="file-upload" class="hidden" required>
+              <div class="text-red-500 text-center text-sm hidden">Image is required!</div>
+              <label for="file-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
+                <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
+                <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
+              </label>
+            </div> -->
+
+  <!-- Modal for Upload Kilo -->
+  <div class="toUpdateKiloModal hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-20">
+    <div class="bg-white shadow-lg rounded-3xl m-2 w-full md:w-1/2">
+      <div class="flex items-center py-6 px-4 bg-federal text-white text-lg font-semibold rounded-t-3xl">
+        <div class="flex items-center justify-start space-x-2">
+          <img class="w-7 h-7" src="./img/icons/weight-scale.svg" alt="">
+          <h1 id="#top">Update the kilo</h1>
+        </div>
+      </div>
+      <div class="p-4 h-auto w-full overflow-y-auto max-h-64">
+        <div class="w-full text-ashblack text-md font-semibold mb-2">
+          <p class="justify-start">Booking info</p>
+        </div>
+
+        <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
+          <div class="grid grid-cols-2 gap-2">
+            <p>ID:</p>
+            <p id="display-id-forkilo" class="justify-end flex">1<!-- dynamic data --></p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <p>Customer Name:</p>
+            <p id="display-full-name-forkilo" class="justify-end flex">Felix Bragais<!-- dynamic data --></p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <p>Phone Number:</p>
+            <p id="display-phone-number-forkilo" class="justify-end flex">09691026692<!-- dynamic data --></p>
+          </div>
+        </div>
+
+        <form action="" id="upload-kilo-form" enctype="multipart/form-data" novalidate>
+          <!-- Image Upload Section -->
+          <p class="text-md font-semibold mb-2 text-gray-500">Upload Image</p>
+          <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-2">
+            <input type="file" id="file-upload" name="file-upload" class="hidden" accept="image/*" required>
+            <div class="text-red-500 text-center text-sm hidden">Image is required!</div>
+            <label for="file-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
+              <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
+              <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
+            </label>
+            <!-- Image preview -->
+            <div class="mt-4 text-center flex w-full items-center justify-center">
+              <img id="image-preview" class="hidden w-32 h-32 object-cover rounded-md border border-gray-300" alt="Image Preview">
+            </div>
+          </div>
+
+          <div class="flex flex-col items-center justify-center mb-4">
+
+
+            <!-- Laundry Kilo Section -->
+            <div class="w-full">
+              <label for="kilo" class="block text-sm font-medium text-gray-500">Laundry Kilos</label>
+              <input required type="number" id="kilo" name="kilo" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., 3">
+              <div class="text-red-500 text-sm hidden">Laundry kilo is required!</div>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-center space-x-2">
+            <input id="update-kilo-button" type="submit" class="flex justify-center items-center px-4 py-2 bg-federal hover:bg-[#1a2479] text-white rounded-md mr-2" value="Submit">
+            <button type="button" class="closeUpdateKiloModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md mr-2">Close</button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

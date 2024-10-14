@@ -2,6 +2,51 @@ import { handleDisplayCurrentTime, openModal, showToaster, Modal } from "./dashb
 
 handleDisplayCurrentTime();
 openModal('viewModalTrigger', 'toViewBookingModal', 'closeViewBookingModal', 'closeViewBookingModal2');
+openModal('updateKiloTrigger', 'toUpdateKiloModal', 'closeUpdateKiloModal', 'closeUpdateKiloModal2');
+
+// Handle the input validation from add items
+function validateForm(form) {
+  form.addEventListener('input', (e) => {
+    const target = e.target;
+    const feedback = target.nextElementSibling;
+
+    if (target.tagName === 'INPUT') {
+      if (target.checkValidity()) {
+        target.classList.remove('border-red-500');
+        target.classList.add('border-green-700'); // Change border to green
+        feedback.classList.add('hidden');
+      } else {
+        target.classList.remove('border-green-700');
+        target.classList.add('border-red-500'); // Change border to red if still invalid
+        feedback.classList.remove('hidden');
+      }
+    }
+  });
+}
+
+const proofImage = document.getElementById('display-proof-image');
+const modalImage = document.getElementById('modal-image');
+const imageModal = document.getElementById('imageModal');
+const closeModalButton = document.getElementById('closeImageModal');
+
+// Add click event to the proof image
+proofImage.addEventListener('click', () => {
+  modalImage.src = proofImage.src; // Set the modal image src to the current image src
+  modalImage.alt = proofImage.alt; // Set the alt text
+  imageModal.classList.remove('hidden'); // Show the modal
+});
+
+// Add click event to the close button
+closeModalButton.addEventListener('click', () => {
+  imageModal.classList.add('hidden'); // Hide the modal
+});
+
+// Optional: Close modal when clicking outside of the image
+imageModal.addEventListener('click', (event) => {
+  if (event.target === imageModal) {
+    imageModal.classList.add('hidden'); // Hide the modal if clicking outside
+  }
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   const tbody = document.getElementById('users-booking-list');
@@ -116,10 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       let targetElement = e.target.matches('a.pickupLink') ? e.target : e.target.closest('a.pickupLink');
       let id = targetElement.getAttribute('id');
-      // Customer Confirmation Modal
-      const warningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
-      warningModal.show(updatePickup, id);
-      // showModal(updatePickup, id);
+      viewInfoForKiloUpdate(id);
     }
 
     // Target DeliveryLink
@@ -150,9 +192,38 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('display-service-selection').innerHTML = response.service_selection;
     document.getElementById('display-service-type').innerHTML = response.service_type;
     document.getElementById('display-suggestions').innerHTML = response.suggestions;
+    document.getElementById('display-kilo').innerText = response.kilo;
+
+    // Display the proof image by setting the image src
+    const proofImage = document.getElementById('display-proof-image');
+    const proofImageMessage = document.getElementById('proof-image-message');
+
+    if (response.image_proof) {
+      proofImage.src = `./backend/${response.image_proof}`; // Set the image path
+      proofImage.alt = "Proof of Kilo Image"; // Optional alt text
+      proofImage.classList.remove('hidden'); // Show the image (remove hidden class)
+      proofImageMessage.classList.add('hidden'); // Hide the message (add hidden class)
+    } else {
+      proofImage.src = ''; // Clear the src
+      proofImage.classList.add('hidden'); // Hide the image (add hidden class)
+      proofImageMessage.innerText = "Please wait while we process the kilo of your laundry."; // Set the message text
+      proofImageMessage.classList.remove('hidden'); // Show the message (remove hidden class)
+    }
 
   }
 
+  // View Booking Details for Update Kilo Ajax Request
+  const viewInfoForKiloUpdate = async (id) => {
+    const data = await fetch(`./backend/delivery_action.php?info-for-kilo-update=1&id=${id}`, {
+      method: 'GET',
+    });
+    const response = await data.json();
+    document.getElementById('display-id-forkilo').innerText = response.id;
+    document.getElementById('display-full-name-forkilo').innerText = response.fname + ' ' + response.lname;
+    document.getElementById('display-phone-number-forkilo').innerText = response.phone_number;
+    document.getElementById('')
+
+  }
   // Update Status From Pickup to On Process Ajax Request
   const updatePickup = async (id) => {
     const data = await fetch(`./backend/delivery_action.php?update-pickup=1&id=${id}`, {
@@ -173,6 +244,60 @@ document.addEventListener("DOMContentLoaded", () => {
       showToaster('Something went wrong !', 'exclamation-error', green600, red700);
     }
   }
+
+  const updateKiloForm = document.getElementById('upload-kilo-form');
+  validateForm(updateKiloForm);
+
+  // Add Kilo and Proof of Kilo Ajax Request
+  updateKiloForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(updateKiloForm);
+    formData.append('add-kilo', 1); // To differentiate request in backend
+    formData.append('booking_id', document.getElementById('display-id-forkilo').textContent); // Append booking ID dynamically
+
+    // Form Validation
+    if (updateKiloForm.checkValidity() === false) {
+      e.stopPropagation();
+
+      [...updateKiloForm.elements].forEach((input) => {
+        const feedback = input.nextElementSibling;
+
+        if (input.tagName === 'INPUT') {
+          if (!input.checkValidity()) {
+            input.classList.add('border-red-500');
+            feedback.classList.remove('hidden');
+          } else {
+            input.classList.remove('border-red-500');
+            feedback.classList.add('hidden');
+          }
+        }
+      });
+
+      const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
+      errorWarningModal.show();
+      return false;
+    } else {
+      document.getElementById('update-kilo-button').value = 'Please Wait...';
+
+      const data = await fetch('./backend/delivery_action.php', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const response = await data.json(); // Assuming the response is JSON
+
+      // Handle success or error response
+      if (response.status === 'success') {
+        showToaster('Kilo updated successfully!', 'check', '#047857', '#065f46');
+        updateKiloForm.reset();
+        document.querySelector('.toUpdateKiloModal').classList.add('hidden');
+      } else {
+        showToaster('Something went wrong!', 'exclamation-error', '#dc2626', '#b91c1c');
+      }
+    }
+  });
+
 
   // Update Status From Delivery to isReceive Ajax Request
   const updateDelivery = async (id) => {
@@ -351,5 +476,31 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
   deliveryNotification();
+
+  // Get the file input and image preview elements
+  const fileInput = document.getElementById('file-upload');
+  const imagePreview = document.getElementById('image-preview');
+
+  // Add an event listener for when the user selects an image
+  fileInput.addEventListener('change', function (event) {
+    const file = event.target.files[0]; // Get the selected file
+    if (file) {
+      // Create a FileReader to read the file
+      const reader = new FileReader();
+
+      // When the file is read, update the image preview
+      reader.onload = function (e) {
+        imagePreview.src = e.target.result; // Set the image source to the file's data URL
+        imagePreview.classList.remove('hidden'); // Unhide the image preview
+      };
+
+      // Read the selected image file as a data URL
+      reader.readAsDataURL(file);
+    } else {
+      // If no file is selected, hide the image preview
+      imagePreview.src = '';
+      imagePreview.classList.add('hidden');
+    }
+  });
 
 });

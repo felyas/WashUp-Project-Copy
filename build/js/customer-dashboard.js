@@ -34,7 +34,7 @@ const fetchAllBookings = async (page = 1) => {
   paginationContainer.innerHTML = data.pagination;
 
   if (!modalShown) {
-    const isReceiveRow = document.querySelector('tr[data-status="is receive"]');
+    const isReceiveRow = document.querySelector('tr[data-status="delivered"]');
     if (isReceiveRow) {
       const bookingId = isReceiveRow.getAttribute('data-id');
 
@@ -138,8 +138,6 @@ const editBooking = async (id) => {
   document.getElementById('id').value = response.id;
   document.getElementById('fname').value = response.fname;
   document.getElementById('lname').value = response.lname;
-  document.getElementById('pickup_date').value = response.pickup_date;
-  document.getElementById('pickup_time').value = response.pickup_time;
   document.getElementById('phone_number').value = response.phone_number;
   document.getElementById('address').value = response.address;
 }

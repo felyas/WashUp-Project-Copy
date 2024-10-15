@@ -3,6 +3,7 @@ import { handleDisplayCurrentTime, openModal, showToaster, Modal } from "./dashb
 handleDisplayCurrentTime();
 openModal('viewModalTrigger', 'toViewBookingModal', 'closeViewBookingModal', 'closeViewBookingModal2');
 openModal('updateKiloTrigger', 'toUpdateKiloModal', 'closeUpdateKiloModal', 'closeUpdateKiloModal2');
+openModal('updateProofOfDeliveryTrigger', 'toUpdateDeliveryProofModal', 'closeUpdateDeliveryProofModal', 'closeUpdateDeliveryProofModal2');
 
 // Handle the input validation from add items
 function validateForm(form) {
@@ -10,19 +11,22 @@ function validateForm(form) {
     const target = e.target;
     const feedback = target.nextElementSibling;
 
-    if (target.tagName === 'INPUT') {
+    // Ensure validation only applies to 'file' and 'number' input types
+    if (target.tagName === 'INPUT' && (target.type === 'file' || target.type === 'number')) {
       if (target.checkValidity()) {
         target.classList.remove('border-red-500');
-        target.classList.add('border-green-700'); // Change border to green
-        feedback.classList.add('hidden');
+        target.classList.add('border-green-700'); // Change border to green if valid
+        feedback.classList.add('hidden'); // Hide feedback on valid input
       } else {
         target.classList.remove('border-green-700');
-        target.classList.add('border-red-500'); // Change border to red if still invalid
-        feedback.classList.remove('hidden');
+        target.classList.add('border-red-500'); // Change border to red if invalid
+        feedback.classList.remove('hidden'); // Show feedback on invalid input
       }
     }
   });
 }
+
+
 
 const proofImage = document.getElementById('display-proof-image');
 const modalImage = document.getElementById('modal-image');
@@ -142,8 +146,6 @@ document.addEventListener("DOMContentLoaded", () => {
   statusFilter.addEventListener('change', () => {
     fetchAll();
   })
-
-  // Initial fetch
   fetchAll();
 
   //Targeting anchor tags from tbody
@@ -169,9 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       let targetElement = e.target.matches('a.deliveryLink') ? e.target : e.target.closest('a.deliveryLink');
       let id = targetElement.getAttribute('id');
-      const warningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
-      warningModal.show(updateDelivery, id);
-      // showModal(updateDelivery, id);
+      viewInfoForProofAndReceipt(id);
     }
   });
 
@@ -221,33 +221,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('display-id-forkilo').innerText = response.id;
     document.getElementById('display-full-name-forkilo').innerText = response.fname + ' ' + response.lname;
     document.getElementById('display-phone-number-forkilo').innerText = response.phone_number;
-    document.getElementById('')
-
-  }
-  // Update Status From Pickup to On Process Ajax Request
-  const updatePickup = async (id) => {
-    const data = await fetch(`./backend/delivery_action.php?update-pickup=1&id=${id}`, {
-      method: 'GET',
-    });
-    const response = await data.text();
-    if (response.includes('success')) {
-      // Example: Trigger the toaster with hex values
-      const green600 = '#047857'; // Hex value for green-600
-      const green700 = '#065f46'; // Hex value for green-700
-      showToaster('Status updated successfully!', 'check', green600, green700);
-      fetchAll();
-      fetchBookingCounts();
-    } else {
-      // Example: Trigger the toaster with hex values
-      const green600 = '#d95f5f'; // Hex value for green-600
-      const red700 = '#c93c3c'; // Hex value for green-700
-      showToaster('Something went wrong !', 'exclamation-error', green600, red700);
-    }
   }
 
   const updateKiloForm = document.getElementById('upload-kilo-form');
   validateForm(updateKiloForm);
 
+  const warningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
   // Add Kilo and Proof of Kilo Ajax Request
   updateKiloForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -263,7 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
       [...updateKiloForm.elements].forEach((input) => {
         const feedback = input.nextElementSibling;
 
-        if (input.tagName === 'INPUT') {
+        if (input.tagName === 'INPUT' && (input.type === 'file' || input.type === 'number')) {
           if (!input.checkValidity()) {
             input.classList.add('border-red-500');
             feedback.classList.remove('hidden');
@@ -278,25 +257,117 @@ document.addEventListener("DOMContentLoaded", () => {
       errorWarningModal.show();
       return false;
     } else {
-      document.getElementById('update-kilo-button').value = 'Please Wait...';
+      // Show confirmation modal before proceeding with the submission
+      warningModal.show(async () => {
+        // This code runs when the user confirms the action in the modal
+        document.getElementById('update-kilo-button').value = 'Please Wait...';
 
-      const data = await fetch('./backend/delivery_action.php', {
-        method: 'POST',
-        body: formData,
-      });
+        const data = await fetch('./backend/delivery_action.php', {
+          method: 'POST',
+          body: formData,
+        });
 
-      const response = await data.json(); // Assuming the response is JSON
+        const response = await data.json(); // Assuming the response is JSON
 
-      // Handle success or error response
-      if (response.status === 'success') {
-        showToaster('Kilo updated successfully!', 'check', '#047857', '#065f46');
-        updateKiloForm.reset();
-        document.querySelector('.toUpdateKiloModal').classList.add('hidden');
-      } else {
-        showToaster('Something went wrong!', 'exclamation-error', '#dc2626', '#b91c1c');
-      }
+        // Handle success or error response
+        if (response.status === 'success') {
+          showToaster('Kilo and status updated successfully!', 'check', '#047857', '#065f46');
+          updateKiloForm.reset();
+          document.querySelector('.toUpdateKiloModal').classList.add('hidden');
+          document.getElementById('update-kilo-button').value = 'Submit';
+          fetchAll();
+          fetchBookingCounts();
+
+          // Remove validation classes after reset
+          [...updateKiloForm.elements].forEach((input) => {
+            if (input.tagName === 'INPUT') {
+              input.classList.remove('border-green-700', 'border-red-500');
+            }
+          });
+        } else {
+          showToaster('Something went wrong!', 'exclamation-error', '#dc2626', '#b91c1c');
+        }
+      }, document.getElementById('display-id-forkilo').textContent); // Pass the booking ID if needed
     }
   });
+
+  const viewInfoForProofAndReceipt = async (id) => {
+    const data = await fetch(`./backend/delivery_action.php?info-for-proof-receipt=1&id=${id}`, {
+      method: 'GET',
+    });
+    const response = await data.json();
+    document.getElementById('display-id-forProof').innerText = response.id;
+    document.getElementById('display-full-name-forProof').innerText = response.fname + ' ' + response.lname;
+    document.getElementById('display-phone-number-forProof').innerText = response.phone_number;
+  }
+
+  const ProofAndReceiptForm = document.getElementById('upload-proofAndReceipt-form');
+  validateForm(ProofAndReceiptForm);
+
+  ProofAndReceiptForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(ProofAndReceiptForm);
+    formData.append('add-receipt', 1); // To differentiate request in backend
+    formData.append('booking_id', document.getElementById('display-id-forProof').textContent); // Append booking ID dynamically
+
+    // Form Validation
+    if (ProofAndReceiptForm.checkValidity() === false) {
+      e.stopPropagation();
+
+      [...ProofAndReceiptForm.elements].forEach((input) => {
+        const feedback = input.nextElementSibling;
+
+        if (input.tagName === 'INPUT' && (input.type === 'file')) {
+          if (!input.checkValidity()) {
+            input.classList.add('border-red-500');
+            feedback.classList.remove('hidden');
+          } else {
+            input.classList.remove('border-red-500');
+            feedback.classList.add('hidden');
+          }
+        }
+      });
+
+      const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
+      errorWarningModal.show();
+      return false;
+    } else {
+      // Show confirmation modal before proceeding with the submission
+      warningModal.show(async () => {
+        // This code runs when the user confirms the action in the modal
+        document.getElementById('update-delivery-proof-button').value = 'Please Wait...';
+
+        const data = await fetch('./backend/delivery_action.php', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const response = await data.json(); // Assuming the response is JSON
+
+        // Handle success or error response
+        if (response.status === 'success') {
+          showToaster('Proof of delivery, receipt and status updated successfully!', 'check', '#047857', '#065f46');
+          ProofAndReceiptForm.reset();
+          document.querySelector('.toUpdateDeliveryProofModal').classList.add('hidden');
+          document.getElementById('update-delivery-proof-button').value = 'Submit';
+          fetchAll();
+          fetchBookingCounts();
+
+          // Remove validation classes after reset
+          [...ProofAndReceiptForm.elements].forEach((input) => {
+            if (input.tagName === 'INPUT') {
+              input.classList.remove('border-green-700', 'border-red-500');
+            }
+          });
+        } else {
+          showToaster('Something went wrong!', 'exclamation-error', '#dc2626', '#b91c1c');
+        }
+      }, document.getElementById('display-id-forProof').textContent); // Pass the booking ID if needed
+    }
+  });
+
+
 
 
   // Update Status From Delivery to isReceive Ajax Request
@@ -477,30 +548,38 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   deliveryNotification();
 
-  // Get the file input and image preview elements
-  const fileInput = document.getElementById('file-upload');
-  const imagePreview = document.getElementById('image-preview');
+  // Function to handle file input change and image preview
+  function handleImagePreview(fileInputId, imagePreviewId) {
+    const fileInput = document.getElementById(fileInputId);
+    const imagePreview = document.getElementById(imagePreviewId);
 
-  // Add an event listener for when the user selects an image
-  fileInput.addEventListener('change', function (event) {
-    const file = event.target.files[0]; // Get the selected file
-    if (file) {
-      // Create a FileReader to read the file
-      const reader = new FileReader();
+    // Add an event listener for when the user selects an image
+    fileInput.addEventListener('change', function (event) {
+      const file = event.target.files[0]; // Get the selected file
+      if (file) {
+        // Create a FileReader to read the file
+        const reader = new FileReader();
 
-      // When the file is read, update the image preview
-      reader.onload = function (e) {
-        imagePreview.src = e.target.result; // Set the image source to the file's data URL
-        imagePreview.classList.remove('hidden'); // Unhide the image preview
-      };
+        // When the file is read, update the image preview
+        reader.onload = function (e) {
+          imagePreview.src = e.target.result; // Set the image source to the file's data URL
+          imagePreview.classList.remove('hidden'); // Unhide the image preview
+        };
 
-      // Read the selected image file as a data URL
-      reader.readAsDataURL(file);
-    } else {
-      // If no file is selected, hide the image preview
-      imagePreview.src = '';
-      imagePreview.classList.add('hidden');
-    }
-  });
+        // Read the selected image file as a data URL
+        reader.readAsDataURL(file);
+      } else {
+        // If no file is selected, hide the image preview
+        imagePreview.src = '';
+        imagePreview.classList.add('hidden');
+      }
+    });
+  }
+
+  // Call the function for each file input and its respective image preview
+  handleImagePreview('file-upload', 'image-preview');  // For the main image upload
+  handleImagePreview('file-proof-upload', 'image-preview-delivery-proof');  // For proof of delivery
+  handleImagePreview('file-receipt-upload', 'image-preview-receipt');  // For receipt
+
 
 });

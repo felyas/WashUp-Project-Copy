@@ -77,7 +77,7 @@ if (isset($_GET['readAll'])) {
       // If status is 'for for delivery', append deliveryLink
       if ($row['status'] === 'for delivery') {
         $output .= '
-            <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-[#0E4483] hover:bg-[#0C376A] rounded-md transition deliveryLink">
+            <a href="#" id="' . $row['id'] . '" class="updateProofOfDeliveryTrigger px-3 py-2 bg-[#0E4483] hover:bg-[#0C376A] rounded-md transition deliveryLink">
               <div class="relative">
                 <img class="absolute -top-1 -right-3 transform -translate-x-1/2 w-3 h-3" src="./img/icons/circle-check-solid.svg" alt="process done">
                 <img class="w-4 h-4" src="./img/icons/pickup.svg" alt="edit">
@@ -132,13 +132,13 @@ if (isset($_GET['view'])) {
 }
 
 // Handle Update Status From Pickup to On Process Ajax Request
-if (isset($_GET['update-pickup'])) {
-  $id = $_GET['id'];
+// if (isset($_GET['update-pickup'])) {
+//   $id = $_GET['id'];
 
-  if ($db->updatePickup($id)) {
-    echo $util->showMessage('success', 'Status updated successfully');
-  }
-}
+//   if ($db->updatePickup($id)) {
+//     echo $util->showMessage('success', 'Status updated successfully');
+//   }
+// }
 
 // Handle Update Status From Pickup to On Process Ajax Request
 if (isset($_GET['update-delivery'])) {
@@ -239,6 +239,62 @@ if (isset($_POST['add-kilo'])) {
     echo json_encode([
       'status' => 'error',
       'message' => 'File is not valid image!'
+    ]);
+  }
+  exit();
+}
+
+if(isset($_GET['info-for-proof-receipt'])) {
+  $id = $_GET['id'];
+  $view =$db->viewSummary($id);
+
+  echo json_encode($view);
+}
+
+if(isset($_POST['add-receipt'])) {
+  $id = $util->testInput($_POST['booking_id']);
+
+  //Set up file upload directories
+  $target_dir = "uploads/receipt/";
+  $proof_file = $target_dir . basename($_FILES["file-proof-upload"]["name"]);
+  $receipt_file = $target_dir . basename($_FILES["file-receipt-upload"]["name"]);
+
+  // Validate file type (esure image)
+  $imageFileTypeProof = strtolower(pathinfo($proof_file, PATHINFO_EXTENSION));
+  $imageFileTypeReceipt = strtolower(pathinfo($receipt_file,PATHINFO_EXTENSION));
+
+  // Check if both files are images
+  if(getimagesize($_FILES["file-proof-upload"]["tmp_name"]) !== false && getimagesize($_FILES["file-receipt-upload"]["tmp_name"]) !== false ) {
+
+    // Attempt to move the uploaded files to the target directory
+    $proof_upload_success = move_uploaded_file($_FILES["file-proof-upload"]["tmp_name"], $proof_file);
+    $receipt_upload_success = move_uploaded_file($_FILES["file-receipt-upload"]["tmp_name"], $receipt_file);
+
+      if($proof_upload_success && $receipt_upload_success) {
+        // Update booking in the database
+        $result = $db->updateProofAndReceipt($id, $proof_file, $receipt_file);
+
+        if($result === true) {
+          echo json_encode([
+            'status' => 'success',
+            'message' => 'Delivery proof and receipt updated successfully!',
+          ]);
+        } else {
+          echo json_encode([
+            'status' => 'error',
+            'message' => 'Failed to update booking',
+          ]);
+        }
+      } else {
+        echo json_encode([
+          'status' => 'error',
+          'message' => 'Error uploading images!',
+        ]);
+      }
+  } else {
+    echo json_encode([
+      'status' => 'error',
+      'message' => 'One or both files are not valid images!'
     ]);
   }
   exit();

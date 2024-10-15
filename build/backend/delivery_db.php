@@ -92,18 +92,18 @@ class Database extends Config
   }
 
   // UPDATE PICKUP STATUS FROM DATABASE
-  public function updatePickup($id)
-  {
-    $sql = 'UPDATE booking SET status = :status, is_read = :is_read WHERE id = :id';
-    $stmt = $this->conn->prepare($sql);
-    $stmt->execute([
-      'status' => 'on process',
-      'is_read' => 0,
-      'id' => $id
-    ]);
+  // public function updatePickup($id)
+  // {
+  //   $sql = 'UPDATE booking SET status = :status, is_read = :is_read WHERE id = :id';
+  //   $stmt = $this->conn->prepare($sql);
+  //   $stmt->execute([
+  //     'status' => 'on process',
+  //     'is_read' => 0,
+  //     'id' => $id
+  //   ]);
 
-    return true;
-  }
+  //   return true;
+  // }
 
   // UPDATE PICKUP STATUS FROM DATABASE
   public function updateDelivery($id)
@@ -167,15 +167,32 @@ class Database extends Config
 
   // Update Kilo and Proof of Kilo for an Existing Booking
   public function updateKiloAndProof($id, $kilo, $image_path) {
-    $sql = 'UPDATE booking SET kilo = :kilo, image_proof = :image_path WHERE id = :id';
+    $sql = 'UPDATE booking SET kilo = :kilo, image_proof = :image_path, status = :status,is_read = :is_read WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
       'kilo' => $kilo,
       'image_path' => $image_path,
+      'status' => 'on process',
+      'is_read' => 0,
       'id' => $id,
     ]);
     $result = $stmt->rowCount() > 0;
     
+    return $result;
+  }
+
+  public function updateProofAndReceipt($id, $proof_path, $receipt_path){
+    $sql = 'UPDATE booking SET delivery_proof = :proof_path, receipt = :receipt_path, status = :status, is_read = :is_read WHERE id = :id';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'proof_path' => $proof_path,
+      'receipt_path' => $receipt_path,
+      'status' => 'delivered',
+      'is_read' => 0,
+      'id' =>$id,
+    ]);
+    $result = $stmt->rowCount() > 0;
+
     return $result;
   }
 

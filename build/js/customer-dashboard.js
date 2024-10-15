@@ -7,6 +7,41 @@ bookNowBtn.addEventListener('click', () => {
   window.location.href = './booking.php';
 })
 
+// Select the modal and modal image elements
+const modal = document.getElementById('imageModal');
+const modalImage = document.getElementById('modal-image');
+const closeModalButton = document.getElementById('closeImageModal');
+
+// Event delegation: attach the click event listener to a parent element
+document.addEventListener('click', function (e) {
+  // Check if the clicked element has the class 'image-proof'
+  if (e.target.classList.contains('image-proof')) {
+    // Set the modal image source to the clicked image's source
+    modalImage.src = e.target.src;
+
+    // Display the modal
+    modal.classList.remove('hidden');
+  }
+});
+
+// Close the modal when the close button is clicked
+closeModalButton.addEventListener('click', function () {
+  modal.classList.add('hidden');
+});
+
+// Optionally, close the modal when clicking outside the modal content
+window.addEventListener('click', function (e) {
+  if (e.target === modal) {
+    modal.classList.add('hidden');
+  }
+});
+
+// Close the modal when clicking outside the modal content
+window.addEventListener('click', function (e) {
+  if (e.target === modal) {
+    modal.classList.add('hidden');
+  }
+});
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -290,11 +325,22 @@ const fetchNotifications = async (lastCheckTime) => {
       notifications.forEach(notification => {
         const notificationElement = document.createElement('div');
         notificationElement.classList.add('flex', 'items-center', 'justify-between', 'bg-gray-200', 'mb-1');
+
+        // Check the status and modify the message accordingly
+        let message;
+        if (notification.status === 'on process') {
+          message = `The proof of kilo for your booking (ID: ${notification.id}) has been added. We're now processing your laundry.`;
+        } else if(notification.status === 'delivered') {
+          message = `Your laundry (Booking ID: ${notification.id}) has been successfully delivered. A receipt and proof of delivery have been sent to you.`;
+        } else {
+          message = `Booking with ID ${notification.id} updated to <span class="font-semibold text-celestial">${notification.status}</span>`;
+        }
+
         notificationElement.innerHTML = `
           <div class="flex items-center p-4 bg-blue-100 border border-blue-200 rounded-lg shadow-md">
             <img src="./img/about-bg1.png" alt="Notification Image" class="w-12 h-12 mr-4 rounded-full">
             <div class="flex-1">
-              <p class="text-sm">Booking with ID ${notification.id} updated to <span class="font-semibold text-celestial">${notification.status}</span></p>
+              <p class="text-sm">${message}</p>
             </div>
             <button class="w-12 p-0 border-none font-bold js-notification-close" data-id="${notification.id}">
               &#10005;
@@ -307,6 +353,7 @@ const fetchNotifications = async (lastCheckTime) => {
       // Update total notification count
       totalNotificationsElement.textContent = notifications.length;
       notificationDot.classList.remove('hidden');
+
       // Calling other function to update the UI
       fetchAllBookings();
       fetchBookingCounts();
@@ -323,6 +370,7 @@ const fetchNotifications = async (lastCheckTime) => {
     console.error('Error fetching notifications:', error);
   }
 };
+
 
 // Initial call to start long polling
 let initialTimestamp = new Date().toISOString(); // Start with the current time

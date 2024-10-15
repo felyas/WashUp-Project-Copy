@@ -79,11 +79,12 @@ class Database extends Config
 
   // UPDATE ON PROCESS STATUS FROM DATABASE
   public function done($id) {
-    $sql = 'UPDATE booking SET status = :status, is_read = :is_read WHERE id = :id';
+    $sql = 'UPDATE booking SET status = :status, is_read = :is_read, delivery_is_read = :delivery_is_read WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
       'status' => 'for delivery',
-      'is_read' => 0,            
+      'is_read' => 0, 
+      'delivery_is_read' => 0,
       'id' => $id      
     ]);
 

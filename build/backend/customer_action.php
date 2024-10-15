@@ -73,6 +73,22 @@ if (isset($_GET['read'])) {
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['created_at'] . '</td>
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['service_selection'] . '</td>
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['service_type'] . '</td>
+          <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
+            ';
+
+      // Check if 'image_proof' is not empty and display image or fallback text
+      if (!empty($row['image_proof'])) {
+        $output .= '
+          <img class="w-12 h-12 cursor-pointer image-proof" src="./backend/' . $row['image_proof'] . '" alt="">
+        ';
+      } else {
+        $output .= '
+          <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
+        ';
+      }
+
+      $output .= '
+          </td>
           <td class="px-4 py-2">
             <div class="w-auto py-1 px-2 ' . $statusClasses . ' font-bold rounded-lg text-center">
               ' . strtoupper($row['status']) . '
@@ -124,6 +140,7 @@ if (isset($_GET['read'])) {
   // Return JSON response
   echo json_encode(['rows' => $output, 'pagination' => $pagination]);
 }
+
 
 
 

@@ -195,6 +195,7 @@ if ($_SESSION['role'] !== 'user') {
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">BOOKING DATE</th>
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">SERVICE</th>
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">SERVICE TYPE</th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">PROOF OF KILO</th>
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">STATUS</th>
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ACTION</th>
                     </tr>
@@ -207,6 +208,9 @@ if ($_SESSION['role'] !== 'user') {
                       <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">2024-10-2</td>
                       <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Wash</td>
                       <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Standard 2-days</td>
+                      <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
+                        <img class="w-12 h-12" src="./backend/" alt="">
+                      </td>
                       <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle font-semibold">for delivery</td>
                       <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
                         <div class="flex justify-center space-x-2">
@@ -244,6 +248,17 @@ if ($_SESSION['role'] !== 'user') {
       </main>
     </div>
   </div>
+
+  <!-- Modal for displaying the larger image -->
+  <div class="fixed p-2 inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-30" id="imageModal">
+    <div class="bg-white shadow-lg p-4 rounded-lg">
+      <button id="closeImageModal" class="px-2 py-1 bg-gray-500 hover:bg-gray-700 text-white rounded-md">
+        <img class="w-5 h-5" src="./img/icons/x.svg" alt="">
+      </button>
+      <img id="modal-image" class="w-full max-w-md h-auto mt-2" src="" alt="Large Proof Image">
+    </div>
+  </div>
+
 
 
   <!-- Delete Warning Modal Overlay -->

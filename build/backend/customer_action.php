@@ -76,18 +76,50 @@ if (isset($_GET['read'])) {
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
             ';
 
-      // Check if 'image_proof' is not empty and display image or fallback text
-      if (!empty($row['image_proof'])) {
-        $output .= '
-          <img class="w-12 h-12 cursor-pointer image-proof" src="./backend/' . $row['image_proof'] . '" alt="">
-        ';
-      } else {
-        $output .= '
-          <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
-        ';
-      }
+            // Check if 'image_proof' is not empty and display image or fallback text
+            if (!empty($row['image_proof'])) {
+              $output .= '
+                <img class="w-12 h-12 cursor-pointer image-proof" src="./backend/' . $row['image_proof'] . '" alt="">
+              ';
+            } else {
+              $output .= '
+                <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
+              ';
+            }
 
-      $output .= '
+            $output .= '
+          </td>
+          <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
+            ';
+
+            // Check if 'delivery_proof' is not empty and display image or fallback text
+            if (!empty($row['delivery_proof'])) {
+              $output .= '
+                <img class="w-12 h-12 cursor-pointer image-proof" src="./backend/' . $row['delivery_proof'] . '" alt="">
+              ';
+            } else {
+              $output .= '
+                <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
+              ';
+            }
+
+            $output .= '
+          </td>
+          <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
+            ';
+
+            // Check if 'receipt' is not empty and display image or fallback text
+            if (!empty($row['receipt'])) {
+              $output .= '
+                <img class="w-12 h-12 cursor-pointer image-proof" src="./backend/' . $row['receipt'] . '" alt="">
+              ';
+            } else {
+              $output .= '
+                <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
+              ';
+            }
+
+            $output .= '
           </td>
           <td class="px-4 py-2">
             <div class="w-auto py-1 px-2 ' . $statusClasses . ' font-bold rounded-lg text-center">

@@ -196,6 +196,8 @@ if ($_SESSION['role'] !== 'user') {
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">SERVICE</th>
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">SERVICE TYPE</th>
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">PROOF OF KILO</th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">PROOF OF DELIVERY</th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">RECEIPT</th>
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">STATUS</th>
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ACTION</th>
                     </tr>

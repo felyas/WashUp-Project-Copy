@@ -356,17 +356,6 @@ if ($_SESSION['role'] !== 'delivery') {
           <p>Suggestions:</p>
           <p id="display-suggestions" class="justify-end flex"><!-- dynamic data --></p>
         </div>
-        <div class="grid grid-cols-2 gap-2">
-          <p>Kilo: </p>
-          <p id="display-kilo" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <p>Proof Image:</p>
-          <div class="justify-end flex">
-            <img id="display-proof-image" class="w-16 h-16 object-cover cursor-pointer hidden" src="" alt="Proof Image"> <!-- Initially hidden -->
-            <p id="proof-image-message" class="text-gray-500 hidden"></p>
-          </div>
-        </div>
 
 
       </div>

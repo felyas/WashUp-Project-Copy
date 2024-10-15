@@ -26,32 +26,6 @@ function validateForm(form) {
   });
 }
 
-
-
-const proofImage = document.getElementById('display-proof-image');
-const modalImage = document.getElementById('modal-image');
-const imageModal = document.getElementById('imageModal');
-const closeModalButton = document.getElementById('closeImageModal');
-
-// Add click event to the proof image
-proofImage.addEventListener('click', () => {
-  modalImage.src = proofImage.src; // Set the modal image src to the current image src
-  modalImage.alt = proofImage.alt; // Set the alt text
-  imageModal.classList.remove('hidden'); // Show the modal
-});
-
-// Add click event to the close button
-closeModalButton.addEventListener('click', () => {
-  imageModal.classList.add('hidden'); // Hide the modal
-});
-
-// Optional: Close modal when clicking outside of the image
-imageModal.addEventListener('click', (event) => {
-  if (event.target === imageModal) {
-    imageModal.classList.add('hidden'); // Hide the modal if clicking outside
-  }
-});
-
 document.addEventListener("DOMContentLoaded", () => {
   const tbody = document.getElementById('users-booking-list');
   const paginationContainer = document.getElementById('pagination-container');
@@ -192,24 +166,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('display-service-selection').innerHTML = response.service_selection;
     document.getElementById('display-service-type').innerHTML = response.service_type;
     document.getElementById('display-suggestions').innerHTML = response.suggestions;
-    document.getElementById('display-kilo').innerText = response.kilo;
-
-    // Display the proof image by setting the image src
-    const proofImage = document.getElementById('display-proof-image');
-    const proofImageMessage = document.getElementById('proof-image-message');
-
-    if (response.image_proof) {
-      proofImage.src = `./backend/${response.image_proof}`; // Set the image path
-      proofImage.alt = "Proof of Kilo Image"; // Optional alt text
-      proofImage.classList.remove('hidden'); // Show the image (remove hidden class)
-      proofImageMessage.classList.add('hidden'); // Hide the message (add hidden class)
-    } else {
-      proofImage.src = ''; // Clear the src
-      proofImage.classList.add('hidden'); // Hide the image (add hidden class)
-      proofImageMessage.innerText = "Please wait while we process the kilo of your laundry."; // Set the message text
-      proofImageMessage.classList.remove('hidden'); // Show the message (remove hidden class)
-    }
-
   }
 
   // View Booking Details for Update Kilo Ajax Request

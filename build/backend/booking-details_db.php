@@ -122,14 +122,13 @@ class Database extends Config
     return true;
   }
 
-  public function updateKiloAndItems($id, $kilo, $items) {
+  public function updateKiloAndItems($id, $items) {
     $sql = 'UPDATE booking
-            SET kilo = :kilo, item_used = :item_used
+            SET item_used = :item_used
             WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $itemUsed = json_encode($items);
     $stmt->execute([
-      'kilo' => $kilo,
       'item_used' => $itemUsed,
       'id' => $id,
     ]);

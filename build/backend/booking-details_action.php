@@ -58,17 +58,66 @@ if (isset($_GET['readAll'])) {
       }
 
       $output .= '
-        <tr class="border-b border-gray-200">
+        <tr class="border-b border-gray-200 h-5 items-center justify-center">
           <td class="px-4 py-2">' . $row['id'] . '</td>
           <td class="px-4 py-2">' . $row['fname'] . ' ' . $row['lname'] . '</td>
           <td class="px-4 py-2">' . $row['phone_number'] . '</td>
           <td class="px-4 py-2">' . $row['address'] . '</td>
+          <td class="px-4 py-2 border-b border-left text-sm border-gray-200 align-middle">
+            ';
+
+            // Check if 'image_proof' is not empty and display image or fallback text
+            if (!empty($row['image_proof'])) {
+              $output .= '
+                <img class="w-12 h-12 cursor-pointer image-proof" src="./backend/' . $row['image_proof'] . '" alt="">
+              ';
+            } else {
+              $output .= '
+                <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
+              ';
+            }
+
+            $output .= '
+          </td>
+          <td class="px-4 py-2 border-b border-left text-sm border-gray-200 align-middle">
+            ';
+
+            // Check if 'delivery_proof' is not empty and display image or fallback text
+            if (!empty($row['delivery_proof'])) {
+              $output .= '
+                <img class="w-12 h-12 cursor-pointer image-proof" src="./backend/' . $row['delivery_proof'] . '" alt="">
+              ';
+            } else {
+              $output .= '
+                <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
+              ';
+            }
+
+            $output .= '
+          </td>
+          <td class="px-4 py-2 border-b border-left text-sm border-gray-200 align-middle">
+            ';
+
+            // Check if 'receipt' is not empty and display image or fallback text
+            if (!empty($row['receipt'])) {
+              $output .= '
+                <img class="w-12 h-12 cursor-pointer image-proof" src="./backend/' . $row['receipt'] . '" alt="">
+              ';
+            } else {
+              $output .= '
+                <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
+              ';
+            }
+
+            $output .= '
+          </td>
+
           <td class="px-4 py-2">
             <div class="w-auto py-1 px-2 ' . $statusClasses . ' font-bold rounded-lg text-center">
               ' . strtoupper($row['status']) . '
             </div>
           </td>
-          <td class="min-w-[150px] h-auto flex items-center justify-start space-x-2 flex-grow">
+          <td class="min-w-[200px] py-1 px-2 flex items-center justify-start h-full space-x-2">
             <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
               <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
             </a>';
@@ -179,7 +228,6 @@ if (isset($_GET['customer-info'])) {
 
 if (isset($_POST['updatekilo'])) {
   $id = $util->testInput($_POST['bookingId']);
-  $kilo = $util->testInput($_POST['kilo']);
 
   $items = [];
 
@@ -229,7 +277,7 @@ if (isset($_POST['updatekilo'])) {
   }
 
   // Insert kilo and items used into booking table
-  $db->updateKiloAndItems($id, $kilo, $items);
+  $db->updateKiloAndItems($id, $items);
 
   // Return success message
   echo json_encode([

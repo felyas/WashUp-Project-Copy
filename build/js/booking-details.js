@@ -1,5 +1,41 @@
 import { handleSidebar, handleDisplayCurrentTime, openModal, handleDropdown, showToaster, Modal } from "./dashboards-main.js";
 
+// Select the modal and modal image elements
+const modal = document.getElementById('imageModal');
+const modalImage = document.getElementById('modal-image');
+const closeModalButton = document.getElementById('closeImageModal');
+
+// Event delegation: attach the click event listener to a parent element
+document.addEventListener('click', function (e) {
+  // Check if the clicked element has the class 'image-proof'
+  if (e.target.classList.contains('image-proof')) {
+    // Set the modal image source to the clicked image's source
+    modalImage.src = e.target.src;
+
+    // Display the modal
+    modal.classList.remove('hidden');
+  }
+});
+
+// Close the modal when the close button is clicked
+closeModalButton.addEventListener('click', function () {
+  modal.classList.add('hidden');
+});
+
+// Optionally, close the modal when clicking outside the modal content
+window.addEventListener('click', function (e) {
+  if (e.target === modal) {
+    modal.classList.add('hidden');
+  }
+});
+
+// Close the modal when clicking outside the modal content
+window.addEventListener('click', function (e) {
+  if (e.target === modal) {
+    modal.classList.add('hidden');
+  }
+});
+
 document.addEventListener("DOMContentLoaded", () => {
   handleSidebar();
   handleDisplayCurrentTime();
@@ -491,7 +527,7 @@ document.addEventListener("DOMContentLoaded", () => {
             input.classList.remove('border-green-700', 'border-red-500');
           }
         });
-        
+
       } else if (response.status = 'out of stock') {
         const red600 = '#dc2626';
         const red700 = '#b91c1c';
@@ -499,7 +535,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateKiloBtn.value = 'Submit';
         updateKiloForm.reset();
         document.querySelector('.toUpdateKiloModal').classList.add('hidden');
-        
+
         [...updateKiloForm.elements].forEach((input) => {
           if (input.tagName === 'INPUT') {
             input.classList.remove('border-green-700', 'border-red-500');
@@ -513,7 +549,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateKiloBtn.value = 'Submit';
         updateKiloForm.reset();
         document.querySelector('.toUpdateKiloModal').classList.add('hidden');
-        
+
         [...updateKiloForm.elements].forEach((input) => {
           if (input.tagName === 'INPUT') {
             input.classList.remove('border-green-700', 'border-red-500');
@@ -526,7 +562,7 @@ document.addEventListener("DOMContentLoaded", () => {
         updateKiloBtn.value = 'Submit';
         updateKiloForm.reset();
         document.querySelector('.toUpdateKiloModal').classList.add('hidden');
-        
+
         [...updateKiloForm.elements].forEach((input) => {
           if (input.tagName === 'INPUT') {
             input.classList.remove('border-green-700', 'border-red-500');

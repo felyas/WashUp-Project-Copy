@@ -170,7 +170,7 @@ if ($_SESSION['role'] !== 'admin') {
                 <p class="text-md font-semibold text-ashblack">MANAGE BOOKING</p>
               </div>
               <div class="overflow-x-auto h-auto min-h-72 p-2 pt-0">
-                <table class="text-nowrap w-full text-left text-ashblack border-collapse border border-solid border-gray-200">
+                <table class="text-nowrap w-full text-left text-ashblack  border-collapse border border-solid border-gray-200">
                   <thead class="bg-gray-200">
                     <tr>
                       <th data-column="id" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
@@ -189,6 +189,9 @@ if ($_SESSION['role'] !== 'admin') {
                         ADDRESS
                         <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
                       </th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-l border-gray-200">PROOF OF KILO</th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-l border-gray-200">PROOF OF DELIVERY</th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-l border-gray-200">RECEIPT</th>
                       <!-- Adding the status dropdown filter -->
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">
                         <select id="status-filter" class="ml-2 px-2 py-1 text-sm border border-gray-300 rounded">
@@ -225,6 +228,15 @@ if ($_SESSION['role'] !== 'admin') {
   <?php
   include './modal.php';
   ?>
+  <!-- Modal for displaying the larger image -->
+  <div class="fixed p-2 inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-30" id="imageModal">
+    <div class="bg-white shadow-lg p-4 rounded-lg">
+      <button id="closeImageModal" class="px-2 py-1 bg-gray-500 hover:bg-gray-700 text-white rounded-md">
+        <img class="w-5 h-5" src="./img/icons/x.svg" alt="">
+      </button>
+      <img id="modal-image" class="w-full max-w-md h-auto mt-2" src="" alt="Large Proof Image">
+    </div>
+  </div>
 
   <!-- Modal for View -->
   <div class="toViewBookingModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
@@ -289,18 +301,7 @@ if ($_SESSION['role'] !== 'admin') {
     </div>
   </div>
 
-
-
-  <!-- <p class="text-md font-semibold mb-2 text-gray-500">Upload Image</p> -->
-            <!-- <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-2">
-              <input type="file" id="file-upload" class="hidden" required>
-              <div class="text-red-500 text-center text-sm hidden">Image is required!</div>
-              <label for="file-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
-                <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
-                <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
-              </label>
-            </div> -->
-  <!-- Modal for Upload Kilo -->
+  <!-- Modal to update Kilo -->
   <div class="toUpdateKiloModal hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-20">
     <div class="bg-white shadow-lg rounded-3xl m-2">
       <div class="flex items-center py-6 px-4 bg-federal text-white text-lg font-semibold rounded-t-3xl">
@@ -312,7 +313,7 @@ if ($_SESSION['role'] !== 'admin') {
         </div>
 
         <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
-        <div class="grid grid-cols-2 gap-2">
+          <div class="grid grid-cols-2 gap-2">
             <p>ID:</p>
             <p id="display-id-info" class="justify-end flex"><!-- dynamic data --></p>
           </div>
@@ -327,18 +328,6 @@ if ($_SESSION['role'] !== 'admin') {
         </div>
 
         <form action="" id="upload-kilo-form" novalidate>
-          <!-- Image Upload Section -->
-          <div class="flex flex-col items-center justify-center mb-4">
-
-
-            <!-- Laundry Kilo Section -->
-            <div class="w-full">
-              <label for="kilo" class="block text-sm font-medium text-gray-500">Laundry Kilo</label>
-              <input required type="number" id="kilo" name="kilo" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., 5" value="0">
-              <div class="text-red-500 text-sm hidden">Laundry kilo is required!</div>
-            </div>
-          </div>
-
           <!-- Dynamic Item and Quantity Section -->
           <div class="flex flex-col items-center mb-4">
             <p class="text-md font-semibold mb-2 text-gray-500">Items Used and Quantity</p>

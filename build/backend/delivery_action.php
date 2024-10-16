@@ -210,13 +210,13 @@ if (isset($_POST['add-kilo'])) {
   $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
   // Validate file as an image
-  if(getimagesize($_FILES["file-upload"]["tmp_name"]) !== false ){
+  if (getimagesize($_FILES["file-upload"]["tmp_name"]) !== false) {
     // Move uploaded file to target directory
-    if(move_uploaded_file($_FILES["file-upload"]["tmp_name"], $target_file)) {
+    if (move_uploaded_file($_FILES["file-upload"]["tmp_name"], $target_file)) {
       // Update booking in the database
       $result = $db->updateKiloAndProof($id, $kilo, $target_file);
 
-      if($result === true) {
+      if ($result === true) {
         echo json_encode([
           'status' => 'success',
           'message' => 'Kilo and image updated successfully!'
@@ -227,14 +227,12 @@ if (isset($_POST['add-kilo'])) {
           'message' => 'Failed to update booking!'
         ]);
       }
-
     } else {
       echo json_encode([
         'status' => 'error',
         'message' => 'Error uploading image!'
       ]);
     }
-
   } else {
     echo json_encode([
       'status' => 'error',
@@ -244,14 +242,14 @@ if (isset($_POST['add-kilo'])) {
   exit();
 }
 
-if(isset($_GET['info-for-proof-receipt'])) {
+if (isset($_GET['info-for-proof-receipt'])) {
   $id = $_GET['id'];
-  $view =$db->viewSummary($id);
+  $view = $db->viewSummary($id);
 
   echo json_encode($view);
 }
 
-if(isset($_POST['add-receipt'])) {
+if (isset($_POST['add-receipt'])) {
   $id = $util->testInput($_POST['booking_id']);
 
   //Set up file upload directories
@@ -261,36 +259,36 @@ if(isset($_POST['add-receipt'])) {
 
   // Validate file type (esure image)
   $imageFileTypeProof = strtolower(pathinfo($proof_file, PATHINFO_EXTENSION));
-  $imageFileTypeReceipt = strtolower(pathinfo($receipt_file,PATHINFO_EXTENSION));
+  $imageFileTypeReceipt = strtolower(pathinfo($receipt_file, PATHINFO_EXTENSION));
 
   // Check if both files are images
-  if(getimagesize($_FILES["file-proof-upload"]["tmp_name"]) !== false && getimagesize($_FILES["file-receipt-upload"]["tmp_name"]) !== false ) {
+  if (getimagesize($_FILES["file-proof-upload"]["tmp_name"]) !== false && getimagesize($_FILES["file-receipt-upload"]["tmp_name"]) !== false) {
 
     // Attempt to move the uploaded files to the target directory
     $proof_upload_success = move_uploaded_file($_FILES["file-proof-upload"]["tmp_name"], $proof_file);
     $receipt_upload_success = move_uploaded_file($_FILES["file-receipt-upload"]["tmp_name"], $receipt_file);
 
-      if($proof_upload_success && $receipt_upload_success) {
-        // Update booking in the database
-        $result = $db->updateProofAndReceipt($id, $proof_file, $receipt_file);
+    if ($proof_upload_success && $receipt_upload_success) {
+      // Update booking in the database
+      $result = $db->updateProofAndReceipt($id, $proof_file, $receipt_file);
 
-        if($result === true) {
-          echo json_encode([
-            'status' => 'success',
-            'message' => 'Delivery proof and receipt updated successfully!',
-          ]);
-        } else {
-          echo json_encode([
-            'status' => 'error',
-            'message' => 'Failed to update booking',
-          ]);
-        }
+      if ($result === true) {
+        echo json_encode([
+          'status' => 'success',
+          'message' => 'Delivery proof and receipt updated successfully!',
+        ]);
       } else {
         echo json_encode([
           'status' => 'error',
-          'message' => 'Error uploading images!',
+          'message' => 'Failed to update booking',
         ]);
       }
+    } else {
+      echo json_encode([
+        'status' => 'error',
+        'message' => 'Error uploading images!',
+      ]);
+    }
   } else {
     echo json_encode([
       'status' => 'error',
@@ -298,4 +296,114 @@ if(isset($_POST['add-receipt'])) {
     ]);
   }
   exit();
+}
+
+if (isset($_GET['read-pending'])) {
+  $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
+  $limit = 10; // Rows per page
+  $query = isset($_GET['query']) ? $_GET['query'] : '';
+
+  $pendingBooking = $db->fetchPendingBooking($page, $limit, $query);
+  $totalRows = $db->getTotalPendingRows($query);
+  $totalPages = ceil($totalRows / $limit);
+
+  $output = '';
+  if ($pendingBooking) {
+    foreach ($pendingBooking as $row) {
+      $output .= '
+        <tr class="border-b border-gray-200">
+          <td class="px-4 py-2">' . $row['id'] . '</td>
+          <td class="px-4 py-2 text-nowrap">' . $row['fname'] . ' ' . $row['lname'] . '</td>
+          <td class="px-4 py-2 text-nowrap">' . $row['address'] . '</td>
+          <td class="min-w-[150px] flex items-center justify-start space-x-2 flex-grow">
+            <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
+              <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+            </a>
+            <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition editLink">
+              <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
+            </a>
+            <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition admitLink">
+              <img class="w-4 h-4" src="./img/icons/check.svg" alt="admit">
+            </a>
+            <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deniedLink">
+              <img class="w-4 h-4" src="./img/icons/decline.svg" alt="denied">
+            </a>
+          </td>
+        </tr>
+      ';
+    }
+  } else {
+    $output = '<tr>
+      <td colspan="7" class="text-center py-4 text-gray-200">
+        No Pending Booking Found!
+      </td>
+    </tr>';
+  }
+
+  // Pagination HTML for Previous/Next
+  $paginationOutput = '<div class="flex justify-center items-center space-x-2">';
+
+  // Previous button
+  if ($page > 1) {
+    $paginationOutput .= '<a href="#" data-page="' . ($page - 1) . '" class="pagination-link bg-gray-200 text-gray-600 px-4 py-2 rounded">Previous</a>';
+  } else {
+    $paginationOutput .= '<span class="bg-gray-300 text-gray-500 px-4 py-2 rounded">Previous</span>';
+  }
+
+  // Next button
+  if ($page < $totalPages) {
+    $paginationOutput .= '<a href="#" data-page="' . ($page + 1) . '" class="pagination-link bg-gray-200 text-gray-600 px-4 py-2 rounded">Next</a>';
+  } else {
+    $paginationOutput .= '<span class="bg-gray-300 text-gray-500 px-4 py-2 rounded">Next</span>';
+  }
+
+  $paginationOutput .= '</div>';
+
+  // Return JSON response
+  echo json_encode([
+    'bookings' => $output,
+    'pagination' => $paginationOutput
+  ]);
+}
+
+// Handle Admit Ajax Request
+if (isset($_GET['admit'])) {
+  $id = $_GET['id'];
+
+  if ($db->admit($id)) {
+    echo $util->showMessage('success', 'Booking admitted successfully!');
+  }
+}
+
+// Handle Denied Ajax Request
+if (isset($_GET['denied'])) {
+  $id = $_GET['id'];
+
+  if ($db->denied($id)) {
+    echo $util->showMessage('success', 'Booking denied successfully!');
+  }
+}
+
+// Handle fetching unavailable times for a specific date
+if (isset($_GET['get_unavailable_times'])) {
+  $date = $_GET['date'];
+  $unavailableTimes = $db->getUnavailableTimesForDate($date);
+  echo json_encode($unavailableTimes);
+}
+
+if (isset($_GET['edit-info'])) {
+  $id = $_GET['id'];
+  $info = $db->viewSummary($id);
+
+  echo json_encode($info);
+}
+
+if (isset($_POST['update'])) {
+  $id = $util->testInput($_POST['id']);
+  $pickup_date = $util->testInput($_POST['pickup-date']);
+  $pickup_time = $util->testInput($_POST['pickup_time']);
+
+  if ($db->updateBooking($id, $pickup_date, $pickup_time)) {
+    echo $util->showMessage('success', 'Booking updated successfully!');
+  }
 }

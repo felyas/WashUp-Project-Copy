@@ -167,10 +167,48 @@ if ($_SESSION['role'] !== 'delivery') {
           </div>
         </div>
 
+        <div class="h-96 w-full grid grid-cols-1 lg:grid-cols-4 gap-2 text-sm mb-4">
+          <div class="w-full col-span-3 border border-solid border-gray-200 shadow-md">
+            <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
+              <p class="text-md font-semibold text-ashblack py-2">PENDING BOOKINGS</p>
+              <div class="flex justify-between items-center relative">
+                <input id="js-search-pending" type="text" placeholder="Search bookings..." class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
+                <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
+                  <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
+                </button>
+              </div>
+            </div>
+            <div class="overflow-x-auto h-auto min-h-72 px-2">
+              <table class="text-nowrap w-full text-left text-ashblack border-collapse border border-solid border-gray-200">
+                <thead class="bg-gray-200">
+                  <tr>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ID</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">CUSTOMER NAME</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ADDRESS</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ACTION</th>
+                  </tr>
+                </thead>
+                <tbody id="js-pending-tbody">
+                  <!-- Dynamic Data -->
+                </tbody>
+              </table>
+              <div id="pagination-container-pending" class="bg-white w-full p-4 mb-4 justify-center items-center flex text-sm">
+                <!-- Pagination links will be populated here -->
+              </div>
+            </div>
+
+          </div>
+          <div class="col-span-1 h-full lg:col-span-1 w-auto bg-white border border-solid border-gray-200 shadow-md p-2">
+            <div id="calendar">
+              <!-- Calendar goes here -->
+            </div>
+          </div>
+        </div>
+
         <!--List-->
-        <div class="h-auto grid grid-cols-1 lg:grid-cols-4 gap-2 text-sm mb-4">
+        <div class="h-auto grid grid-cols-1 gap-2 text-sm mb-4">
           <!-- First div taking 3/4 of the width on large screens -->
-          <div class="col-span-4 lg:col-span-3 h-auto w-full rounded-sm bg-white px-4 py-2 border border-solid border-gray-200 shadow-lg">
+          <div class="h-auto w-full rounded-sm bg-white px-4 py-2 border border-solid border-gray-200 shadow-md">
             <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
               <p class="text-md font-semibold text-ashblack py-2">MANAGE BOOKING</p>
               <div class="flex justify-between items-center relative">
@@ -250,13 +288,6 @@ if ($_SESSION['role'] !== 'delivery') {
 
             <!-- Pagination Container -->
             <div id="pagination-container" class="w-full py-2 justify-center items-center flex text-sm">
-            </div>
-          </div>
-
-          <!-- Second div taking 1/4 of the width on large screens -->
-          <div class="col-span-4 lg:col-span-1 w-auto bg-white border border-solid border-gray-200 shadow-lg p-2">
-            <div id="calendar">
-              <!-- Calendar goes here -->
             </div>
           </div>
         </div>
@@ -366,6 +397,57 @@ if ($_SESSION['role'] !== 'delivery') {
     </div>
   </div>
 
+  <!-- Modal for Edit -->
+  <div class="toEditBookingModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
+    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2">
+      <div class="flex justify-between items-center border-b pb-2 mb-2">
+
+        <h2 class="text-lg font-semibold text-gray-500">Booking Information</h2>
+        <button class="closeEditBookingModal text-gray-500 hover:text-gray-800">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+      <div class="mb-6">
+        <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
+          <div class="grid grid-cols-2 gap-2">
+            <p>ID:</p>
+            <p id="display-id-editInfo" class="justify-end flex"><!-- dynamic data --></p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <p>Customer Name:</p>
+            <p id="display-full-name-editInfo" class="justify-end flex"><!-- dynamic data --></p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <p>Phone Number:</p>
+            <p id="display-phone-number-editInfo" class="justify-end flex"><!-- dynamic data --></p>
+          </div>
+        </div>
+      </div>
+
+      <form id="edit-booking-form" class="mt-4">
+        <input type="hidden" name="id" id="id">
+        <div class="grid grid-cols-2 gap-2 mb-4">
+          <div class="">
+            <label for="pickup-date" class="block text-sm font-medium text-gray-500">Pickup Date</label>
+            <input type="date" id="pickup-date" name="pickup-date" class="pickup-date-editInfo mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack">
+            <div class="text-red-500 text-sm hidden">Pickup date is required!</div>
+          </div>
+          <div class="grid grid-cols-1 justify-start">
+            <label for="pickup-time" class="pickup-time-editInfo block text-sm font-medium text-gray-500">Pick-up Time</label>
+            <select id="pickup-time" name="pickup_time" class="p-2 border border-ashblack rounded-md max-h-12 overflow-auto" required>
+              <!-- Options will be dynamically populated by JavaScript -->
+            </select>
+            <div class="text-red-500 text-sm hidden">Pick-up time is required!</div>
+          </div>
+        </div>
+
+        <input type="submit" id="edit-booking-btn" value="Save" class="px-4 py-2 w-full bg-green-700 hover:bg-green-800 text-white font-semibold rounded-md">
+      </form>
+    </div>
+  </div>
+
   <!-- Modal for displaying the larger image -->
   <div class="fixed p-2 inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-30" id="imageModal">
     <div class="bg-white shadow-lg p-4 rounded-lg">
@@ -373,18 +455,6 @@ if ($_SESSION['role'] !== 'delivery') {
       <img id="modal-image" class="w-full max-w-md h-auto mt-2" src="" alt="Large Proof Image">
     </div>
   </div>
-
-
-
-  <!-- <p class="text-md font-semibold mb-2 text-gray-500">Upload Image</p> -->
-  <!-- <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-2">
-              <input type="file" id="file-upload" class="hidden" required>
-              <div class="text-red-500 text-center text-sm hidden">Image is required!</div>
-              <label for="file-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
-                <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
-                <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
-              </label>
-            </div> -->
 
   <!-- Modal for Upload Kilo -->
   <div class="toUpdateKiloModal hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-20">
@@ -452,74 +522,74 @@ if ($_SESSION['role'] !== 'delivery') {
   </div>
 
   <<!-- Modal for Delivery Proof -->
-  <div class="toUpdateDeliveryProofModal hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-20">
-    <div class="bg-white shadow-lg rounded-3xl m-2 w-full md:w-1/2">
-      <div class="flex items-center py-6 px-4 bg-federal text-white text-lg font-semibold rounded-t-3xl">
-        <div class="flex items-center justify-start space-x-2">
-          <img class="w-7 h-7" src="./img/icons/receipt.svg" alt="">
-          <h1 id="top">Proof of delivery</h1>
+    <div class="toUpdateDeliveryProofModal hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-20">
+      <div class="bg-white shadow-lg rounded-3xl m-2 w-full md:w-1/2">
+        <div class="flex items-center py-6 px-4 bg-federal text-white text-lg font-semibold rounded-t-3xl">
+          <div class="flex items-center justify-start space-x-2">
+            <img class="w-7 h-7" src="./img/icons/receipt.svg" alt="">
+            <h1 id="top">Proof of delivery</h1>
+          </div>
         </div>
-      </div>
-      <div class="p-4 h-auto w-full overflow-y-auto max-h-64">
-        <div class="w-full text-ashblack text-md font-semibold mb-2">
-          <p class="justify-start">Booking info</p>
-        </div>
+        <div class="p-4 h-auto w-full overflow-y-auto max-h-64">
+          <div class="w-full text-ashblack text-md font-semibold mb-2">
+            <p class="justify-start">Booking info</p>
+          </div>
 
-        <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
-          <div class="grid grid-cols-2 gap-2">
-            <p>ID:</p>
-            <p id="display-id-forProof" class="justify-end flex">1<!-- dynamic data --></p>
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <p>Customer Name:</p>
-            <p id="display-full-name-forProof" class="justify-end flex">Felix Bragais<!-- dynamic data --></p>
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <p>Phone Number:</p>
-            <p id="display-phone-number-forProof" class="justify-end flex">09691026692<!-- dynamic data --></p>
-          </div>
-        </div>
-
-        <form action="" id="upload-proofAndReceipt-form" enctype="multipart/form-data" novalidate>
-          <!-- Image Upload Section -->
-          <p class="text-md font-semibold mb-2 text-gray-500">Upload Proof of Delivery</p>
-          <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-4">
-            <input type="file" id="file-proof-upload" name="file-proof-upload" class="hidden" accept="image/*" required>
-            <div class="text-red-500 text-center text-sm hidden">Proof of delivery is required!</div>
-            <label for="file-proof-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
-              <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
-              <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
-            </label>
-            <!-- Image preview -->
-            <div class="mt-4 text-center flex w-full items-center justify-center">
-              <img id="image-preview-delivery-proof" class="hidden w-32 h-32 object-cover rounded-md border border-gray-300" alt="Image Preview">
+          <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
+            <div class="grid grid-cols-2 gap-2">
+              <p>ID:</p>
+              <p id="display-id-forProof" class="justify-end flex">1<!-- dynamic data --></p>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <p>Customer Name:</p>
+              <p id="display-full-name-forProof" class="justify-end flex">Felix Bragais<!-- dynamic data --></p>
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <p>Phone Number:</p>
+              <p id="display-phone-number-forProof" class="justify-end flex">09691026692<!-- dynamic data --></p>
             </div>
           </div>
 
-          <p class="text-md font-semibold mb-2 text-gray-500">Upload Receipt</p>
-          <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-4">
-            <input type="file" id="file-receipt-upload" name="file-receipt-upload" class="hidden" accept="image/*" required>
-            <div class="text-red-500 text-center text-sm hidden">Receipt is required!</div>
-            <label for="file-receipt-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
-              <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
-              <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
-            </label>
-            <!-- Image preview -->
-            <div class="mt-4 text-center flex w-full items-center justify-center">
-              <img id="image-preview-receipt" class="hidden w-32 h-32 object-cover rounded-md border border-gray-300" alt="Image Preview">
+          <form action="" id="upload-proofAndReceipt-form" enctype="multipart/form-data" novalidate>
+            <!-- Image Upload Section -->
+            <p class="text-md font-semibold mb-2 text-gray-500">Upload Proof of Delivery</p>
+            <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-4">
+              <input type="file" id="file-proof-upload" name="file-proof-upload" class="hidden" accept="image/*" required>
+              <div class="text-red-500 text-center text-sm hidden">Proof of delivery is required!</div>
+              <label for="file-proof-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
+                <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
+                <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
+              </label>
+              <!-- Image preview -->
+              <div class="mt-4 text-center flex w-full items-center justify-center">
+                <img id="image-preview-delivery-proof" class="hidden w-32 h-32 object-cover rounded-md border border-gray-300" alt="Image Preview">
+              </div>
             </div>
-          </div>
 
-          <div class="flex items-center justify-center space-x-2">
-            <input id="update-delivery-proof-button" type="submit" class="flex justify-center items-center px-4 py-2 bg-federal hover:bg-[#1a2479] text-white rounded-md mr-2" value="Submit">
-            <button type="button" class="closeUpdateDeliveryProofModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md mr-2">Close</button>
-          </div>
-        </form>
+            <p class="text-md font-semibold mb-2 text-gray-500">Upload Receipt</p>
+            <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-4">
+              <input type="file" id="file-receipt-upload" name="file-receipt-upload" class="hidden" accept="image/*" required>
+              <div class="text-red-500 text-center text-sm hidden">Receipt is required!</div>
+              <label for="file-receipt-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
+                <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
+                <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
+              </label>
+              <!-- Image preview -->
+              <div class="mt-4 text-center flex w-full items-center justify-center">
+                <img id="image-preview-receipt" class="hidden w-32 h-32 object-cover rounded-md border border-gray-300" alt="Image Preview">
+              </div>
+            </div>
+
+            <div class="flex items-center justify-center space-x-2">
+              <input id="update-delivery-proof-button" type="submit" class="flex justify-center items-center px-4 py-2 bg-federal hover:bg-[#1a2479] text-white rounded-md mr-2" value="Submit">
+              <button type="button" class="closeUpdateDeliveryProofModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md mr-2">Close</button>
+            </div>
+          </form>
+        </div>
       </div>
     </div>
-  </div>
 
-  <script type="module" src="./js/delivery-dashboard.js"></script>
+    <script type="module" src="./js/delivery-dashboard.js"></script>
 </body>
 
 

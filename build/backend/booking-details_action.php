@@ -117,10 +117,11 @@ if (isset($_GET['readAll'])) {
               ' . strtoupper($row['status']) . '
             </div>
           </td>
-          <td class="min-w-[200px] py-1 px-2 flex items-center justify-start h-full space-x-2">
-            <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
-              <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-            </a>';
+          <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
+            <div class="flex justify-start space-x-2 min-w-[150px]">
+              <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800   rounded-md transition viewLink">
+                <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+              </a>';
 
       // If status is 'pending', append admitLink and deniedLink
       if ($row['status'] === 'pending') {
@@ -156,6 +157,7 @@ if (isset($_GET['readAll'])) {
 
 
       $output .= '
+            </div>
           </td>
         </tr>
       ';

@@ -204,30 +204,6 @@ if ($_SESSION['role'] !== 'user') {
                   </thead>
                   <tbody id="users-booking-list">
                     <!-- Dynamic List -->
-                    <tr>
-                      <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">1</td>
-                      <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Felix Bragais</td>
-                      <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">2024-10-2</td>
-                      <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Wash</td>
-                      <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Standard 2-days</td>
-                      <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
-                        <img class="w-12 h-12" src="./backend/" alt="">
-                      </td>
-                      <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle font-semibold">for delivery</td>
-                      <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
-                        <div class="flex justify-center space-x-2">
-                          <a href="#" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
-                            <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                          </a>
-                          <a href="#" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
-                            <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
-                          </a>
-                          <a href="#" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
-                            <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                          </a>
-                        </div>
-                      </td>
-                    </tr>
                   </tbody>
                 </table>
               </div>

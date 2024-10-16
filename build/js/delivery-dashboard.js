@@ -4,6 +4,8 @@ handleDisplayCurrentTime();
 openModal('viewModalTrigger', 'toViewBookingModal', 'closeViewBookingModal', 'closeViewBookingModal2');
 openModal('updateKiloTrigger', 'toUpdateKiloModal', 'closeUpdateKiloModal', 'closeUpdateKiloModal2');
 openModal('updateProofOfDeliveryTrigger', 'toUpdateDeliveryProofModal', 'closeUpdateDeliveryProofModal', 'closeUpdateDeliveryProofModal2');
+openModal('editModalTrigger', 'toEditBookingModal', 'closeEditBookingModal', 'closeEditBookingModal2');
+
 
 // Handle the input validation from add items
 function validateForm(form) {
@@ -26,11 +28,71 @@ function validateForm(form) {
   });
 }
 
+// Function to set the minimum date and display the current date in the pick-up date input
+function setMinDate() {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const dd = String(today.getDate()).padStart(2, '0');
+  const currentDate = `${yyyy}-${mm}-${dd}`;
+
+  const dateInput = document.getElementById('pickup-date');
+
+  // Set both min and value attributes to today's date
+  dateInput.setAttribute('min', currentDate);
+}
+
+// Function to generate 20-minute interval time options from 8:00 AM to 9:00 PM, with unavailable times disabled
+function populateTimeOptions(unavailableTimes = []) {
+  const selectTime = document.getElementById('pickup-time');
+  selectTime.innerHTML = ''; // Clear previous options
+
+  const startTime = 8 * 60; // 8:00 AM in minutes
+  const endTime = 21 * 60; // 9:00 PM in minutes
+  const interval = 20; // 20 minutes
+
+  for (let time = startTime; time <= endTime; time += interval) {
+    const hours = Math.floor(time / 60);
+    const minutes = time % 60;
+
+    const isPM = hours >= 12;
+    const displayHours = hours % 12 || 12; // Convert to 12-hour format
+    const displayMinutes = minutes.toString().padStart(2, '0');
+    const ampm = isPM ? 'PM' : 'AM';
+
+    const timeFormatted = `${displayHours}:${displayMinutes} ${ampm}`;
+
+    const option = document.createElement('option');
+    option.value = timeFormatted;
+    option.textContent = timeFormatted;
+
+    // Disable the option if it's in the unavailable times array
+    if (unavailableTimes.includes(timeFormatted)) {
+      option.disabled = true; // Disable the option if it's already booked
+      option.textContent += ' (Unavailable)'; // Append (Unavailable) to the text
+    }
+
+    selectTime.appendChild(option);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", () => {
   const tbody = document.getElementById('users-booking-list');
   const paginationContainer = document.getElementById('pagination-container');
   const searchInput = document.getElementById('js-search-bar');
   const statusFilter = document.getElementById('status-filter');
+
+  setMinDate();
+  populateTimeOptions();
+
+  document.getElementById('pickup-date').addEventListener('change', async function () {
+    const selectedDate = this.value; // Get the selected date
+    if (selectedDate) {
+      const response = await fetch(`./backend/customer_action.php?get_unavailable_times=1&date=${selectedDate}`);
+      const unavailableTimes = await response.json(); // Fetch unavailable times from the backend
+      populateTimeOptions(unavailableTimes); // Populate time options with unavailable times disabled
+    }
+  });
 
   // Function to toggle sorting icons 
   const toggleSortIcon = (th, order) => {
@@ -123,31 +185,153 @@ document.addEventListener("DOMContentLoaded", () => {
   fetchAll();
 
   //Targeting anchor tags from tbody
-  tbody.addEventListener('click', (e) => {
-    // Target View Link
-    if (e.target && (e.target.matches('a.viewLink') || e.target.closest('a.viewLink'))) {
-      e.preventDefault();
-      let targetElement = e.target.matches('a.viewLink') ? e.target : e.target.closest('a.viewLink');
-      let id = targetElement.getAttribute('id');
-      viewSummary(id);
-    }
+  const tbodyList = document.querySelectorAll('tbody');
+  tbodyList.forEach(tbody => {
+    tbody.addEventListener('click', (e) => {
+      // Target View Link
+      if (e.target && (e.target.matches('a.viewLink') || e.target.closest('a.viewLink'))) {
+        e.preventDefault();
+        let targetElement = e.target.matches('a.viewLink') ? e.target : e.target.closest('a.viewLink');
+        let id = targetElement.getAttribute('id');
+        viewSummary(id);
+      }
 
-    // Target Pickup Link
-    if (e.target && (e.target.matches('a.pickupLink') || e.target.closest('a.pickupLink'))) {
-      e.preventDefault();
-      let targetElement = e.target.matches('a.pickupLink') ? e.target : e.target.closest('a.pickupLink');
-      let id = targetElement.getAttribute('id');
-      viewInfoForKiloUpdate(id);
-    }
+      // Target Pickup Link
+      if (e.target && (e.target.matches('a.pickupLink') || e.target.closest('a.pickupLink'))) {
+        e.preventDefault();
+        let targetElement = e.target.matches('a.pickupLink') ? e.target : e.target.closest('a.pickupLink');
+        let id = targetElement.getAttribute('id');
+        viewInfoForKiloUpdate(id);
+      }
 
-    // Target DeliveryLink
-    if (e.target && (e.target.matches('a.deliveryLink') || e.target.closest('a.deliveryLink'))) {
-      e.preventDefault();
-      let targetElement = e.target.matches('a.deliveryLink') ? e.target : e.target.closest('a.deliveryLink');
-      let id = targetElement.getAttribute('id');
-      viewInfoForProofAndReceipt(id);
+      // Target DeliveryLink
+      if (e.target && (e.target.matches('a.deliveryLink') || e.target.closest('a.deliveryLink'))) {
+        e.preventDefault();
+        let targetElement = e.target.matches('a.deliveryLink') ? e.target : e.target.closest('a.deliveryLink');
+        let id = targetElement.getAttribute('id');
+        viewInfoForProofAndReceipt(id);
+      }
+
+      // Target AdmitLink
+      if (e.target && (e.target.matches('a.admitLink') || e.target.closest('a.admitLink'))) {
+        e.preventDefault();
+        let targetElement = e.target.matches('a.admitLink') ? e.target : e.target.closest('a.admitLink');
+        let id = targetElement.getAttribute('id');
+        const admitWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
+        admitWarningModal.show(admitBooking, id);
+      }
+
+      // Target DeniedLink
+      if (e.target && (e.target.matches('a.deniedLink') || e.target.closest('a.deniedLink'))) {
+        e.preventDefault();
+        let targetElement = e.target.matches('a.deniedLink') ? e.target : e.target.closest('a.deniedLink');
+        let id = targetElement.getAttribute('id');
+        const deniedWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
+        deniedWarningModal.show(deniedBooking, id);
+      }
+
+      // Target EditLink
+      if (e.target && (e.target.matches('a.editLink') || e.target.closest('a.editLink'))) {
+        e.preventDefault();
+        let targetElement = e.target.matches('a.editLink') ? e.target : e.target.closest('a.editLink');
+        let id = targetElement.getAttribute('id');
+        viewEditInfo(id);
+      }
+
+
+    });
+  })
+
+  // View edit info Ajax Request
+  const viewEditInfo = async (id) => {
+    const data = await fetch(`./backend/delivery_action.php?edit-info=1&id=${id}`, {
+      method: 'GET',
+    });
+    const response = await data.json();
+    document.getElementById('display-id-editInfo').innerText = response.id;
+    document.getElementById('display-full-name-editInfo').innerText = response.fname + ' ' + response.lname;
+    document.getElementById('display-phone-number-editInfo').innerText = response.phone_number;
+  }
+
+  const editForm = document.getElementById('edit-booking-form');
+
+  editForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(editForm);
+    formData.append('update', 1);
+    formData.append('id', document.getElementById('display-id-editInfo').textContent);
+
+    if (editForm.checkValidity() === false) {
+      e.stopPropagation();
+
+      // Add validation error handling
+      [...editForm.elements].forEach((input) => {
+        const feedback = input.nextElementSibling;
+
+        if (input.tagName === 'INPUT' && (input.type === 'text' || input.type === 'date' || input.type === 'time')) {
+          // Handle text input validation feedback
+          if (!input.checkValidity()) {
+            input.classList.add('border-red-500');
+            feedback.classList.remove('hidden');
+          } else {
+            input.classList.remove('border-red-500');
+            feedback.classList.add('hidden');
+          }
+        }
+      });
+      const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
+      errorWarningModal.show();
+      return false;
+    } else {
+      document.getElementById('edit-booking-btn').value = 'Please Wait...';
+
+      const data = await fetch(`./backend/delivery_action.php`, {
+        method: 'POST',
+        body: formData,
+      });
+      const response = await data.text();
+      if (response.includes('success')) {
+        const successModal = new Modal('success-modal', 'success-confirm-modal', 'success-close-modal');
+        successModal.show();
+        document.getElementById('edit-booking-btn').value = 'Save';
+        editForm.reset();
+        fetchAllBookings();
+        document.querySelector('.toEditBookingModal').classList.add('hidden');
+      } else {
+        showToaster('Something went wrong !', 'exclamation-error', '#dc2626', '#b91c1c');
+      }
     }
-  });
+  })
+
+
+  // Admit Ajax Request
+  const admitBooking = async (id) => {
+    const data = await fetch(`./backend/delivery_action.php?admit=1&id=${id}`, {
+      method: 'GET',
+    });
+    const response = await data.text();
+    if (response.includes('success')) {
+      showToaster('Booking admitted successfully !', 'check', '#047857', '#065f46');
+      fetchAll();
+      fetchAllPendingBooking();
+      fetchBookingCounts();
+    }
+  }
+
+  const deniedBooking = async (id) => {
+    const data = await fetch(`./backend/delivery_action.php?denied=1&id=${id}`, {
+      method: 'GET',
+    });
+    const response = await data.text();
+    if (response.includes('success')) {
+      showToaster('Booking denied !', 'check', '#047857', '#065f46');
+      fetchAll();
+      fetchAllPendingBooking();
+      fetchBookingCounts();
+    }
+  }
+
 
 
   // View Booking Details Ajax Request
@@ -322,30 +506,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }, document.getElementById('display-id-forProof').textContent); // Pass the booking ID if needed
     }
   });
-
-
-
-
-  // Update Status From Delivery to isReceive Ajax Request
-  const updateDelivery = async (id) => {
-    const data = await fetch(`./backend/delivery_action.php?update-delivery=1&id=${id}`, {
-      method: 'GET',
-    });
-    const response = await data.text();
-    if (response.includes('success')) {
-      // Example: Trigger the toaster with hex values
-      const green600 = '#047857'; // Hex value for green-600
-      const green700 = '#065f46'; // Hex value for green-700
-      showToaster('Status updated successfully!', 'check', green600, green700);
-      fetchAll();
-      fetchBookingCounts();
-    } else {
-      // Example: Trigger the toaster with hex values
-      const red600 = '#d95f5f'; // Hex value for red-600
-      const red700 = '#c93c3c'; // Hex value for green-700
-      showToaster('Something went wrong !', 'exclamation-error', red600, red700);
-    }
-  }
 
   // Fetch the total number of bookings for each status: "for pick-up", "for delivery", and "complete"
   const fetchBookingCounts = async () => {
@@ -536,6 +696,37 @@ document.addEventListener("DOMContentLoaded", () => {
   handleImagePreview('file-upload', 'image-preview');  // For the main image upload
   handleImagePreview('file-proof-upload', 'image-preview-delivery-proof');  // For proof of delivery
   handleImagePreview('file-receipt-upload', 'image-preview-receipt');  // For receipt
+
+
+  const pendingTbody = document.getElementById('js-pending-tbody');
+  const paginationContainerPending = document.getElementById('pagination-container-pending');
+  // Fetch Pending Ajax Request with pagination and search
+  const fetchAllPendingBooking = async (page = 1) => {
+    const searchQuery = document.getElementById('js-search-pending').value.trim();
+    const data = await fetch(`./backend/delivery_action.php?read-pending=1&page=${page}&query=${searchQuery}`, {
+      method: 'GET',
+    });
+    const response = await data.json();
+    pendingTbody.innerHTML = response.bookings;
+    paginationContainerPending.innerHTML = response.pagination; // Pagination displayed here
+  }
+
+  // Search Input Event Listener
+  document.getElementById('js-search-pending').addEventListener('input', () => {
+    fetchAllPendingBooking();
+  });
+
+  //Pagination Links Event Delegation
+  paginationContainerPending.addEventListener('click', (e) => {
+    if (e.target.classList.contains('pagination-link')) {
+      e.preventDefault();
+      const page = e.target.getAttribute('data-page');
+      fetchAllPendingBooking(page); // Fetch data for the clicked page
+    }
+  });
+
+  //Initial Fetch
+  fetchAllPendingBooking();
 
 
 });

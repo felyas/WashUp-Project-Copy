@@ -166,7 +166,8 @@ class Database extends Config
   }
 
   // Update Kilo and Proof of Kilo for an Existing Booking
-  public function updateKiloAndProof($id, $kilo, $image_path) {
+  public function updateKiloAndProof($id, $kilo, $image_path)
+  {
     $sql = 'UPDATE booking SET kilo = :kilo, image_proof = :image_path, status = :status,is_read = :is_read WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
@@ -177,11 +178,13 @@ class Database extends Config
       'id' => $id,
     ]);
     $result = $stmt->rowCount() > 0;
-    
+
     return $result;
   }
 
-  public function updateProofAndReceipt($id, $proof_path, $receipt_path){
+  // Update Proof of Delivery and receipt in DATABASE
+  public function updateProofAndReceipt($id, $proof_path, $receipt_path)
+  {
     $sql = 'UPDATE booking SET delivery_proof = :proof_path, receipt = :receipt_path, status = :status, is_read = :is_read WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
@@ -189,13 +192,89 @@ class Database extends Config
       'receipt_path' => $receipt_path,
       'status' => 'delivered',
       'is_read' => 0,
-      'id' =>$id,
+      'id' => $id,
     ]);
     $result = $stmt->rowCount() > 0;
 
     return $result;
   }
 
+  // Fetch All Pending In DATABASE
+  public function fetchPendingBooking($page, $limit, $query)
+  {
+    $start = ($page - 1) * $limit;
+    $query = '%' . $query . '%';
+
+    $sql = "SELECT * FROM booking WHERE status = 'pending' AND (fname LIKE :query OR lname LIKE :query OR phone_number LIKE :query OR address LIKE :query) ORDER BY id DESC LIMIT :start, :limit";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(':query', $query, PDO::PARAM_STR);
+    $stmt->bindValue(':start', $start, PDO::PARAM_INT);
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll();
+  }
+
+  // Get Total Number of Pending Rows with Search Filter
+  public function getTotalPendingRows($query)
+  {
+    $query = '%' . $query . '%';
+
+    $sql = "SELECT COUNT(*) as total FROM booking WHERE status = 'pending' AND (fname LIKE :query OR lname LIKE :query OR phone_number LIKE :query OR address LIKE :query)";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(':query', $query, PDO::PARAM_STR);
+    $stmt->execute();
+
+    $result = $stmt->fetch();
+    return $result['total'];
+  }
+
+  // Update Pending Status to 'For Pickup' in DATABASE
+  public function admit($id) {
+    $sql = 'UPDATE booking SET status = :status, is_read = :is_read WHERE id = :id';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'status' => 'for pick-up',
+      'is_read' => 0,
+      'id' => $id,
+    ]);
+
+    return true;
+  }
+
+  // Update Pending Status to 'For Pickup' in DATABASE
+  public function denied($id) {
+    $sql = 'DELETE FROM booking WHERE id = :id';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'id' => $id
+    ]);
+
+    return true;
+  }
+
+  // Fetch unavailable times for a specific date
+  public function getUnavailableTimesForDate($date)
+  {
+    $sql = 'SELECT pickup_time FROM booking WHERE pickup_date = :pickup_date';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['pickup_date' => $date]);
+    $result = $stmt->fetchAll(PDO::FETCH_COLUMN); // Fetch only the pickup_time column
+    return $result;
+  }
+
+  // Update Booking Details in Database
+  public function updateBooking($id, $pickup_date, $pickup_time) {
+    $sql = 'UPDATE booking SET pickup_date = :pickup_date, pickup_time = :pickup_time WHERE id = :id';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'id' => $id,
+      'pickup_date' => $pickup_date,
+      'pickup_time' => $pickup_time,
+    ]);
+
+    return true;
+  }
 
 
 }

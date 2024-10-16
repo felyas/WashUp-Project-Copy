@@ -205,17 +205,8 @@ editBookingForm.addEventListener('submit', async (e) => {
       }
     });
 
-    // Show SweetAlert
-    Swal.fire({
-      icon: 'error',
-      title: 'Validation Error',
-      text: 'Please fill out all required fields correctly.',
-      buttonsStyling: false, // Disable default button styling
-      customClass: {
-        confirmButton: 'bg-gray-700 hover:bg-gray-800 text-white font-semibold py-3 px-5 rounded-lg'
-      }
-    });
-
+    const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
+    errorWarningModal.show();
     return false;
   } else {
     document.getElementById('edit-booking-btn').value = 'Please Wait...';
@@ -225,7 +216,6 @@ editBookingForm.addEventListener('submit', async (e) => {
       body: formData,
     });
     const response = await data.text();
-    //Handle response and show SweetAlert
     if (response.includes('success')) {
       const successModal = new Modal('success-modal', 'success-confirm-modal', 'success-close-modal');
       successModal.show();
@@ -234,15 +224,7 @@ editBookingForm.addEventListener('submit', async (e) => {
       fetchAllBookings();
       document.querySelector('.toEditBookingModal').classList.add('hidden');
     } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: 'Something went wrong!',
-        buttonsStyling: false, // Disable default button styling
-        customClass: {
-          confirmButton: 'bg-gray-700 hover:bg-gray-800 text-white font-semibold py-3 px-5 rounded-lg'
-        }
-      });
+      showToaster('Something went wrong !', 'exclamation-error', '#dc2626', '#b91c1c');
     }
 
   }
@@ -330,7 +312,7 @@ const fetchNotifications = async (lastCheckTime) => {
         let message;
         if (notification.status === 'on process') {
           message = `The proof of kilo for your booking (ID: ${notification.id}) has been added. We're now processing your laundry.`;
-        } else if(notification.status === 'delivered') {
+        } else if (notification.status === 'delivered') {
           message = `Your laundry (Booking ID: ${notification.id}) has been successfully delivered. A receipt and proof of delivery have been sent to you.`;
         } else {
           message = `Booking with ID ${notification.id} updated to <span class="font-semibold text-celestial">${notification.status}</span>`;

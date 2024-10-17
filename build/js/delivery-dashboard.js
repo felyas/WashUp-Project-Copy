@@ -1,5 +1,6 @@
-import { handleDisplayCurrentTime, openModal, showToaster, Modal } from "./dashboards-main.js";
+import { handleDisplayCurrentTime, handleSidebar, openModal, showToaster, Modal } from "./dashboards-main.js";
 
+handleSidebar();
 handleDisplayCurrentTime();
 openModal('viewModalTrigger', 'toViewBookingModal', 'closeViewBookingModal', 'closeViewBookingModal2');
 openModal('updateKiloTrigger', 'toUpdateKiloModal', 'closeUpdateKiloModal', 'closeUpdateKiloModal2');
@@ -114,6 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Fetch All items with pagination, search, sorting, and filtering
   const dateFilter = document.getElementById('date-filter');
   let currentDateFilter = '';
+  
   const fetchAll = async (page = 1, column = 'id', order = 'desc', query = '') => {
     const searchQuery = searchInput.value.trim() || query;
     const statusQuery = status || statusFilter.value; // Get status from dropdown or passed value

@@ -173,9 +173,9 @@ if ($_SESSION['role'] !== 'user') {
 
 
         <!--List-->
-        <div class="h-auto grid grid-cols-1 lg:grid-cols-4 gap-2 text-sm mb-4">
+        <div class="h-auto w-full grid grid-cols-1 lg:grid-cols-4 gap-2 text-sm mb-4">
           <!-- First div taking 3/4 of the width on large screens -->
-          <div class="col-span-4 lg:col-span-3 h-auto w-full rounded-sm px-4">
+          <div class="col-span-4 lg:col-span-3 h-auto w-full rounded-sm">
             <div class="bg-white border border-solid border-gray-200 shadow-lg pb-2"> <!-- Outer container -->
               <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center"> <!-- Added border-b for a clean separation -->
                 <p class="text-md font-semibold text-ashblack py-2">MANAGE BOOKING</p>
@@ -295,6 +295,34 @@ if ($_SESSION['role'] !== 'user') {
     </div>
   </div>
 
+  <!-- Error Modal Overlay -->
+  <div id="error-modal" class="hidden p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+    <div class="bg-white px-4 py-4 rounded-md shadow-lg w-full max-w-sm flex items-center flex-col">
+      <div class="grid grid-cols-4 mb-4">
+        <!-- First child taking 1/4 of the parent's width -->
+        <div class="col-span-1 flex items-center">
+          <div class="flex justify-center items-center col-span-1 bg-red-500 rounded-full w-16 h-16">
+            <img class="w-8 h-8" src="./img/icons/circle-error.svg" alt="">
+          </div>
+        </div>
+        <!-- Second child taking 3/4 of the parent's width -->
+        <div class="col-span-3">
+          <h1 id="modal-title" class="text-lg font-bold mb-2 text-red-600">Error !</h1>
+          <p id="modal-message" class="text-md text-gray-500 text-wrap">Please complete all required fields !</p>
+        </div>
+      </div>
+
+      <div class="w-full flex justify-end items-center space-x-2 text-sm font-semibold">
+        <button id="error-confirm-modal" class="hidden bg-red-600 border-2 border-solid border-red-600 text-white hover:bg-red-700 hover:border-red-700 py-2 px-4 rounded transition">
+          Yes
+        </button>
+        <button id="error-close-modal" class="bg-red-600 border-2 border-solid border-red-600 text-white hover:bg-red-700 hover:border-red-700 py-2 px-4 rounded transition">
+          Ok
+        </button>
+      </div>
+    </div>
+  </div>
+
 
   <!-- Modal for Edit -->
   <div class="toEditBookingModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
@@ -313,27 +341,27 @@ if ($_SESSION['role'] !== 'user') {
         <div class="grid grid-cols-2 gap-2">
           <div class="mb-4">
             <label for="fname" class="block text-sm font-medium text-gray-500">First Name</label>
-            <input type="text" id="fname" name="fname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" First Name: ">
+            <input type="text" id="fname" name="fname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" First Name: ">
             <div class="text-red-500 text-sm hidden">First name is required!</div>
           </div>
           <div class="mb-4">
             <label for="lname" class="block text-sm font-medium text-gray-500">Last Name</label>
-            <input type="text" id="lname" name="lname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Last Name: ">
+            <input type="text" id="lname" name="lname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" Last Name: ">
             <div class="text-red-500 text-sm hidden">Last name is required!</div>
           </div>
         </div>
         <div class="mb-4">
           <label for="phone_number" class="block text-sm font-medium text-gray-500">Phone Number</label>
-          <input type="text" id="phone_number" name="phone_number" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., +63 912 345 6789">
+          <input type="text" id="phone_number" name="phone_number" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder="e.g., +63 912 345 6789">
           <div class="text-red-500 text-sm hidden">Phone number is required!</div>
         </div>
         <div class="mb-4">
           <label for="address" class="block text-sm font-medium text-gray-500">Address</label>
-          <input type="text" id="address" name="address" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., Villa Rizza, Blk 2 Lot 3, Paciano Rizal">
+          <input type="text" id="address" name="address" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder="e.g., Villa Rizza, Blk 2 Lot 3, Paciano Rizal">
           <div class="text-red-500 text-sm hidden">Address is required!</div>
         </div>
 
-        <input type="submit" id="edit-booking-btn" value="Save" class="px-4 py-2 w-full bg-green-700 hover:bg-green-800 text-white font-semibold rounded-md">
+        <input type="submit" id="add-complaint-btn" value="Save" class="px-4 py-2 w-full bg-green-700 hover:bg-green-800 text-white font-semibold rounded-md">
       </form>
     </div>
   </div>
@@ -428,6 +456,85 @@ if ($_SESSION['role'] !== 'user') {
       </form>
     </div>
   </div>
+
+  <!-- Modal for Complaint Request -->
+  <div class="toRequestComplianceModal p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
+    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2 relative ">
+      <button class="closeRequestComplianceModal text-gray-500 hover:text-gray-800 absolute top-5 right-5">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+      <div class="w-full h-auto py-2 flex flex-col items-center text-nowrap text-gray-500">
+        <div class="flex items-center justify-center">
+          <img class="10 h-10" src="./img/original-logo.png" alt="">
+        </div>
+        <h4 class="text-lg font-bold">WASHUP LAUNDRY</h4>
+        <hr class="w-full my-2">
+      </div>
+
+      <div class="h-auto w-full overflow-y-auto max-h-72 flex flex-col items-center">
+        <p class="text-ashblack text-md font-semibold mb-2">Customer Complaint Form</p>
+        <form action="" id="report-complain-form" class="mt-2" novalidate>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="mb-4">
+              <label for="fname" class="block text-sm font-medium text-gray-500">First Name</label>
+              <input type="text" id="fname" name="fname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" First Name: " required>
+              <div class="text-red-500 text-sm hidden">First name is required!</div>
+            </div>
+            <div class="mb-4">
+              <label for="lname" class="block text-sm font-medium text-gray-500">Last Name</label>
+              <input type="text" id="lname" name="lname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" Last Name: " required>
+              <div class="text-red-500 text-sm hidden">Last name is required!</div>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div class="mb-4">
+              <label for="phone_number" class="block text-sm font-medium text-gray-500">Phone Number</label>
+              <input type="text" id="phone_number" name="phone_number" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder="Phone Number: " required>
+              <div class="text-red-500 text-sm hidden">Phone number is required!</div>
+            </div>
+            <div class="mb-4">
+              <label for="email" class="block text-sm font-medium text-gray-500">Email</label>
+              <input type="text" id="email" name="email" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" Email: " required>
+              <div class="text-red-500 text-sm hidden">Email is required!</div>
+            </div>
+          </div>
+
+          <!-- Common Problem Dropdown -->
+          <div class="mb-4">
+            <label for="common_problem" class="block text-sm font-medium text-gray-500">Common Problem</label>
+            <select id="reason" name="reason" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" required>
+              <option value="" selected disabled>Select a common issue</option>
+              <option value="delayed_pickup">Delayed Laundry Pickup</option>
+              <option value="missing_items">Missing Items in Laundry</option>
+              <option value="damaged_clothes">Clothes Damaged during Cleaning</option>
+              <option value="stains_not_removed">Stains Not Removed Properly</option>
+              <option value="incorrect_billing">Incorrect Billing or Payment Issues</option>
+              <option value="other">Other</option>
+            </select>
+
+            <div class="text-red-500 text-sm hidden">Reason is required!</div>
+          </div>
+
+          <!-- Description Textarea -->
+          <div class="mb-4">
+            <label for="description" class="block text-sm font-medium text-gray-500">Describe Your Problem</label>
+            <textarea name="description" id="description" rows="4" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder="Describe the issue in detail" required></textarea>
+            <div class="text-red-500 text-sm hidden">Description is required!</div>
+          </div>
+
+          <input type="submit" id="edit-booking-btn" value="Submit" class="px-4 py-2 w-full bg-green-700 hover:bg-green-800 text-white font-semibold rounded-md">
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Complain Section -->
+  <div class="fixed bottom-4 right-4 flex items-center justify-center">
+    <button id="js-report-compain" class="reportComplainTrigger w-10 h-10 rounded-md bg-red-700 flex items-center justify-center"><img class="w-5 h-5" src="./img/icons/report-white.svg" alt="report"></button>
+  </div>
+
 
 
 

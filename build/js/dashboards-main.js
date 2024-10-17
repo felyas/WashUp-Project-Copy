@@ -117,7 +117,7 @@ function showToaster(message, icon, color600, color700) {
 
   // Set the styles directly using inline styles
   toaster.innerHTML = `
-    <div style="background-color: ${color600}; border: 2px solid ${color700};" class="h-14 py-2 px-4 rounded flex items-center justify-center">
+    <div style="background-color: ${color600}; border: 2px solid ${color700};" class="h-14 py-2 px-4 rounded flex items-center justify-center w-full">
       <div class="flex items-center justify-center space-x-2">
         <div id="toaster-icon" style="background-color: ${color700};" class="p-2 h-8 w-8 rounded-full flex items-center justify-center">
           <img class="w-5 h-5" src="./img/icons/${icon}.svg" alt="Check icon">

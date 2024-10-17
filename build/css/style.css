@@ -620,8 +620,16 @@ video {
   inset: 0px;
 }
 
+.-bottom-\[2px\] {
+  bottom: -2px;
+}
+
 .-right-3 {
   right: -0.75rem;
+}
+
+.-right-\[3px\] {
+  right: -3px;
 }
 
 .-right-\[61px\] {
@@ -640,6 +648,10 @@ video {
   bottom: 0px;
 }
 
+.bottom-4 {
+  bottom: 1rem;
+}
+
 .left-0 {
   left: 0px;
 }
@@ -654,6 +666,10 @@ video {
 
 .right-4 {
   right: 1rem;
+}
+
+.right-5 {
+  right: 1.25rem;
 }
 
 .right-\[14px\] {
@@ -678,6 +694,10 @@ video {
 
 .top-4 {
   top: 1rem;
+}
+
+.top-5 {
+  top: 1.25rem;
 }
 
 .top-\[40\%\] {
@@ -830,6 +850,10 @@ video {
   margin-top: 0.25rem;
 }
 
+.mt-16 {
+  margin-top: 4rem;
+}
+
 .mt-2 {
   margin-top: 0.5rem;
 }
@@ -930,12 +954,20 @@ video {
   height: 1.75rem;
 }
 
+.h-72 {
+  height: 18rem;
+}
+
 .h-8 {
   height: 2rem;
 }
 
 .h-96 {
   height: 24rem;
+}
+
+.h-\[14px\] {
+  height: 14px;
 }
 
 .h-\[20px\] {
@@ -972,6 +1004,10 @@ video {
 
 .max-h-64 {
   max-height: 16rem;
+}
+
+.max-h-72 {
+  max-height: 18rem;
 }
 
 .max-h-96 {
@@ -1054,6 +1090,10 @@ video {
   width: 24rem;
 }
 
+.w-\[14px\] {
+  width: 14px;
+}
+
 .w-\[180px\] {
   width: 180px;
 }
@@ -1082,6 +1122,10 @@ video {
   width: 100%;
 }
 
+.w-40 {
+  width: 10rem;
+}
+
 .min-w-\[100px\] {
   min-width: 100px;
 }
@@ -1090,8 +1134,8 @@ video {
   min-width: 150px;
 }
 
-.min-w-\[200px\] {
-  min-width: 200px;
+.min-w-\[180px\] {
+  min-width: 180px;
 }
 
 .max-w-5xl {
@@ -1251,6 +1295,10 @@ video {
 .gap-x-6 {
   -moz-column-gap: 1.5rem;
        column-gap: 1.5rem;
+}
+
+.gap-y-2 {
+  row-gap: 0.5rem;
 }
 
 .gap-y-4 {
@@ -1764,6 +1812,10 @@ video {
 
 .pt-6 {
   padding-top: 1.5rem;
+}
+
+.pt-72 {
+  padding-top: 18rem;
 }
 
 .text-left {
@@ -2325,6 +2377,10 @@ video {
     margin-bottom: 0px;
   }
 
+  .sm\:mr-0 {
+    margin-right: 0px;
+  }
+
   .sm\:block {
     display: block;
   }
@@ -2369,6 +2425,10 @@ video {
     width: 75%;
   }
 
+  .sm\:w-auto {
+    width: auto;
+  }
+
   .sm\:max-w-max {
     max-width: -moz-max-content;
     max-width: max-content;
@@ -2400,6 +2460,10 @@ video {
 
   .sm\:gap-1 {
     gap: 0.25rem;
+  }
+
+  .sm\:gap-2 {
+    gap: 0.5rem;
   }
 
   .sm\:scroll-smooth {
@@ -2450,6 +2514,10 @@ video {
     grid-column: span 1 / span 1;
   }
 
+  .md\:mt-20 {
+    margin-top: 5rem;
+  }
+
   .md\:block {
     display: block;
   }
@@ -2460,6 +2528,10 @@ video {
 
   .md\:hidden {
     display: none;
+  }
+
+  .md\:h-auto {
+    height: auto;
   }
 
   .md\:w-1\/2 {

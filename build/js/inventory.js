@@ -135,7 +135,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     } else {
       addItemBtn.value = 'Please Wait...';
-
       const data = await fetch('./backend/inventory_action.php', {
         method: 'POST',
         body: formData,
@@ -146,9 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // Handle success or error response
       if (response.includes('success')) {
         fetchAll();
-        const green600 = '#047857';
-        const green700 = '#065f46';
-        showToaster('Item added successfully!', 'check', green600, green700);
+        showToaster('Item added successfully!', 'check', '#047857', '#065f46');
         addItemBtn.value = 'Add';
         addItemForm.reset();
         document.querySelector('.toAddItemModal').classList.add('hidden');
@@ -160,10 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
       } else {
-        const red600 = '#dc2626';
-        const red700 = '#b91c1c';
-        showToaster('Something went wrong !', 'exclamation-error', red600, red700);
-        fetchAll();
+        showToaster('Something went wrong !', 'exclamation-error', '#dc2626', '#b91c1c');
       }
     }
   });

@@ -43,20 +43,49 @@ if ($_SESSION['role'] !== 'delivery') {
 
 </head>
 
-<body class="bg-white min-h-screen font-poppins">
-  <div class="flex min-h-screen">
+<body class="bg-white h-full font-poppins">
+  <div class="flex h-full">
+    <!-- Sidebar -->
+    <div id="sidebar" class="w-64 z-50 bg-gray-800 text-white flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full">
+      <div class="p-4 text-lg font-bold border-b border-gray-700">
+        <div class="flex justify-center items-center w-[180px]">
+          <img src="./img/logo-white.png" alt="" class="w-12 h-10 mr-1">
+          <h1 class="text-base font-bold text-wrap leading-4">
+            WASHUP LAUNDRY
+          </h1>
+        </div>
+      </div>
+      <nav class="flex flex-col flex-1 p-4 space-y-4 text-md">
+        <a href="./delivery-dashboard.php" class="flex items-center p-2 rounded hover:bg-gray-700">
+          <img class="h-4 w-4 mr-4" src="./img/icons/dashboard.svg" alt="">
+          <p>Dashboard</p>
+        </a>
+        <a href="./customer-complaints.php" class="flex items-center p-2 rounded hover:bg-gray-700">
+          <img class="h-4 w-4 mr-4" src="./img/icons/report-white.svg" alt="">
+          <p>Customer Complaints</p>
+        </a>
+
+        <div class="flex items-center justify-center pt-72">
+          <!-- Close Button -->
+          <button id="close-sidebar" class="lg:hidden p-6 text-white rounded-full bg-gray-900 hover:bg-gray-700">
+            <img class="h-6 w-6 mx-auto" src="./img/icons/close-button.svg" alt="">
+          </button>
+        </div>
+      </nav>
+    </div>
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col">
       <!-- Header -->
       <header class="bg-federal shadow p-4">
-        <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center lg:justify-end">
           <!-- Hamburger Menu -->
-          <div id="logo" class="lg:hidden text-white">
-            <img class="w-10 h-8" src="./img/logo-white.png" alt="LOGO">
-          </div>
+          <button id="hamburger" class="lg:hidden px-4 py-2 text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+          </button>
 
-          <h1 class="text-2xl font-bold text-white hidden lg:block">Delivery Dashboard</h1>
           <!--Notifications-->
           <div class="flex items-center justify-between lg:space-x-4 text-sm">
             <p class="js-current-time text-white"></p>
@@ -100,9 +129,9 @@ if ($_SESSION['role'] !== 'delivery') {
       </header>
 
       <!-- Main Content Area -->
-      <main class="flex-1 p-6 relative">
+      <main class="flex-1 p-6 relative h-full">
 
-        <div id="toaster" class="fixed top-4 right-4 hidden text-white shadow-lg z-50">
+        <div id="toaster" class="fixed top-4 right-4 hidden text-white shadow-lg z-30">
           <!-- Dynamic Toaster Content -->
         </div>
 
@@ -167,52 +196,14 @@ if ($_SESSION['role'] !== 'delivery') {
           </div>
         </div>
 
-        <div class="h-96 w-full grid grid-cols-1 lg:grid-cols-4 gap-2 text-sm mb-4">
-          <div class="w-full col-span-3 border border-solid border-gray-200 shadow-md">
-            <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack py-2">PENDING BOOKINGS</p>
-              <div class="flex justify-between items-center relative">
-                <input id="js-search-pending" type="text" placeholder="Search bookings..." class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
-                <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
-                  <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
-                </button>
-              </div>
-            </div>
-            <div class="overflow-x-auto h-auto min-h-72 px-2">
-              <table class="text-nowrap w-full text-left text-ashblack border-collapse border border-solid border-gray-200">
-                <thead class="bg-gray-200">
-                  <tr>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ID</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">CUSTOMER NAME</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ADDRESS</th>
-                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ACTION</th>
-                  </tr>
-                </thead>
-                <tbody id="js-pending-tbody">
-                  <!-- Dynamic Data -->
-                </tbody>
-              </table>
-              <div id="pagination-container-pending" class="bg-white w-full p-4 mb-4 justify-center items-center flex text-sm">
-                <!-- Pagination links will be populated here -->
-              </div>
-            </div>
-
-          </div>
-          <div class="col-span-1 h-full lg:col-span-1 w-auto bg-white border border-solid border-gray-200 shadow-md p-2">
-            <div id="calendar">
-              <!-- Calendar goes here -->
-            </div>
-          </div>
-        </div>
-
         <!--List-->
-        <div class="h-auto grid grid-cols-1 gap-2 text-sm mb-4">
+        <div class="h-96 w-full grid grid-cols-1 gap-2 text-sm mb-4">
           <!-- First div taking 3/4 of the width on large screens -->
-          <div class="h-auto w-full rounded-sm bg-white px-4 py-2 border border-solid border-gray-200 shadow-md">
+          <div class="h-auto w-full rounded-sm bg-white border border-solid border-gray-200 shadow-md">
             <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
               <p class="text-md font-semibold text-ashblack py-2">MANAGE BOOKING</p>
               <div class="flex justify-between items-center relative">
-                <input id="js-search-bar" type="text" placeholder="Search bookings..." class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
+                <input id="js-search-bar" type="text" placeholder="Search " class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
                 <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
                   <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
                 </button>
@@ -292,7 +283,43 @@ if ($_SESSION['role'] !== 'delivery') {
           </div>
         </div>
 
+        <div class="w-full h-96 grid grid-cols-1 lg:grid-cols-4 mt-16 md:mt-20 gap-y-2 sm:gap-2 text-sm mb-4">
+          <div class="w-full col-span-3 border border-solid border-gray-200 shadow-md">
+            <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
+              <p class="text-md font-semibold text-ashblack py-2">PENDING BOOKINGS</p>
+              <div class="flex justify-between items-center relative">
+                <input id="js-search-pending" type="text" placeholder="Search " class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
+                <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
+                  <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
+                </button>
+              </div>
+            </div>
+            <div class="overflow-x-auto h-auto min-h-72 px-2">
+              <table class="text-nowrap w-full text-left text-ashblack border-collapse border border-solid border-gray-200">
+                <thead class="bg-gray-200">
+                  <tr>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ID</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">CUSTOMER NAME</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ADDRESS</th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ACTION</th>
+                  </tr>
+                </thead>
+                <tbody id="js-pending-tbody">
+                  <!-- Dynamic Data -->
+                </tbody>
+              </table>
+              <div id="pagination-container-pending" class="bg-white w-full p-4 mb-4 justify-center items-center flex text-sm">
+                <!-- Pagination links will be populated here -->
+              </div>
+            </div>
 
+          </div>
+          <div class="col-span-1 h-72 md:h-auto lg:col-span-1 w-full bg-white border border-solid border-gray-200 shadow-md p-2">
+            <div id="calendar">
+              <!-- Calendar goes here -->
+            </div>
+          </div>
+        </div>
       </main>
     </div>
   </div>
@@ -521,75 +548,75 @@ if ($_SESSION['role'] !== 'delivery') {
     </div>
   </div>
 
-  <<!-- Modal for Delivery Proof -->
-    <div class="toUpdateDeliveryProofModal hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-20">
-      <div class="bg-white shadow-lg rounded-3xl m-2 w-full md:w-1/2">
-        <div class="flex items-center py-6 px-4 bg-federal text-white text-lg font-semibold rounded-t-3xl">
-          <div class="flex items-center justify-start space-x-2">
-            <img class="w-7 h-7" src="./img/icons/receipt.svg" alt="">
-            <h1 id="top">Proof of delivery</h1>
-          </div>
-        </div>
-        <div class="p-4 h-auto w-full overflow-y-auto max-h-64">
-          <div class="w-full text-ashblack text-md font-semibold mb-2">
-            <p class="justify-start">Booking info</p>
-          </div>
-
-          <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
-            <div class="grid grid-cols-2 gap-2">
-              <p>ID:</p>
-              <p id="display-id-forProof" class="justify-end flex">1<!-- dynamic data --></p>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <p>Customer Name:</p>
-              <p id="display-full-name-forProof" class="justify-end flex">Felix Bragais<!-- dynamic data --></p>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <p>Phone Number:</p>
-              <p id="display-phone-number-forProof" class="justify-end flex">09691026692<!-- dynamic data --></p>
-            </div>
-          </div>
-
-          <form action="" id="upload-proofAndReceipt-form" enctype="multipart/form-data" novalidate>
-            <!-- Image Upload Section -->
-            <p class="text-md font-semibold mb-2 text-gray-500">Upload Proof of Delivery</p>
-            <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-4">
-              <input type="file" id="file-proof-upload" name="file-proof-upload" class="hidden" accept="image/*" required>
-              <div class="text-red-500 text-center text-sm hidden">Proof of delivery is required!</div>
-              <label for="file-proof-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
-                <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
-                <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
-              </label>
-              <!-- Image preview -->
-              <div class="mt-4 text-center flex w-full items-center justify-center">
-                <img id="image-preview-delivery-proof" class="hidden w-32 h-32 object-cover rounded-md border border-gray-300" alt="Image Preview">
-              </div>
-            </div>
-
-            <p class="text-md font-semibold mb-2 text-gray-500">Upload Receipt</p>
-            <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-4">
-              <input type="file" id="file-receipt-upload" name="file-receipt-upload" class="hidden" accept="image/*" required>
-              <div class="text-red-500 text-center text-sm hidden">Receipt is required!</div>
-              <label for="file-receipt-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
-                <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
-                <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
-              </label>
-              <!-- Image preview -->
-              <div class="mt-4 text-center flex w-full items-center justify-center">
-                <img id="image-preview-receipt" class="hidden w-32 h-32 object-cover rounded-md border border-gray-300" alt="Image Preview">
-              </div>
-            </div>
-
-            <div class="flex items-center justify-center space-x-2">
-              <input id="update-delivery-proof-button" type="submit" class="flex justify-center items-center px-4 py-2 bg-federal hover:bg-[#1a2479] text-white rounded-md mr-2" value="Submit">
-              <button type="button" class="closeUpdateDeliveryProofModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md mr-2">Close</button>
-            </div>
-          </form>
+  <!-- Modal for Delivery Proof -->
+  <div class="toUpdateDeliveryProofModal hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-20">
+    <div class="bg-white shadow-lg rounded-3xl m-2 w-full md:w-1/2">
+      <div class="flex items-center py-6 px-4 bg-federal text-white text-lg font-semibold rounded-t-3xl">
+        <div class="flex items-center justify-start space-x-2">
+          <img class="w-7 h-7" src="./img/icons/receipt.svg" alt="">
+          <h1 id="top">Proof of delivery</h1>
         </div>
       </div>
-    </div>
+      <div class="p-4 h-auto w-full overflow-y-auto max-h-64">
+        <div class="w-full text-ashblack text-md font-semibold mb-2">
+          <p class="justify-start">Booking info</p>
+        </div>
 
-    <script type="module" src="./js/delivery-dashboard.js"></script>
+        <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
+          <div class="grid grid-cols-2 gap-2">
+            <p>ID:</p>
+            <p id="display-id-forProof" class="justify-end flex">1<!-- dynamic data --></p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <p>Customer Name:</p>
+            <p id="display-full-name-forProof" class="justify-end flex">Felix Bragais<!-- dynamic data --></p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <p>Phone Number:</p>
+            <p id="display-phone-number-forProof" class="justify-end flex">09691026692<!-- dynamic data --></p>
+          </div>
+        </div>
+
+        <form action="" id="upload-proofAndReceipt-form" enctype="multipart/form-data" novalidate>
+          <!-- Image Upload Section -->
+          <p class="text-md font-semibold mb-2 text-gray-500">Upload Proof of Delivery</p>
+          <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-4">
+            <input type="file" id="file-proof-upload" name="file-proof-upload" class="hidden" accept="image/*" required>
+            <div class="text-red-500 text-center text-sm hidden">Proof of delivery is required!</div>
+            <label for="file-proof-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
+              <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
+              <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
+            </label>
+            <!-- Image preview -->
+            <div class="mt-4 text-center flex w-full items-center justify-center">
+              <img id="image-preview-delivery-proof" class="hidden w-32 h-32 object-cover rounded-md border border-gray-300" alt="Image Preview">
+            </div>
+          </div>
+
+          <p class="text-md font-semibold mb-2 text-gray-500">Upload Receipt</p>
+          <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-4">
+            <input type="file" id="file-receipt-upload" name="file-receipt-upload" class="hidden" accept="image/*" required>
+            <div class="text-red-500 text-center text-sm hidden">Receipt is required!</div>
+            <label for="file-receipt-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
+              <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
+              <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
+            </label>
+            <!-- Image preview -->
+            <div class="mt-4 text-center flex w-full items-center justify-center">
+              <img id="image-preview-receipt" class="hidden w-32 h-32 object-cover rounded-md border border-gray-300" alt="Image Preview">
+            </div>
+          </div>
+
+          <div class="flex items-center justify-center space-x-2">
+            <input id="update-delivery-proof-button" type="submit" class="flex justify-center items-center px-4 py-2 bg-federal hover:bg-[#1a2479] text-white rounded-md mr-2" value="Submit">
+            <button type="button" class="closeUpdateDeliveryProofModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md mr-2">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="./js/delivery-dashboard.js"></script>
 </body>
 
 

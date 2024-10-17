@@ -76,50 +76,50 @@ if (isset($_GET['read'])) {
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
             ';
 
-            // Check if 'image_proof' is not empty and display image or fallback text
-            if (!empty($row['image_proof'])) {
-              $output .= '
+      // Check if 'image_proof' is not empty and display image or fallback text
+      if (!empty($row['image_proof'])) {
+        $output .= '
                 <img class="w-12 h-12 cursor-pointer image-proof" src="./backend/' . $row['image_proof'] . '" alt="">
               ';
-            } else {
-              $output .= '
+      } else {
+        $output .= '
                 <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
               ';
-            }
+      }
 
-            $output .= '
+      $output .= '
           </td>
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
             ';
 
-            // Check if 'delivery_proof' is not empty and display image or fallback text
-            if (!empty($row['delivery_proof'])) {
-              $output .= '
+      // Check if 'delivery_proof' is not empty and display image or fallback text
+      if (!empty($row['delivery_proof'])) {
+        $output .= '
                 <img class="w-12 h-12 cursor-pointer image-proof" src="./backend/' . $row['delivery_proof'] . '" alt="">
               ';
-            } else {
-              $output .= '
+      } else {
+        $output .= '
                 <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
               ';
-            }
+      }
 
-            $output .= '
+      $output .= '
           </td>
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
             ';
 
-            // Check if 'receipt' is not empty and display image or fallback text
-            if (!empty($row['receipt'])) {
-              $output .= '
+      // Check if 'receipt' is not empty and display image or fallback text
+      if (!empty($row['receipt'])) {
+        $output .= '
                 <img class="w-12 h-12 cursor-pointer image-proof" src="./backend/' . $row['receipt'] . '" alt="">
               ';
-            } else {
-              $output .= '
+      } else {
+        $output .= '
                 <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
               ';
-            }
+      }
 
-            $output .= '
+      $output .= '
           </td>
           <td class="px-4 py-2">
             <div class="w-auto py-1 px-2 ' . $statusClasses . ' font-bold rounded-lg text-center">
@@ -277,4 +277,30 @@ if (isset($_GET['get_unavailable_times'])) {
   $date = $_GET['date'];
   $unavailableTimes = $db->getUnavailableTimesForDate($date);
   echo json_encode($unavailableTimes);
+}
+
+if (isset($_POST['add-complaint'])) {
+  $user_id = $_SESSION['user_id'];
+  $first_name = $util->testInput($_POST['fname']);
+  $last_name = $util->testInput($_POST['lname']);
+  $phone_number = $util->testInput($_POST['phone_number']);
+  $email = $util->testInput($_POST['email']);
+  $reason = $util->testInput($_POST['reason']);
+  $description = $util->testInput($_POST['description']);
+
+  $result = $db->addComplaint($user_id, $first_name, $last_name, $phone_number, $email, $reason, $description);
+
+  if($result === true) {
+    echo json_encode([
+      'status' => 'success',
+      'message' => 'New complaint request send successfully!',
+    ]);
+  } else {
+    echo json_encode([
+      'status' => 'success',
+      'message' => 'Failed to send complaint.',
+    ]);
+  }
+
+  exit();
 }

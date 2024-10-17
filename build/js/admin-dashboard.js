@@ -2,7 +2,6 @@ import { handleSidebar, handleDisplayCurrentTime, handleTdColor, openModal, hand
 
 
 document.addEventListener("DOMContentLoaded", () => {
-  handleTdColor();
   handleSidebar();
   handleDisplayCurrentTime();
   handleDropdown();

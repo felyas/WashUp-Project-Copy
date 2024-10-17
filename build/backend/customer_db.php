@@ -203,5 +203,21 @@ class Database extends Config
     return $result;
   }
 
+  // Add New Complain Request to DATABASE
+  public function addComplaint($user_id, $first_name, $last_name, $phone_number, $email, $reason, $description){
+    $sql = 'INSERT INTO complaints (user_id, first_name, last_name, phone_number, email, reason, description) VALUES (:user_id, :first_name, :last_name, :phone_number, :email, :reason, :description)';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'user_id' => $user_id,
+      'first_name' => $first_name,
+      'last_name' => $last_name,
+      'phone_number' => $phone_number,
+      'email' => $email,
+      'reason' => $reason,
+      'description' => $description,
+    ]);
+
+    return true;
+  }
 
 }

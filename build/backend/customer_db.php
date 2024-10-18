@@ -220,4 +220,29 @@ class Database extends Config
     return true;
   }
 
+  // INSERT NEW FEEDBACK INTO DATABASE
+  public function insertFeedback($user_id, $first_name, $last_name, $rating, $description) {
+    $sql = 'INSERT INTO feedback (user_id, first_name, last_name, rating, description) VALUES (:user_id, :first_name, :last_name, :rating, :description)';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'user_id' => $user_id,
+      'first_name' => $first_name,
+      'last_name' => $last_name,
+      'rating' => $rating,
+      'description' => $description,
+    ]);
+
+    return true;
+  }
+
+  // FETCH 3 FEEDBACK FROM DARATABASE
+  public function fetchFeedback(){
+    $sql = 'SELECT * FROM feedback ORDER BY id DESC LIMIT 3';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll();
+
+    return $result;
+  }
+
 }

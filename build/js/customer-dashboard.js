@@ -69,6 +69,7 @@ document.addEventListener("DOMContentLoaded", () => {
   openModal('editModalTrigger', 'toEditBookingModal', 'closeEditBookingModal', 'closeEditBookingModal2');
   openModal('viewModalTrigger', 'toViewBookingModal', 'closeViewBookingModal', 'closeViewBookingModal2');
   openModal('reportComplainTrigger', 'toRequestComplianceModal', 'closeRequestComplianceModal', 'closeRequestComplianceModal2');
+  openModal('feedbackModalTrigger', 'toViewFeedbackModal', 'closeFeedbackModal', 'closeFeedbackModal2');
 
 
 
@@ -519,6 +520,70 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
   })
+
+
+  const stars = document.querySelectorAll('input[name="rating"]');
+
+  // Function to update star colors
+  function updateStarColors() {
+    stars.forEach((star, index) => {
+      const label = star.nextElementSibling;
+      if (star.checked) {
+        // If the star is checked, color it and all previous stars yellow
+        for (let i = 0; i <= index; i++) {
+          stars[i].nextElementSibling.style.color = '#fbbf24'; // yellow
+        }
+      } else {
+        // If the star is not checked, set its label to gray
+        label.style.color = '#d1d5db'; // gray
+      }
+    });
+  }
+
+  // Initialize star colors based on the checked state
+  updateStarColors();
+
+  // Add event listeners to stars
+  stars.forEach((star) => {
+    star.addEventListener('change', updateStarColors);
+  });
+
+
+  const feedbackForm = document.getElementById('feedback-form');
+  const submitFeedbackBtn = document.getElementById('submit-review');
+  // Submit Feedback Ajax Request
+  feedbackForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(feedbackForm);
+    formData.append('new-feedback', 1);
+    submitFeedbackBtn.value = 'Please wait...';
+
+    const data = await fetch('./backend/customer_action.php', {
+      method: 'POST',
+      body: formData,
+    });
+    const response = await data.json();
+    if(response.status === 'success') {
+      submitFeedbackBtn.value = 'Submit';
+      showToaster(response.message, 'check', '#047857', '#065f46');
+      feedbackForm.reset();
+      document.querySelector('.toViewFeedbackModal').classList.add('hidden');
+    } else {
+      showToaster('Something went wrong !', 'exclamation-error', '#dc2626', '#b91c1c');
+    }
+  })
+
+  // Fetch Feedback Ajax Request 
+  const fetchFeedback = async () => {
+    const data = await fetch(`./backend/customer_action.php?fetch-feedback=1`, {
+      method: 'GET',
+    })
+    const response = await data.text();
+    document.getElementById('feedback-container').innerHTML = response;
+  }
+  fetchFeedback();
+
 
 
 });

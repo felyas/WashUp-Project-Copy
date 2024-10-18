@@ -149,7 +149,7 @@ if ($_SESSION['role'] !== 'delivery') {
                 </div>
               </div>
               <div class="flex flex-col items-center justify-center">
-                <p class="text-lg md:text-3xl font-semibold" id="js-pending-count">1<!-- total count --></p>
+                <p class="text-lg md:text-3xl font-semibold" id="js-pending-count"><!-- total count --></p>
                 <p class="text-sm md:text-md text-wrap">Pending</p>
               </div>
             </div>
@@ -167,7 +167,7 @@ if ($_SESSION['role'] !== 'delivery') {
                 </div>
               </div>
               <div class="flex flex-col items-center justify-center">
-                <p class="text-lg md:text-3xl font-semibold" id="js-for-pickup">1<!-- total count --></p>
+                <p class="text-lg md:text-3xl font-semibold" id="js-resolved"><!-- total count --></p>
                 <p class="text-sm md:text-md text-wrap px-2 sm:px-0">Resolved</p>
               </div>
             </div>

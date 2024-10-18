@@ -47,33 +47,47 @@ class Database extends Config
   }
 
   // READ ONE DATA ON DATABASE
-  public function readInfo($id) {
+  public function readInfo($id)
+  {
     $sql = 'SELECT * FROM complaints WHERE complaint_id = :complaint_id';
     $stmt = $this->conn->prepare($sql);
-    $stmt->execute([ 'complaint_id' => $id ]);
+    $stmt->execute(['complaint_id' => $id]);
     $result = $stmt->fetch();
 
     return $result;
   }
 
   // UPDATE STATUS FROM DATABASE
-  public function resolved($id) {
+  public function resolved($id)
+  {
     $sql = 'UPDATE complaints SET status = :status WHERE complaint_id = :complaint_id';
     $stmt = $this->conn->prepare($sql);
-    $stmt->execute([ 
+    $stmt->execute([
       'status' => 'resolved',
       'complaint_id' => $id,
-     ]);
-    
-     return true;
+    ]);
+
+    return true;
   }
 
   // DELETE COMPLAINT RECORD ON DATABASE
-  public function delete($id) {
+  public function delete($id)
+  {
     $sql = 'DELETE FROM complaints WHERE complaint_id = :complaint_id';
     $stmt = $this->conn->prepare($sql);
-    $stmt->execute([ 'complaint_id' => $id ]);
+    $stmt->execute(['complaint_id' => $id]);
 
     return true;
+  }
+
+  // Count the Total Based on Status from Database
+  public function countByStatus($status)
+  {
+    $sql = 'SELECT COUNT(*) as count FROM complaints WHERE status = :status';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['status' => $status]);
+    $result = $stmt->fetch();
+
+    return $result['count']; // Return the count of rows
   }
 }

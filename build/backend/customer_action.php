@@ -290,7 +290,7 @@ if (isset($_POST['add-complaint'])) {
 
   $result = $db->addComplaint($user_id, $first_name, $last_name, $phone_number, $email, $reason, $description);
 
-  if($result === true) {
+  if ($result === true) {
     echo json_encode([
       'status' => 'success',
       'message' => 'New complaint request send successfully!',
@@ -303,4 +303,65 @@ if (isset($_POST['add-complaint'])) {
   }
 
   exit();
+}
+
+// Handle Submit Feedback Ajax Request
+if (isset($_POST['new-feedback'])) {
+  $user_id = $_SESSION['user_id'];
+  $first_name = $_SESSION['first_name'];
+  $last_name = $_SESSION['last_name'];
+  $rating = $util->testInput($_POST['rating']);
+  $description = $util->testInput($_POST['description']);
+
+  if ($db->insertFeedback($user_id, $first_name, $last_name, $rating, $description)) {
+    echo json_encode([
+      'status' => 'success',
+      'message' => 'Thank you, your feedback was recorded!',
+    ]);
+  } else {
+    echo json_encode([
+      'status' => 'error',
+      'message' => 'Something went wrong!',
+    ]);
+  }
+}
+
+// Handle Fetch Feedback Ajax Request
+if (isset($_GET['fetch-feedback'])) {
+  $output = '';
+  $feedback = $db->fetchFeedback();
+
+  if ($feedback) {
+    foreach ($feedback as $row) {
+      // Start building the star rating output
+      $starOutput = '';
+      for ($i = 0; $i < $row['rating']; $i++) {
+        $starOutput .= '<img class="w-7 h-7 mb-2" src="./img/icons/star-rating.svg" alt="Star Rating">';
+      }
+
+      $output .= '
+            <div class="border border-solid max-h-72 overflow-y-auto border-polynesian rounded-lg p-4 flex flex-col items-center">
+                <div class="mb-4 flex flex-col items-center">
+                  <div class="w-full h-auto flex items-center justify-center space-x-2">
+                    ' . $starOutput . ' <!-- Output the dynamic stars here -->
+                  </div>
+                    <p id="feedback-fullname" class="text-polynesian font-semibold text-md">' . $row['first_name'] . ' ' . $row['last_name'] . '</p>
+                </div>
+                <div class="h-auto flex items-center relative w-full px-8">
+                    <img class="w-10 h-10 absolute top-0 left-0 -translate-y-1/2" src="./img/icons/quote-left.svg" alt="Quote Left">
+                    <p id="feedback-description" class="text-gray-500 text-center">' . $row['description'] . '</p>
+                    <img class="w-10 h-10 absolute -bottom-5 right-0 -translate-y-1/2" src="./img/icons/quote-right.svg" alt="Quote Right">
+                </div>
+            </div>
+        ';
+
+      echo $output;
+    }
+  } else {
+    echo $output = '
+            <div id="feedback-container" class="w-full h-full p-2 flex flex-col items-center">
+              <p id="feedback-description" class="text-gray-500 text-center">No feedback yet!</p>
+            </div>
+    ';
+  }
 }

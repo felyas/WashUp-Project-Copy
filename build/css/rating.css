@@ -1,0 +1,28 @@
+ /* Basic styling for the stars */
+ .starRating {
+  font-size: 2rem;
+  color: #d1d5db; /* Default gray color */
+  transition: color 0.2s ease-in-out;
+}
+
+/* When hovering over a star, it and all the stars to the left will turn yellow */
+.starRating:hover,
+.starRating:hover ~ .starRating {
+  color: #fbbf24; /* Yellow color for stars */
+}
+
+/* When a star is selected, all stars before it remain yellow */
+input[type="radio"]:checked ~ label {
+  color: #fbbf24;
+}
+
+/* Ensures when you click a star, the correct stars stay yellow */
+input[type="radio"]:checked ~ label:hover,
+input[type="radio"]:checked ~ label:hover ~ .starRating {
+  color: #fbbf24;
+}
+
+/* Clear hover effect on other stars when hovered */
+.starRating:hover ~ input[type="radio"] ~ .starRating {
+  color: #d1d5db;
+}

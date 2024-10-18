@@ -28,6 +28,7 @@ if ($_SESSION['role'] !== 'user') {
   <!-- CSS -->
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/palette.css">
+  <link rel="stylesheet" href="./css/rating.css">
 
   <!-- FullCalendar CDN -->
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
@@ -171,9 +172,42 @@ if ($_SESSION['role'] !== 'user') {
           </div>
         </div>
 
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+          <!-- Second div taking 1/4 of the width on large screens -->
+          <div class="w-auto h-72 bg-white border border-solid border-gray-200 shadow-lg">
+            <div id="calendar" class="p-2">
+              <!-- Calendar goes here -->
+            </div>
+          </div>
+
+          <div class="h-72 flex flex-col items-center border border-solid border-gray-200 rounded-md shadow-md">
+            <div class="py-4 w-full bg-polynesian h-12 flex items-center justify-center">
+              <p class="font-semibold text-white">Customers Feedback</p>
+            </div>
+            <div id="feedback-container" class="w-full h-full p-2 flex flex-col items-center">
+              <div class="border border-solid max-h-72 overflow-y-auto  border-polynesian rounded-lg p-4 flex flex-col items-center ">
+                <div class="mb-4 flex flex-col items-center">
+                  <div class="w-full h-auto flex items-center justify-center space-x-2">
+                    <img class="w-7 h-7 mb-2" src="./img/icons/star-rating.svg" alt="Star Rating">
+                  </div>
+                  <p id="feedback-fullname" class="text-polynesian font-semibold text-md">Felix Bragais</p>
+                </div>
+                <div class="h-auto flex items-center relative w-full px-8">
+                  <img class="w-10 h-10 absolute top-0 left-0 -translate-y-1/2" src="./img/icons/quote-left.svg" alt="Quote Left">
+                  <p id="feedback-description" class="text-gray-500 text-center">
+                    Salamat washup laundry, ang bango at ang linis po ng mga damit namin :>
+                  </p>
+                  <img class="w-10 h-10 absolute -bottom-5 right-0 -translate-y-1/2" src="./img/icons/quote-right.svg" alt="Quote Right">
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
 
         <!--List-->
-        <div class="h-auto w-full grid grid-cols-1 lg:grid-cols-4 gap-2 text-sm mb-4">
+        <div class="h-auto w-full grid grid-cols-1 text-sm mb-4">
           <!-- First div taking 3/4 of the width on large screens -->
           <div class="col-span-4 lg:col-span-3 h-auto w-full rounded-sm">
             <div class="bg-white border border-solid border-gray-200 shadow-lg pb-2"> <!-- Outer container -->
@@ -213,14 +247,6 @@ if ($_SESSION['role'] !== 'user') {
             <div id="pagination-container" class="w-full py-2 justify-center items-center flex text-sm">
             </div>
           </div>
-
-
-          <!-- Second div taking 1/4 of the width on large screens -->
-          <div class="col-span-4 lg:col-span-1 w-auto bg-white border border-solid border-gray-200 shadow-lg">
-            <div id="calendar" class="p-2">
-              <!-- Calendar goes here -->
-            </div>
-          </div>
         </div>
 
       </main>
@@ -236,8 +262,6 @@ if ($_SESSION['role'] !== 'user') {
       <img id="modal-image" class="w-full max-w-md h-auto mt-2" src="" alt="Large Proof Image">
     </div>
   </div>
-
-
 
   <!-- Delete Warning Modal Overlay -->
   <div id="delete-modal" class="hidden p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
@@ -451,14 +475,14 @@ if ($_SESSION['role'] !== 'user') {
       <form action="" class="w-full flex justify-center items-center space-x-4">
         <input id="bookingId-input" class="hidden" type="text"> <!-- Include the booking ID here -->
 
-        <input id="confirmYes" class="transition py-2 px-4 bg-federal hover:bg-[#070c3f] rounded-md text-white font-semibold cursor-pointer" type="button" value="Yes!">
+        <input id="confirmYes" class="feedbackModalTrigger transition py-2 px-4 bg-federal hover:bg-[#070c3f] rounded-md text-white font-semibold cursor-pointer" type="button" value="Yes!">
         <button id="confirmNo" class="transition py-2 px-4 bg-gray-700 hover:bg-gray-600 rounded-md text-white font-semibold" type="button">Not Yet</button>
       </form>
     </div>
   </div>
 
   <!-- Modal for Complaint Request -->
-  <div class="toRequestComplianceModal p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
+  <div class="toRequestComplianceModal p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center  z-20 hidden">
     <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2 relative ">
       <button class="closeRequestComplianceModal text-gray-500 hover:text-gray-800 absolute top-5 right-5">
         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -469,12 +493,12 @@ if ($_SESSION['role'] !== 'user') {
         <div class="flex items-center justify-center">
           <img class="10 h-10" src="./img/original-logo.png" alt="">
         </div>
-        <h4 class="text-lg font-bold">WASHUP LAUNDRY</h4>
+        <h4 class="text-lg font-bold text-federal">WASHUP LAUNDRY</h4>
         <hr class="w-full my-2">
       </div>
 
       <div class="h-auto w-full overflow-y-auto max-h-72 flex flex-col items-center">
-        <p class="text-ashblack text-md font-semibold mb-2">Customer Complaint Form</p>
+        <p class="text-gray-500 text-md font-semibold mb-2">Customer Complaint Form</p>
         <form action="" id="report-complain-form" class="mt-2" novalidate>
           <div class="grid grid-cols-2 gap-2">
             <div class="mb-4">
@@ -524,8 +548,75 @@ if ($_SESSION['role'] !== 'user') {
             <div class="text-red-500 text-sm hidden">Description is required!</div>
           </div>
 
-          <input type="submit" id="edit-booking-btn" value="Submit" class="px-4 py-2 w-full bg-green-700 hover:bg-green-800 text-white font-semibold rounded-md">
+          <input type="submit" id="edit-booking-btn" value="Submit" class="px-4 py-2 w-full bg-federal hover:bg-[#1b266b] text-white font-semibold rounded-md transition">
         </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Feedback -->
+  <div class="toViewFeedbackModal hidden p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-20">
+    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2 relative">
+      <button class="closeFeedbackModal text-gray-500 hover:text-gray-800 absolute top-5 right-5">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+
+      <div class="w-full h-auto py-2 flex flex-col items-center text-nowrap">
+        <div class="w-32 h-32 p-4 rounded-full border-8 border-solid border-[#0E4483] flex items-center justify-center">
+          <img class="w-24 h-20" src="./img/icons/comment-solid.svg" alt="">
+        </div>
+        <h1 class="text-2xl text-[#0E4483] font-bold mb-4">Your Feedback Matters!</h1>
+      </div>
+
+      <div class="h-auto w-full flex flex-col items-center justify-center">
+        <!-- Feedback Form -->
+        <form action="" id="feedback-form" class="mt-2 w-full" novalidate>
+          <!-- Star Rating Section -->
+          <div class="mb-4 w-full">
+            <label for="rating" class="block text-sm font-medium text-gray-500">Rate Our Service</label>
+            <div class="flex space-x-2 mt-2">
+              <!-- Star Rating using radio buttons -->
+              <div class="flex">
+                <input type="radio" id="star1" name="rating" value="1" class="hidden" />
+                <label for="star1" class="starRating cursor-pointer text-gray-300 hover:text-yellow-500 transition-colors duration-200">
+                  ★
+                </label>
+
+                <input type="radio" id="star2" name="rating" value="2" class="hidden" />
+                <label for="star2" class="starRating cursor-pointer text-gray-300 hover:text-yellow-500 transition-colors duration-200">
+                  ★
+                </label>
+
+                <input type="radio" id="star3" name="rating" value="3" class="hidden" checked />
+                <label for="star3" class="starRating cursor-pointer text-gray-300 hover:text-yellow-500 transition-colors duration-200">
+                  ★
+                </label>
+
+                <input type="radio" id="star4" name="rating" value="4" class="hidden" />
+                <label for="star4" class="starRating cursor-pointer text-gray-300 hover:text-yellow-500 transition-colors duration-200">
+                  ★
+                </label>
+
+                <input type="radio" id="star5" name="rating" value="5" class="hidden" />
+                <label for="star5" class="starRating cursor-pointer text-gray-300 hover:text-yellow-500 transition-colors duration-200">
+                  ★
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Description Textarea -->
+          <div class="mb-4 w-full">
+            <label for="description" class="block text-sm font-medium text-gray-500">Describe Your Experience</label>
+            <textarea name="description" id="description" rows="4" class="mt-1 block w-full border-[#0E4483] rounded-sm py-2 px-2 border border-solid" placeholder="Tell us about your experience" required>Great service!</textarea>
+            <div class="text-red-500 text-sm hidden">Description is required!</div>
+          </div>
+
+          <input type="submit" id="submit-review" value="Submit" class="px-4 py-2 w-full bg-[#0E4483] hover:bg-[#0C376A] text-white font-semibold rounded-md">
+        </form>
+
       </div>
     </div>
   </div>

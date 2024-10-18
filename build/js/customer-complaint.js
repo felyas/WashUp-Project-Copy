@@ -150,5 +150,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // FETCH TOTAL COUNT FOR CARDS AJAX REQUEST
+  const fetchComplaintCounts = async () => {
+    const data = await fetch('./backend/customer-complaint_action.php?count_all=1', {
+      method: 'GET',
+    });
+    const response = await data.json();
+    document.getElementById('js-pending-count').textContent = response.pendingCount;
+    document.getElementById('js-resolved').textContent = response.resolvedCount;
+  };
+  fetchComplaintCounts();
 
 });

@@ -46,7 +46,7 @@ if ($_SESSION['role'] !== 'admin') {
 <body class="bg-white min-h-screen font-poppins">
   <div class="flex min-h-screen">
     <!-- Sidebar -->
-    <div id="sidebar" class="w-64 bg-gray-800 text-white flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full">
+    <div id="sidebar" class="w-64 z-50 bg-gray-800 text-white flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full">
       <div class="p-4 text-lg font-bold border-b border-gray-700">
         <div class="flex justify-center items-center w-[180px]">
           <img src="./img/logo-white.png" alt="" class="w-12 h-10 mr-1">
@@ -297,7 +297,7 @@ if ($_SESSION['role'] !== 'admin') {
           </div>
 
           <!-- Second Div (Calendar Section) -->
-          <div class="w-full bg-white rounded-sm shadow-lg border border-solid border-gray-200">
+          <div class="w-full h-72 bg-white rounded-sm shadow-lg border border-solid border-gray-200">
             <div id="calendar" class="p-4">
               <!-- Calendar goes here -->
             </div>

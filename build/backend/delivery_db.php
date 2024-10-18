@@ -185,7 +185,14 @@ class Database extends Config
   // Update Proof of Delivery and receipt in DATABASE
   public function updateProofAndReceipt($id, $proof_path, $receipt_path)
   {
-    $sql = 'UPDATE booking SET delivery_proof = :proof_path, receipt = :receipt_path, status = :status, is_read = :is_read WHERE id = :id';
+    $sql = 'UPDATE booking 
+            SET delivery_proof = :proof_path, 
+                receipt = :receipt_path, 
+                status = :status, 
+                is_read = :is_read, 
+                delivery_date = NOW() 
+            WHERE id = :id';
+
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
       'proof_path' => $proof_path,
@@ -198,6 +205,7 @@ class Database extends Config
 
     return $result;
   }
+
 
   // Fetch All Pending In DATABASE
   public function fetchPendingBooking($page, $limit, $query)
@@ -230,7 +238,8 @@ class Database extends Config
   }
 
   // Update Pending Status to 'For Pickup' in DATABASE
-  public function admit($id) {
+  public function admit($id)
+  {
     $sql = 'UPDATE booking SET status = :status, is_read = :is_read WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
@@ -243,7 +252,8 @@ class Database extends Config
   }
 
   // Update Pending Status to 'For Pickup' in DATABASE
-  public function denied($id) {
+  public function denied($id)
+  {
     $sql = 'DELETE FROM booking WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
@@ -264,7 +274,8 @@ class Database extends Config
   }
 
   // Update Booking Details in Database
-  public function updateBooking($id, $pickup_date, $pickup_time) {
+  public function updateBooking($id, $pickup_date, $pickup_time)
+  {
     $sql = 'UPDATE booking SET pickup_date = :pickup_date, pickup_time = :pickup_time WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
@@ -275,6 +286,4 @@ class Database extends Config
 
     return true;
   }
-
-
 }

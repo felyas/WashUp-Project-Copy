@@ -283,7 +283,7 @@ if ($_SESSION['role'] !== 'delivery') {
           </div>
         </div>
 
-        <div class="w-full h-96 grid grid-cols-1 lg:grid-cols-4 mt-16 md:mt-20 gap-y-2 sm:gap-2 text-sm mb-4">
+        <div class="w-full h-auto grid grid-cols-1 lg:grid-cols-4 mt-16 md:mt-20 gap-y-2 sm:gap-2 text-sm mb-4">
           <div class="w-full col-span-3 border border-solid border-gray-200 shadow-md">
             <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
               <p class="text-md font-semibold text-ashblack py-2">PENDING BOOKINGS</p>
@@ -294,7 +294,7 @@ if ($_SESSION['role'] !== 'delivery') {
                 </button>
               </div>
             </div>
-            <div class="overflow-x-auto h-auto min-h-72 px-2">
+            <div class="overflow-x-auto h-auto px-2">
               <table class="text-nowrap w-full text-left text-ashblack border-collapse border border-solid border-gray-200">
                 <thead class="bg-gray-200">
                   <tr>

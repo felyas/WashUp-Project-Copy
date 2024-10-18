@@ -340,14 +340,14 @@ if (isset($_GET['fetch-feedback'])) {
       }
 
       $output .= '
-            <div class="border border-solid max-h-72 overflow-y-auto border-polynesian rounded-lg p-4 flex flex-col items-center">
+            <div class="border border-solid border-polynesian rounded-lg p-4 m-2 flex flex-col items-center ">
                 <div class="mb-4 flex flex-col items-center">
                   <div class="w-full h-auto flex items-center justify-center space-x-2">
                     ' . $starOutput . ' <!-- Output the dynamic stars here -->
                   </div>
                     <p id="feedback-fullname" class="text-polynesian font-semibold text-md">' . $row['first_name'] . ' ' . $row['last_name'] . '</p>
                 </div>
-                <div class="h-auto flex items-center relative w-full px-8">
+                <div class="h-auto flex items-center justify-center relative w-full px-8">
                     <img class="w-10 h-10 absolute top-0 left-0 -translate-y-1/2" src="./img/icons/quote-left.svg" alt="Quote Left">
                     <p id="feedback-description" class="text-gray-500 text-center">' . $row['description'] . '</p>
                     <img class="w-10 h-10 absolute -bottom-5 right-0 -translate-y-1/2" src="./img/icons/quote-right.svg" alt="Quote Right">

@@ -32,6 +32,19 @@ function populateTimeOptions(unavailableTimes = []) {
   const endTime = 21 * 60; // 9:00 PM in minutes
   const interval = 20; // 20 minutes
 
+  // Get the current date and time
+  const currentDate = new Date();
+  const currentDay = currentDate.getDate();
+  const currentMonth = currentDate.getMonth(); // Zero-indexed months
+  const currentYear = currentDate.getFullYear();
+  const currentTimeInMinutes = currentDate.getHours() * 60 + currentDate.getMinutes(); // Current time in minutes
+
+  // Get the selected date from the date input
+  const selectedDate = new Date(document.getElementById('pickup-date').value);
+  const isToday = selectedDate.getDate() === currentDay &&
+    selectedDate.getMonth() === currentMonth &&
+    selectedDate.getFullYear() === currentYear;
+
   for (let time = startTime; time <= endTime; time += interval) {
     const hours = Math.floor(time / 60);
     const minutes = time % 60;
@@ -49,13 +62,63 @@ function populateTimeOptions(unavailableTimes = []) {
 
     // Disable the option if it's in the unavailable times array
     if (unavailableTimes.includes(timeFormatted)) {
-      option.disabled = true; // Disable the option if it's already booked
-      option.textContent += ' (Unavailable)'; // Append (Unavailable) to the text
+      option.disabled = true;
+      option.textContent += ' (Unavailable)';
+    }
+
+    // Only apply past hour restriction if the selected date is today
+    if (isToday) {
+      const todayTime = new Date(currentYear, currentMonth, currentDay, hours, minutes); // Time being checked
+      if (todayTime < currentDate) {
+        option.disabled = true;
+        option.textContent += ' (Past)';
+      }
     }
 
     selectTime.appendChild(option);
   }
 }
+
+// Previous Code for populateTimeOptions
+// function populateTimeOptions(unavailableTimes = []) {
+//   const selectTime = document.getElementById('pickup-time');
+//   selectTime.innerHTML = ''; // Clear previous options
+
+//   const startTime = 8 * 60; // 8:00 AM in minutes
+//   const endTime = 21 * 60; // 9:00 PM in minutes
+//   const interval = 20; // 20 minutes
+
+//   for (let time = startTime; time <= endTime; time += interval) {
+//     const hours = Math.floor(time / 60);
+//     const minutes = time % 60;
+
+//     const isPM = hours >= 12;
+//     const displayHours = hours % 12 || 12; // Convert to 12-hour format
+//     const displayMinutes = minutes.toString().padStart(2, '0');
+//     const ampm = isPM ? 'PM' : 'AM';
+
+//     const timeFormatted = `${displayHours}:${displayMinutes} ${ampm}`;
+
+//     const option = document.createElement('option');
+//     option.value = timeFormatted;
+//     option.textContent = timeFormatted;
+
+//     // Disable the option if it's in the unavailable times array
+//     if (unavailableTimes.includes(timeFormatted)) {
+//       option.disabled = true; // Disable the option if it's already booked
+//       option.textContent += ' (Unavailable)'; // Append (Unavailable) to the text
+//     }
+
+//     selectTime.appendChild(option);
+//   }
+// }
+
+// Add an event listener to update the time options when the date is changed
+document.getElementById('pickup-date').addEventListener('change', function () {
+  populateTimeOptions(); // Call the function to repopulate the time options when the date changes
+});
+
+
 
 
 const addBookingForm = document.getElementById('add-booking-form');

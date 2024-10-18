@@ -580,7 +580,7 @@ document.addEventListener("DOMContentLoaded", () => {
       method: 'GET',
     })
     const response = await data.text();
-    document.getElementById('feedback-container').innerHTML = response;
+    // document.getElementById('feedback-container').innerHTML = response;
   }
   fetchFeedback();
 

@@ -40,13 +40,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
   } elseif ($otp === $result['otp']) {
     // Update the verification status
-    $updateSql = "UPDATE users SET verification_status = TRUE WHERE email = :email";
+    $updateSql = "UPDATE users SET verification_status = 1 WHERE email = :email";
     $updateStmt = $conn->prepare($updateSql);
     $updateStmt->bindParam(':email', $email);
 
     if ($updateStmt->execute()) {
       // Fetch user details to set session variables
-      $detailsSql = "SELECT id, first_name, last_name FROM users WHERE email = :email";
+      $detailsSql = "SELECT id, first_name, last_name, role FROM users WHERE email = :email";
       $detailsStmt = $conn->prepare($detailsSql);
       $detailsStmt->bindParam(':email', $email);
       $detailsStmt->execute();

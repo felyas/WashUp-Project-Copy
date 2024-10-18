@@ -184,8 +184,8 @@ if ($_SESSION['role'] !== 'user') {
             <div class="py-4 w-full bg-polynesian h-12 flex items-center justify-center">
               <p class="font-semibold text-white">Customers Feedback</p>
             </div>
-            <div id="feedback-container" class="w-full h-full p-2 flex flex-col items-center">
-              <div class="border border-solid max-h-72 overflow-y-auto  border-polynesian rounded-lg p-4 flex flex-col items-center ">
+            <div id="feedback-container" class="w-full h-full max-h-72 overflow-y-auto p-2 flex flex-col items-center">
+              <div class="border border-solid border-polynesian rounded-lg p-4 m-2 flex flex-col items-center ">
                 <div class="mb-4 flex flex-col items-center">
                   <div class="w-full h-auto flex items-center justify-center space-x-2">
                     <img class="w-7 h-7 mb-2" src="./img/icons/star-rating.svg" alt="Star Rating">
@@ -196,6 +196,38 @@ if ($_SESSION['role'] !== 'user') {
                   <img class="w-10 h-10 absolute top-0 left-0 -translate-y-1/2" src="./img/icons/quote-left.svg" alt="Quote Left">
                   <p id="feedback-description" class="text-gray-500 text-center">
                     Salamat washup laundry, ang bango at ang linis po ng mga damit namin :>
+                  </p>
+                  <img class="w-10 h-10 absolute -bottom-5 right-0 -translate-y-1/2" src="./img/icons/quote-right.svg" alt="Quote Right">
+                </div>
+              </div>
+
+              <div class="border border-solid border-polynesian rounded-lg p-4 m-2 flex flex-col items-center ">
+                <div class="mb-4 flex flex-col items-center">
+                  <div class="w-full h-auto flex items-center justify-center space-x-2">
+                    <img class="w-7 h-7 mb-2" src="./img/icons/star-rating.svg" alt="Star Rating">
+                  </div>
+                  <p id="feedback-fullname" class="text-polynesian font-semibold text-md">Felix Bragais</p>
+                </div>
+                <div class="h-auto flex items-center relative w-full px-8">
+                  <img class="w-10 h-10 absolute top-0 left-0 -translate-y-1/2" src="./img/icons/quote-left.svg" alt="Quote Left">
+                  <p id="feedback-description" class="text-gray-500 text-center">
+                    Salamat washup laundry, ang bango at ang linis po ng mga damit namin :>
+                  </p>
+                  <img class="w-10 h-10 absolute -bottom-5 right-0 -translate-y-1/2" src="./img/icons/quote-right.svg" alt="Quote Right">
+                </div>
+              </div>
+
+              <div class="border w-full border-solid border-polynesian rounded-lg p-4 m-2 flex flex-col items-center ">
+                <div class="mb-4 flex flex-col items-center">
+                  <div class="w-full h-auto flex items-center justify-center space-x-2">
+                    <img class="w-7 h-7 mb-2" src="./img/icons/star-rating.svg" alt="Star Rating">
+                  </div>
+                  <p id="feedback-fullname" class="text-polynesian font-semibold text-md">Felix Bragais</p>
+                </div>
+                <div class="h-auto flex items-center justify-center relative w-full px-8">
+                  <img class="w-10 h-10 absolute top-0 left-0 -translate-y-1/2" src="./img/icons/quote-left.svg" alt="Quote Left">
+                  <p id="feedback-description" class="text-gray-500 text-center">
+                    Salamat washup laundry
                   </p>
                   <img class="w-10 h-10 absolute -bottom-5 right-0 -translate-y-1/2" src="./img/icons/quote-right.svg" alt="Quote Right">
                 </div>

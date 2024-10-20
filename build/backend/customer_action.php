@@ -354,9 +354,8 @@ if (isset($_GET['fetch-feedback'])) {
                 </div>
             </div>
         ';
-
-      echo $output;
     }
+    echo $output;
   } else {
     echo $output = '
             <div id="feedback-container" class="w-full h-full p-2 flex flex-col items-center">

@@ -323,6 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // If there are new notifications, display them
       if (notifications.length > 0) {
         // Clear existing messages
+        totalNotificationsElement.innerText = 0;
         notificationContainer.innerHTML = '';
 
         // Append each notification to the container

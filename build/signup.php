@@ -40,39 +40,46 @@ session_start();
     </section>
   </header>
 
-  <main class="flex-grow flex bg-seasalt justify-center">
-    <section class="flex my-4 border border-solid justify-center bg-white shadow-lg mx-2 sm:mx-0">
-      <div class="flex flex-col w-full box-border text-ashblack p-4 items-center">
+  <main class="flex-grow flex bg-seasalt justify-center items-center">
+    <section class="flex my-4 border border-solid justify-center items-center bg-white shadow-lg mx-2 sm:mx-0">
+      <div class="flex flex-col w-full box-border text-ashblack p-4 items-center justify-center">
         <p class="text-3xl my-4 font-semibold">Create an Account</p>
 
         <!-- Div to display errors. -->
-        <?php if (isset($_SESSION['error'])): ?>
-          <div class="w-full text-sm flex justify-center p-2 border bg-red-100 border-red-500 border-solid text-red-800 rounded-lg">
-            <?php echo htmlspecialchars($_SESSION['error']); ?>
-          </div>
-          <?php unset($_SESSION['error']); ?>
-        <?php endif; ?>
+        <div id="error-container" class="hidden w-full flex items-center justify-center text-sm pt-2 text-wrap">
+          <p class="text-red-700 text-center" id="error-message"><!-- Dynamic Error --></p>
+        </div>
 
-        <form action="./backend/handle_signup.php" method="POST" class="flex flex-col my-4">
+        <form action="" id="signup-form" method="POST" class="flex flex-col my-4" novalidate>
           <div class="grid grid-cols-2 gap-2">
-            <label class="text-sm" for="fname">First Name</label>
-            <label class="text-sm" for="lname">Last Name</label>
+            <label class="text-sm text-gray-500" for="fname">First Name</label>
+            <label class="text-sm text-gray-500" for="lname">Last Name</label>
           </div>
           <div class="grid grid-cols-2 gap-2">
             <input type="text" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="fname" placeholder="First Name: " required>
             <input type="text" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="lname" placeholder="Last Name: " required>
           </div>
 
-          <label class="text-sm" for="email">Email</label>
+          <label class="text-sm text-gray-500" for="email">Email</label>
           <input type="email" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="email" placeholder="Email: " required>
 
-          <label class="text-sm" for="password">Password</label>
-          <input type="password" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="password" placeholder="Password: " required>
+          <div class="mb-2">
+            <label class="text-sm text-gray-500" for="password">Password</label>
+            <div class="relative">
+              <input type="password" class="w-full border border-solid border-federal rounded-lg mb-2 p-2 pr-10" name="password" placeholder="Password: " required>
+              <img src="./img/icons/eye-close.svg" alt="Toggle Password Visibility" class="show-password absolute top-1 right-0 flex items-center pr-3 w-8 h-8 cursor-pointer">
+            </div>
+          </div>
 
-          <label class="text-sm" for="confirm_password">Confirm Password</label>
-          <input type="password" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="confirm_password" placeholder="Confirm Password: " required>
+          <div class="mb-2">
+            <label class="text-sm text-gray-500" for="confirm_password">Confirm Password</label>
+            <div class="relative">
+              <input type="password" class="w-full border border-solid border-federal rounded-lg mb-2 p-2 pr-10" name="confirm_password" placeholder="Confirm Password: " required>
+              <img src="./img/icons/eye-close.svg" alt="Toggle Password Visibility" class="show-password absolute top-1 right-0 flex items-center pr-3 w-8 h-8 cursor-pointer">
+            </div>
+          </div>
 
-          <input type="submit" class="w-full bg-federal text-seasalt font-semibold hover:opacity-90 rounded-lg mb-2 p-2 cursor-pointer" value="Sign Up">
+          <input type="submit" id="signup-button" class="w-full bg-federal text-seasalt font-semibold hover:opacity-90 rounded-lg mb-2 p-2 cursor-pointer" value="Sign Up">
         </form>
 
         <p class="text-ashblack text-sm">Have an account already? <a class="text-federal font-medium hover:underline" href="./login.php">Sign In</a></p>
@@ -94,7 +101,7 @@ session_start();
     </section>
   </footer>
 
-  <script type="module" src="./js/login.js"></script>
+  <script type="module" src="./js/signup.js"></script>
 </body>
 
 

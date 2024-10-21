@@ -22,6 +22,7 @@ session_start();
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
 
+
 </head>
 
 <body class="bg-seasalt min-h-screen font-poppins flex flex-col">
@@ -43,28 +44,37 @@ session_start();
   <main class="flex-grow flex items-center justify-center bg-seasalt">
     <section class="flex my-12 border border-solid justify-center items-center bg-white shadow-lg">
       <div class="flex flex-col w-[300px] box-border text-ashblack h-[350px] sm:h-full items-center justify-center">
-        <p class="text-3xl mb-2 font-semibold">Sign In</p>
+        <p class="text-3xl font-semibold">Sign In</p>
 
-        <!-- Div to display success and errors. -->
-        <?php if (isset($_SESSION['status'])): ?>
-          <div class="w-3/4 text-sm flex justify-center p-2 border bg-green-100 border-green-500 border-solid text-green-800 rounded-lg">
-            <?php echo htmlspecialchars($_SESSION['status']); ?>
+        <form action="" id="login-form" method="POST" class="flex flex-col my-4 w-3/4" novalidate>
+
+          <!-- Div to display success message. -->
+          <?php if (isset($_SESSION['status'])): ?>
+            <div id="error-container" class="w-full flex items-center justify-center text-sm pb-2 text-wrap">
+              <p class="text-green-700 text-center" id="error-message"><!-- Dynamic Error -->
+                <?php echo htmlspecialchars($_SESSION['status']); ?>
+              </p>
+            </div>
+            <?php unset($_SESSION['status']); ?>
+          <?php endif; ?>
+
+          <div class="relative mb-2">
+            <input type="email" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="email" placeholder="Email: " required>
+            <img src="./img/icons/user-federal.svg" alt="user" class="absolute top-2 right-0 flex items-center pr-3 w-7 h-7 cursor-pointer">
           </div>
-          <?php unset($_SESSION['status']); ?>
-        <?php endif; ?>
 
-        <?php if (isset($_SESSION['error'])): ?>
-          <div class="w-3/4 text-sm flex justify-center p-2 border bg-red-100 border-red-500 border-solid text-red-800 rounded-lg">
-            <?php echo htmlspecialchars($_SESSION['error']); ?>
+          <div class="relative mb-2">
+            <input type="password" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="password" placeholder="Password: " required>
+            <img src="./img/icons/eye-close.svg" alt="Toggle Password Visibility" class="show-password absolute top-1 right-0 flex items-center pr-3 w-8 h-8 cursor-pointer">
           </div>
-          <?php unset($_SESSION['error']); ?>
-        <?php endif; ?>
 
-        <form action="./backend/handle_login.php" method="POST" class="flex flex-col my-4 w-3/4">
-          <input type="email" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="email" placeholder="Email: ">
-          <input type="password" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="password" placeholder="Password: ">
-          <input type="submit" class="w-full bg-federal text-seasalt font-semibold hover:opacity-90 rounded-lg mb-2 p-2 cursor-pointer" value="Login">
+          <input type="submit" id="login-submit-button" class="w-full bg-federal text-seasalt font-semibold hover:opacity-90 rounded-lg mb-2 p-2 cursor-pointer" value="Login" required>
+
+          <div id="error-container" class="hidden w-full flex items-center justify-center text-sm pt-2 text-wrap">
+            <p class="text-red-700 text-center" id="error-message"><!-- Dynamic Error --></p>
+          </div>
         </form>
+
 
         <p class="text-ashblack text-sm">Don't have an account? <a class="text-federal font-medium hover:underline" href="./signup.php">Sign up</a></p>
         <p class="text-federal text-sm font-medium hover:underline"><a href="./forgot-password.php">Forgot your password?</a></p>

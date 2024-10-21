@@ -14,6 +14,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $new_password = filter_var($_POST['new_password'], FILTER_SANITIZE_STRING);
         $confirm_password = filter_var($_POST['confirm_password'], FILTER_SANITIZE_STRING);
 
+        // Check if the password is at least 8 characters long
+        if (strlen($new_password) < 8) {
+            $_SESSION['error'] = "Password must be at least 8 characters long.";
+            header("Location: ../reset-password.php?token=" . urlencode($token));
+            exit();
+        }
+
         if ($new_password === $confirm_password) {
             // Fetch the token details from the database
             $stmt = $conn->prepare("SELECT * FROM password_resets WHERE token = :token");
@@ -43,7 +50,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     exit();
                 }
             } else {
-                $_SESSION['error'] = "Invalid or expired token.";
+                $_SESSION['error'] = "The token is either invalid or has expired. Please request a new one";
                 header("Location: ../forgot-password.php");
                 exit();
             }

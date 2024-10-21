@@ -42,32 +42,30 @@ session_start();
   <main class="flex-grow flex bg-seasalt items-center justify-center">
     <section class="flex my-4 border border-solid justify-center items-center bg-white shadow-lg mx-2 sm:mx-0">
       <div class="flex flex-col box-border text-ashblack p-4 items-center justify-center">
-        <p class="text-3xl my-2 font-semibold">Forgot your Password ?</p>
+        <p class="text-2xl sm:text-3xl my-2 font-semibold">Forgot your Password ?</p>
 
         <p class="text-md my-1 text-center w-3/4">
           Enter your email address, and we'll send you a link to reset your password.
         </p>
 
-        <!-- Div to display success and errors. -->
-        <?php if (isset($_SESSION['status'])): ?>
-          <div class="w-3/4 text-sm flex justify-center p-2 border bg-green-100 border-green-500 border-solid text-green-800 rounded-lg">
-            <?php echo htmlspecialchars($_SESSION['status']); ?>
-          </div>
-          <?php unset($_SESSION['status']); ?>
-        <?php endif; ?>
-
         <?php if (isset($_SESSION['error'])): ?>
-          <div class="w-3/4 text-sm flex justify-center p-2 border bg-red-100 border-red-500 border-solid text-red-800 rounded-lg">
-            <?php echo htmlspecialchars($_SESSION['error']); ?>
+          <div id="error-container" class="w-full flex items-center justify-center text-sm text-wrap pt-2">
+            <p class="text-red-700 text-center" id="error-message"><!-- Dynamic Error -->
+              <?php echo htmlspecialchars($_SESSION['error']); ?>
+            </p>
           </div>
           <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
 
-        <form action="./backend/handle_forgot-password.php" method="POST" class="flex flex-col my-4 w-3/4">
-          <label class="text-sm" for="">Email</label>
+        <div id="error-container" class="hidden w-full flex items-center justify-center text-sm pt-2 text-wrap">
+          <p class="text-red-700 text-center" id="error-message"><!-- Dynamic Error --></p>
+        </div>
+
+        <form action="" id="forgot-password-form" method="POST" class="flex flex-col my-4 w-3/4">
+          <label class="text-sm text-gray-500" for="">Email</label>
           <input type="email" name="email" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" placeholder="Email: ">
 
-          <input type="submit" class="w-full bg-federal text-seasalt font-semibold hover:opacity-90 rounded-lg mb-2 p-2 cursor-pointer" value="Send">
+          <input type="submit" id="forgot-password-button" class="w-full bg-federal text-seasalt font-semibold hover:opacity-90 rounded-lg mb-2 p-2 cursor-pointer" value="Send">
         </form>
 
         <p class="text-ashblack text-sm">Remembered your password? <a class="text-federal font-medium hover:underline" href="./login.php">Sign In</a>
@@ -91,7 +89,7 @@ session_start();
     </section>
   </footer>
 
-  <script type="module" src="./js/login.js"></script>
+  <script type="module" src="./js/forgot-password.js"></script>
 </body>
 
 

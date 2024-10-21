@@ -7,9 +7,8 @@ $token = isset($_GET['token']) ? htmlspecialchars($_GET['token']) : '';
 
 // Check if the token is provided
 if (empty($token)) {
-    $_SESSION['error'] = "Invalid request. No token provided.";
-    header("Location: ../forgot-password.php");
-    exit();
+  header("Location: ../forgot-password.php");
+  exit();
 }
 ?>
 
@@ -48,25 +47,37 @@ if (empty($token)) {
   </header>
 
   <main class="flex-grow flex bg-seasalt justify-center items-center">
-    <section class="flex my-4 border border-solid justify-center bg-white shadow-lg mx-2 sm:mx-0 max-w-1/2 sm:w-1/2">
+    <section class="flex my-4 border border-solid justify-center items-center bg-white shadow-lg mx-2 sm:mx-0">
       <div class="flex flex-col w-full box-border text-ashblack p-4 items-center">
-        <p class="text-3xl my-4 font-semibold">Reset your password</p>
+        <p class="text-2xl w-full text-center sm:text-3xl my-4 font-semibold">Reset your password</p>
+        <p class="text-md w-full my-1 text-center">
+          Please provide a new password to reset your account
+        </p>
 
         <!-- Div to display errors. -->
         <?php if (isset($_SESSION['error'])): ?>
-          <div class="w-full text-sm flex justify-center p-2 border bg-red-100 border-red-500 border-solid text-red-800 rounded-lg">
-            <?php echo htmlspecialchars($_SESSION['error']); ?>
+          <div id="error-container" class="w-full flex items-center justify-center text-sm text-wrap pt-2">
+            <p class="text-red-700 text-center" id="error-message"><!-- Dynamic Error -->
+              <?php echo htmlspecialchars($_SESSION['error']); ?>
+            </p>
           </div>
           <?php unset($_SESSION['error']); ?>
         <?php endif; ?>
 
         <!-- Form for resetting the password -->
         <form action="./backend/handle_reset-password.php?token=<?php echo urlencode($token); ?>" method="POST" class="flex flex-col my-4 w-full">
-          <label class="text-sm" for="new_password">New Password</label>
-          <input type="password" id="new_password" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="new_password" placeholder="Enter your new Password: " required>
 
-          <label class="text-sm" for="confirm_password">Confirm Password</label>
-          <input type="password" id="confirm_password" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="confirm_password" placeholder="Confirm Password: " required>
+          <label class="text-sm text-gray-500" for="new_password">New Password</label>
+          <div class="relative mb-2">
+            <input type="password" id="new_password" class="w-full border border-solid border-federal rounded-lg mb-2 p-2 pr-10" name="new_password" placeholder="Enter your new Password: " required>
+            <img src="./img/icons/eye-close.svg" alt="Toggle Password Visibility" class="show-password absolute top-1 right-0 flex items-center pr-3 w-8 h-8 cursor-pointer">
+          </div>
+
+          <label class="text-sm text-gray-500" for="confirm_password">Confirm Password</label>
+          <div class="relative mb-2">
+            <input type="password" id="confirm_password" class="w-full border border-solid border-federal rounded-lg mb-2 p-2 pr-10" name="confirm_password" placeholder="Confirm Password: " required>
+            <img src="./img/icons/eye-close.svg" alt="Toggle Password Visibility" class="show-password absolute top-1 right-0 flex items-center pr-3 w-8 h-8 cursor-pointer">
+          </div>
 
           <input type="submit" class="w-full bg-federal text-seasalt font-semibold hover:opacity-90 rounded-lg mb-2 p-2 cursor-pointer" value="Save">
         </form>
@@ -88,6 +99,7 @@ if (empty($token)) {
     </section>
   </footer>
 
-  <script type="module" src="./js/login.js"></script>
+  <script type="module" src="./js/reset-password.js"></script>
 </body>
+
 </html>

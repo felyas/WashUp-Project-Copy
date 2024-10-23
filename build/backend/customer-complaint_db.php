@@ -58,6 +58,19 @@ class Database extends Config
   }
 
   // UPDATE STATUS FROM DATABASE
+  public function onAction($id)
+  {
+    $sql = 'UPDATE complaints SET status = :status WHERE complaint_id = :complaint_id';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'status' => 'received',
+      'complaint_id' => $id,
+    ]);
+
+    return true;
+  }
+
+  // DELETE COMPLAINT RECORD ON DATABASE
   public function resolved($id)
   {
     $sql = 'UPDATE complaints SET status = :status WHERE complaint_id = :complaint_id';
@@ -66,16 +79,6 @@ class Database extends Config
       'status' => 'resolved',
       'complaint_id' => $id,
     ]);
-
-    return true;
-  }
-
-  // DELETE COMPLAINT RECORD ON DATABASE
-  public function delete($id)
-  {
-    $sql = 'DELETE FROM complaints WHERE complaint_id = :complaint_id';
-    $stmt = $this->conn->prepare($sql);
-    $stmt->execute(['complaint_id' => $id]);
 
     return true;
   }

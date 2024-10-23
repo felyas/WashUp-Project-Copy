@@ -30,6 +30,10 @@ if ($_SESSION['role'] !== 'user') {
   <link rel="stylesheet" href="./css/palette.css">
   <link rel="stylesheet" href="./css/rating.css">
 
+  <!-- FullCalendar CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+  <link rel="stylesheet" href="./css/customer-calendar.css">
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -37,17 +41,47 @@ if ($_SESSION['role'] !== 'user') {
 </head>
 
 <body class="bg-white min-h-screen font-poppins">
-  <div class="flex min-h-screen">
+  <div class="flex h-full">
+    <!-- Sidebar -->
+    <div id="sidebar" class="w-64 z-50 bg-gray-800 text-white flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full">
+      <div class="p-4 text-lg font-bold border-b border-gray-700">
+        <div class="flex justify-center items-center w-[180px]">
+          <img src="./img/logo-white.png" alt="" class="w-12 h-10 mr-1">
+          <h1 class="text-base font-bold text-wrap leading-4">
+            WASHUP LAUNDRY
+          </h1>
+        </div>
+      </div>
+      <nav class="flex flex-col flex-1 p-4 space-y-4 text-md">
+        <a href="./customer-dashboard.php" class="flex items-center p-2 rounded hover:bg-gray-700">
+          <img class="h-4 w-4 mr-4" src="./img/icons/dashboard.svg" alt="">
+          <p>Dashboard</p>
+        </a>
+        <a href="./complaint-table.php" class="flex items-center p-2 rounded hover:bg-gray-700">
+          <img class="h-4 w-4 mr-4" src="./img/icons/report-white.svg" alt="">
+          <p>Customer Complaints</p>
+        </a>
+
+        <div class="flex items-center justify-center pt-72">
+          <!-- Close Button -->
+          <button id="close-sidebar" class="lg:hidden p-6 text-white rounded-full bg-gray-900 hover:bg-gray-700">
+            <img class="h-6 w-6 mx-auto" src="./img/icons/close-button.svg" alt="">
+          </button>
+        </div>
+      </nav>
+    </div>
 
     <!-- Main Content -->
     <div class="flex-1 flex flex-col">
       <!-- Header -->
       <header class="bg-federal shadow p-4">
-        <div class="flex justify-between items-center">
+        <div class="flex justify-between items-center lg:justify-end">
           <!-- Hamburger Menu -->
-          <div id="logo" class="text-white">
-            <img class="w-10 h-8" src="./img/logo-white.png" alt="LOGO">
-          </div>
+          <button id="hamburger" class="lg:hidden px-4 py-2 text-white">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
+            </svg>
+          </button>
 
           <!--Notifications & Logout Section-->
           <div class="flex items-center justify-between lg:space-x-4 text-sm">

@@ -86,18 +86,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Target Resolved Link
-    if (e.target && (e.target.matches('a.resolvedLink') || e.target.closest('a.resolvedLink'))) {
+    if (e.target && (e.target.matches('a.receivedLink') || e.target.closest('a.receivedLink'))) {
       e.preventDefault();
-      let targetElement = e.target.matches('a.resolvedLink') ? e.target : e.target.closest('a.resolvedLink');
+      let targetElement = e.target.matches('a.receivedLink') ? e.target : e.target.closest('a.receivedLink');
       let id = targetElement.getAttribute('id');
       const resolvedWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
       resolvedWarningModal.show(toResolved, id);
     }
 
     // Target Delete Link
-    if (e.target && (e.target.matches('a.deleteLink') || e.target.closest('a.deleteLink'))) {
+    if (e.target && (e.target.matches('a.resolvedLink') || e.target.closest('a.resolvedLink'))) {
       e.preventDefault();
-      let targetElement = e.target.matches('a.deleteLink') ? e.target : e.target.closest('a.deleteLink');
+      let targetElement = e.target.matches('a.resolvedLink') ? e.target : e.target.closest('a.resolvedLink');
       let id = targetElement.getAttribute('id');
       const resolvedWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
       resolvedWarningModal.show(closed, id);
@@ -124,7 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Update Status from Pending to Resolved Ajax Request
   const toResolved = async (id) => {
-    const data = await fetch(`./backend/customer-complaint_action.php?resolved=1&id=${id}`, {
+    const data = await fetch(`./backend/customer-complaint_action.php?onAction=1&id=${id}`, {
       method: 'GET',
     });
     const response = await data.json();
@@ -138,7 +138,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Delete Complaint Record Ajax Request
   const closed = async (id) => {
-    const data = await fetch(`./backend/customer-complaint_action.php?delete=1&id=${id}`, {
+    const data = await fetch(`./backend/customer-complaint_action.php?resolved=1&id=${id}`, {
       method: 'GET',
     });
     const response = await data.json();

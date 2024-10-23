@@ -1,4 +1,4 @@
-import { handleDisplayCurrentTime, openModal, showToaster, Modal } from "./dashboards-main.js";
+import { handleDisplayCurrentTime, handleSidebar, openModal, showToaster, Modal } from "./dashboards-main.js";
 
 const bookNowBtn = document.querySelector('.js-book-now');
 const editBookingForm = document.getElementById('edit-booking-form');
@@ -65,6 +65,7 @@ function validateForm(form) {
 
 
 document.addEventListener("DOMContentLoaded", () => {
+  handleSidebar();
   handleDisplayCurrentTime();
   openModal('editModalTrigger', 'toEditBookingModal', 'closeEditBookingModal', 'closeEditBookingModal2');
   openModal('viewModalTrigger', 'toViewBookingModal', 'closeViewBookingModal', 'closeViewBookingModal2');
@@ -581,7 +582,7 @@ document.addEventListener("DOMContentLoaded", () => {
       method: 'GET',
     })
     const response = await data.text();
-    // document.getElementById('feedback-container').innerHTML = response;
+    document.getElementById('feedback-container').innerHTML = response;
   }
   fetchFeedback();
 

@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Check if the user is an admin
-if ($_SESSION['role'] !== 'delivery') {
+if ($_SESSION['role'] !== 'user') {
   header("Location: ./404.php"); // Redirect to the 404 page
   exit();
 }
@@ -22,7 +22,7 @@ if ($_SESSION['role'] !== 'delivery') {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Customer Complaints - WashUp Laundry</title>
+  <title>Delivery Dashboard - WashUp Laundry</title>
   <link rel="icon" href="./img/logo-white.png">
 
   <!-- CSS -->
@@ -46,7 +46,7 @@ if ($_SESSION['role'] !== 'delivery') {
 <body class="bg-white min-h-screen font-poppins">
   <div class="flex min-h-screen">
     <!-- Sidebar -->
-    <div id="sidebar" class="w-64 z-50 bg-gray-800 text-white flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full">
+    <div id="sidebar" class="w-64 min-h-screen z-50 bg-gray-800 text-white flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full">
       <div class="p-4 text-lg font-bold border-b border-gray-700">
         <div class="flex justify-center items-center w-[180px]">
           <img src="./img/logo-white.png" alt="" class="w-12 h-10 mr-1">
@@ -56,15 +56,12 @@ if ($_SESSION['role'] !== 'delivery') {
         </div>
       </div>
       <nav class="flex flex-col flex-1 p-4 space-y-4 text-md">
-        <a href="./delivery-dashboard.php" class="flex items-center p-2 rounded hover:bg-gray-700">
+        <a href="./customer-dashboard.php" class="flex items-center p-2 rounded hover:bg-gray-700">
           <img class="h-4 w-4 mr-4" src="./img/icons/dashboard.svg" alt="">
           <p>Dashboard</p>
         </a>
-        <a href="./customer-complaints.php" class="flex items-center p-2 rounded hover:bg-gray-700">
-          <div class="relative mr-4">
-            <img class="h-4 w-4" src="./img/icons/file.svg" alt="">
-            <img class="absolute -bottom-[2px] -right-[3px] h-[14px] w-[14px]" src="./img/icons/report-white.svg" alt="">
-          </div>
+        <a href="./complaint-table.php" class="flex items-center p-2 rounded hover:bg-gray-700">
+          <img class="h-4 w-4 mr-4" src="./img/icons/report-white.svg" alt="">
           <p>Customer Complaints</p>
         </a>
 
@@ -132,46 +129,10 @@ if ($_SESSION['role'] !== 'delivery') {
       </header>
 
       <!-- Main Content Area -->
-      <main class="flex-1 p-6 relative min-h-screen">
+      <main class="flex-1 p-6 relative h-full flex items-center justify-center">
 
-        <div id="toaster" class="fixed top-4 right-4 w-72 sm:w-auto text-wrap hidden text-white shadow-lg z-30">
+        <div id="toaster" class="fixed top-4 right-4 hidden text-white shadow-lg z-30">
           <!-- Dynamic Toaster Content -->
-        </div>
-
-        <!-- Grid for Booking Summaries -->
-        <div class="grid grid-cols-2 gap-x-6 lg:gap-x-12 gap-y-4 mb-4">
-          <!-- Pending Complaint Card -->
-          <div class="h-36 rounded-lg bg-white shadow-md border border-solid border-gray-200 flex justify-center items-center">
-            <div class="grid grid-cols-2 lg:space-x-2">
-              <div class="mr-2 sm:mr-0 flex items-center justify-center">
-                <div class="rounded-[50%] bg-sky-600 p-4 flex items-center justify-center">
-                  <img class="h-6 w-6" src="./img/icons/pending.svg" alt="">
-                </div>
-              </div>
-              <div class="flex flex-col items-center justify-center">
-                <p class="text-lg md:text-3xl font-semibold" id="js-pending-count"><!-- total count --></p>
-                <p class="text-sm md:text-md text-wrap">Pending</p>
-              </div>
-            </div>
-          </div>
-
-          <!-- Closed Complaint Booking Card -->
-          <div class="h-36 rounded-lg bg-white shadow-md flex justify-center items-center border border-solid border-gray-200">
-            <div class="grid grid-cols-2 lg:space-x-2">
-              <div class="flex items-center justify-center">
-                <div class="rounded-[50%] bg-celestial p-4 flex items-center justify-center">
-                  <div class="relative">
-                    <img class="h-6 w-6" src="./img/icons/hand-holding-solid.svg" alt="">
-                    <img src="./img/icons/box.svg" class="absolute top-0 right-[5px] h-3 w-3" alt="">
-                  </div>
-                </div>
-              </div>
-              <div class="flex flex-col items-center justify-center">
-                <p class="text-lg md:text-3xl font-semibold" id="js-resolved"><!-- total count --></p>
-                <p class="text-sm md:text-md text-wrap px-2 sm:px-0">Resolved</p>
-              </div>
-            </div>
-          </div>
         </div>
 
         <!--List-->
@@ -179,7 +140,7 @@ if ($_SESSION['role'] !== 'delivery') {
           <!-- First div taking 3/4 of the width on large screens -->
           <div class="h-auto w-full rounded-sm bg-white border border-solid border-gray-200 shadow-md">
             <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack py-2">MANAGE CUSTOMER COMPLAINTS</p>
+              <p class="text-md font-semibold text-ashblack py-2">CUSTOMER COMPLAINTS</p>
               <div class="flex justify-between items-center relative">
                 <input id="js-search-bar" type="text" placeholder="Search " class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
                 <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
@@ -259,93 +220,7 @@ if ($_SESSION['role'] !== 'delivery') {
     </div>
   </div>
 
-  <!-- Modal for displaying the larger image -->
-  <div class="fixed p-2 inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-30" id="imageModal">
-    <div class="bg-white shadow-lg p-4 rounded-lg">
-      <button id="closeImageModal" class="px-2 py-1 bg-gray-500 hover:bg-gray-700 text-white rounded-md"><img class="w-5 h-5" src="./img/icons/x.svg" alt=""></button>
-      <img id="modal-image" class="w-full max-w-md h-auto mt-2" src="" alt="Large Proof Image">
-    </div>
-  </div>
-
-  <!-- Modal for View -->
-  <div class="toViewBookingModal p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
-    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2 max-h-96 overflow-y-auto">
-      <div class="w-full h-auto py-2 flex flex-col items-center text-nowrap text-gray-500">
-        <h4 class="text-lg font-bold">CUSTOMER COMPLAINT</h4>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2 mb-4 text-gray-500">
-        <div class="flex justify-start">
-          <p class="text-sm">Date: </p>
-        </div>
-        <div class="flex justify-end">
-          <p id="created_at" class="text-sm"><!-- Dynamic Date --></p>
-        </div>
-      </div>
-      <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
-        <div class="grid grid-cols-2 gap-2">
-          <p>ID:</p>
-          <p id="display-id" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <p>Customer Name:</p>
-          <p id="display-full-name" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <p>Phone Number:</p>
-          <p id="display-phone-number" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <p>Email:</p>
-          <p id="display-email" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <p>Reason:</p>
-          <p id="display-reason" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2 mt-4">
-          <p>Description:</p>
-          <p id="display-description" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-
-
-      </div>
-
-      <div class="flex justify-center items-center w-full">
-        <button type="button" class="closeViewBookingModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md mr-2">Close</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- Warning Modal Overlay -->
-  <div id="warning-modal" class="hidden p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-    <div class="bg-white px-4 py-4 rounded-md shadow-lg w-full max-w-sm flex items-center flex-col">
-      <div class="grid grid-cols-4 mb-4">
-        <!-- First child taking 1/4 of the parent's width -->
-        <div class="col-span-1 flex items-center">
-          <div class="flex justify-center items-center col-span-1 bg-[#f9d6a0] rounded-full w-16 h-16">
-            <img class="w-8 h-8" src="./img/icons/triangle-warning.svg" alt="">
-          </div>
-        </div>
-        <!-- Second child taking 3/4 of the parent's width -->
-        <div class="col-span-3">
-          <h1 id="modal-title" class="text-lg font-bold mb-2">Warning!</h1>
-          <p id="modal-message" class="text-md text-gray-500 text-wrap">Do you really want to perform this action?</p>
-        </div>
-      </div>
-
-      <div class="w-full flex justify-end items-center space-x-2 text-sm font-semibold">
-        <button id="confirm-modal" class="bg-[#e69500] border-2 border-solid border-[#e69500] text-white hover:bg-[#cc8400] hover:border-[#cc8400] py-2 px-4 rounded transition">
-          Yes
-        </button>
-        <button id="close-modal" class="bg-white border-2 border-solid border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white py-2 px-4 rounded transition">
-          No
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <script type="module" src="./js/customer-complaint.js"></script>
+  <script type="module" src="./js/complaint-table.js"></script>
 </body>
 
 

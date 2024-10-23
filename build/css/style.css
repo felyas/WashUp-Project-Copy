@@ -620,11 +620,6 @@ video {
   inset: 0px;
 }
 
-.inset-y-0 {
-  top: 0px;
-  bottom: 0px;
-}
-
 .-bottom-5 {
   bottom: -1.25rem;
 }
@@ -701,6 +696,10 @@ video {
   top: 0.25rem;
 }
 
+.top-2 {
+  top: 0.5rem;
+}
+
 .top-4 {
   top: 1rem;
 }
@@ -725,8 +724,12 @@ video {
   top: 5px;
 }
 
-.top-2 {
-  top: 0.5rem;
+.-right-\[4px\] {
+  right: -4px;
+}
+
+.-top-\[4px\] {
+  top: -4px;
 }
 
 .z-0 {
@@ -1856,10 +1859,6 @@ video {
   padding-top: 18rem;
 }
 
-.pr-2 {
-  padding-right: 0.5rem;
-}
-
 .text-left {
   text-align: left;
 }
@@ -1870,6 +1869,10 @@ video {
 
 .text-right {
   text-align: right;
+}
+
+.text-start {
+  text-align: start;
 }
 
 .align-top {

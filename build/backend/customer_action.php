@@ -340,7 +340,7 @@ if (isset($_GET['fetch-feedback'])) {
       }
 
       $output .= '
-            <div class="border border-solid border-polynesian rounded-lg p-4 m-2 flex flex-col items-center ">
+            <div class="border border-solid border-polynesian rounded-lg p-4 m-2 flex flex-col items-center w-full">
                 <div class="mb-4 flex flex-col items-center">
                   <div class="w-full h-auto flex items-center justify-center space-x-2">
                     ' . $starOutput . ' <!-- Output the dynamic stars here -->

@@ -34,22 +34,28 @@ if (isset($_GET['readAll'])) {
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['email'] . '</td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle font-semibold">' . $row['status'] . '</td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle min-w-[150px]">
-                      <div class="flex justify-center space-x-2">
+                      <div class="flex justify-start space-x-2">
                         <a href="#" id="' . $row['complaint_id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
                           <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
                         </a>';
 
-      // Check if the status is "resolved"
-      if ($row['status'] === 'resolved') {
-        // Show delete link if resolved
-        $output .= '<a href="#" id="' . $row['complaint_id'] . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
-                      <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
-                    </a>';
-      } else {
-        // Show resolved link if not resolved
-        $output .= '<a href="#" id="' . $row['complaint_id'] . '" class="px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition resolvedLink">
-                      <img class="w-4 h-4" src="./img/icons/check.svg" alt="resolved">
-                    </a>';
+      // Check if the status is not "resolved"
+      if ($row['status'] !== 'resolved') {
+        // Show delete or resolved link based on the current status
+        if ($row['status'] === 'received') {
+          // Show delete link if the status is "received"
+          $output .= '<a href="#" id="' . $row['complaint_id'] . '" class="px-3 py-2 bg-[#3b7da3] hover:bg-[#316988] rounded-md transition resolvedLink">
+                        <div class="relative h-auto w-auto">
+                          <img class="h-4 w-4" src="./img/icons/recycle.svg" alt="">
+                          <img src="./img/icons/circle-check-solid.svg" class="absolute -top-[4px] -right-[4px] h-3 w-3" alt="">
+                        </div>
+                      </a>';
+        } else {
+          // Show resolved link if the status is not "received"
+          $output .= '<a href="#" id="' . $row['complaint_id'] . '" class="px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition receivedLink">
+                        <img class="w-4 h-4" src="./img/icons/check.svg" alt="resolved">
+                      </a>';
+        }
       }
 
       $output .= '</div></td></tr>';
@@ -95,22 +101,22 @@ if (isset($_GET['read'])) {
 }
 
 // Handle Updating Status from Pendin to Resolved Ajax Request
-if (isset($_GET['resolved'])) {
+if (isset($_GET['onAction'])) {
   $id = $_GET['id'];
 
-  if ($db->resolved($id)) {
+  if ($db->onAction($id)) {
     echo json_encode([
       'status' => 'success',
-      'message' => 'Customer complaint resolved!',
+      'message' => 'Customer complaint received!',
     ]);
   }
 }
 
 // Handle Delete Complaint Record Ajax Record
-if (isset($_GET['delete'])) {
+if (isset($_GET['resolved'])) {
   $id = $_GET['id'];
 
-  if($db->delete($id)) {
+  if ($db->resolved($id)) {
     echo json_encode([
       'status' => 'success',
       'message' => 'Customer complaint record was deleted!',

@@ -60,7 +60,7 @@ session_start();
 
           <div class="relative mb-2">
             <input type="email" class="w-full border border-solid border-federal rounded-lg mb-2 p-2 pr-8" name="email" placeholder="Email: " required>
-            <img src="./img/icons/user-federal.svg" alt="user" class="absolute top-2 right-0 flex items-center pr-3 w-7 h-7 cursor-pointer">
+            <img src="./img/icons/user-federal.svg" alt="user" class="absolute top-2 right-0 flex items-center pr-3 w-7 h-7">
           </div>
 
           <div class="relative mb-2">

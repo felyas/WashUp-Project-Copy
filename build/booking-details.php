@@ -185,6 +185,13 @@ if ($_SESSION['role'] !== 'admin') {
                         PHONE NUMBER
                         <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
                       </th>
+                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">
+                        <select id="service-type-filter" class="ml-2 px-2 py-1 text-sm border border-gray-300 rounded">
+                          <option value="">Service Type: All</option>
+                          <option value="2-days Standard">2-days Standard</option>
+                          <option value="Rush">Rush</option>
+                        </select>
+                      </th>
                       <th data-column="address" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer  relative">
                         ADDRESS
                         <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>

@@ -4,17 +4,29 @@ require_once './db_connection.php';
 
 class Database extends Config
 {
+  // FETCH SPECIFIC USER FROM DATABASE
+  public function user($id)
+  {
+    $sql = "SELECT * FROM users WHERE id = :id";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['id' => $id]);
+    $result = $stmt->fetch();
+
+    return $result;
+  }
 
   // Read All Row from Database with Sorting, Pagination, Search, and Status
-  public function readAll($start, $limit, $column, $order, $query, $status)
+  public function readAll($start, $limit, $column, $order, $query, $status, $service)
   {
     $searchQuery = '%' . $query . '%'; // Adding wildcards for search
     $statusCondition = $status ? 'AND status = :status' : ''; // Check if status filter is applied
+    $serviceCondition = $service ? 'AND service_type = :service_type' : ''; // Check if status filter is applied
 
     // Constructing the SQL query to search and order results
     $sql = "SELECT * FROM booking 
         WHERE (fname LIKE :query OR lname LIKE :query OR phone_number LIKE :query OR address LIKE :query)
-        $statusCondition
+        $statusCondition 
+        $serviceCondition
         ORDER BY $column $order 
         LIMIT :start, :limit";
 
@@ -25,6 +37,9 @@ class Database extends Config
     $stmt->bindValue(':query', $searchQuery, PDO::PARAM_STR);
     if ($status) {
       $stmt->bindValue(':status', $status, PDO::PARAM_STR);
+    }
+    if ($service) {
+      $stmt->bindValue(':service_type', $service, PDO::PARAM_STR);
     }
     $stmt->bindValue(':start', $start, PDO::PARAM_INT);
     $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
@@ -37,15 +52,17 @@ class Database extends Config
   }
 
   // Count total rows for pagination based on the search query and status
-  public function getTotalRows($query, $status)
+  public function getTotalRows($query, $status, $service)
   {
     $searchQuery = '%' . $query . '%'; // Wildcards for search
     $statusCondition = $status ? 'AND status = :status' : ''; // Status condition
+    $serviceCondition = $service ? 'AND service_type = :service_type' : ''; // Status condition
 
     // SQL to count the total number of matching rows
     $sql = "SELECT COUNT(*) as total FROM booking 
             WHERE (fname LIKE :query OR lname LIKE :query OR phone_number LIKE :query OR address LIKE :query)
-            $statusCondition";
+            $statusCondition
+            $serviceCondition";
 
     // Preparing the statement
     $stmt = $this->conn->prepare($sql);
@@ -54,6 +71,9 @@ class Database extends Config
     $stmt->bindValue(':query', $searchQuery, PDO::PARAM_STR);
     if ($status) {
       $stmt->bindValue(':status', $status, PDO::PARAM_STR);
+    } 
+    if ($service) {
+      $stmt->bindValue(':service_type', $service, PDO::PARAM_STR);
     }
 
     // Executing the query
@@ -78,21 +98,23 @@ class Database extends Config
   }
 
   // UPDATE ON PROCESS STATUS FROM DATABASE
-  public function done($id) {
+  public function done($id)
+  {
     $sql = 'UPDATE booking SET status = :status, is_read = :is_read, delivery_is_read = :delivery_is_read WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
       'status' => 'for delivery',
-      'is_read' => 0, 
+      'is_read' => 0,
       'delivery_is_read' => 0,
-      'id' => $id      
+      'id' => $id
     ]);
 
     return true;
   }
 
   // DELETE BOOKING REQUEST FROM DATABASE
-  public function deniedBooking($id) {
+  public function deniedBooking($id)
+  {
     $sql = 'DELETE FROM booking WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute(['id' => $id]);
@@ -100,16 +122,18 @@ class Database extends Config
     return true;
   }
 
-  public function customerInfo($id) {
+  public function customerInfo($id)
+  {
     $sql = 'SELECT * FROM booking WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
-    $stmt->execute(['id' => $id ]);
+    $stmt->execute(['id' => $id]);
     $result = $stmt->fetch();
 
     return $result;
   }
 
-  public function updateInventory($item, $quantity) {
+  public function updateInventory($item, $quantity)
+  {
     $sql = 'UPDATE inventory
             SET quantity = quantity - :quantity
             WHERE product_name = :product_name';
@@ -122,7 +146,8 @@ class Database extends Config
     return true;
   }
 
-  public function updateKiloAndItems($id, $items) {
+  public function updateKiloAndItems($id, $items)
+  {
     $sql = 'UPDATE booking
             SET item_used = :item_used
             WHERE id = :id';
@@ -136,7 +161,8 @@ class Database extends Config
     return true;
   }
 
-  public function getItemQuantity($item) {
+  public function getItemQuantity($item)
+  {
     $sql = 'SELECT quantity FROM inventory WHERE product_name = :product_name';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute(['product_name' => $item]);
@@ -144,5 +170,4 @@ class Database extends Config
 
     return $result ? $result['quantity'] : 0;
   }
-  
 }

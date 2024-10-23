@@ -5,6 +5,17 @@ require_once './db_connection.php';
 class Database extends Config
 {
 
+  // FETCH SPECIFIC USER FROM DATABASE
+  public function user($id)
+  {
+    $sql = "SELECT * FROM users WHERE id = :id";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['id' => $id]);
+    $result = $stmt->fetch();
+
+    return $result;
+  }
+
   // Fetch All Pending Booking with Pagination and Search
   public function fetchPendingsWithPagination($page, $limit, $query)
   {
@@ -170,12 +181,9 @@ class Database extends Config
   }
 
   public function deleteEvent($event_id)
-{
-  $sql = 'DELETE FROM calendar_event_master WHERE event_id = :event_id';
-  $stmt = $this->conn->prepare($sql);
-  return $stmt->execute(['event_id' => $event_id]);
-}
-
-
-  
+  {
+    $sql = 'DELETE FROM calendar_event_master WHERE event_id = :event_id';
+    $stmt = $this->conn->prepare($sql);
+    return $stmt->execute(['event_id' => $event_id]);
+  }
 }

@@ -2,6 +2,26 @@
 
 class Util
 {
+
+  // Method to send an email
+  public function sendEmail($receiver, $subject, $message)
+  {
+    $sender = "From: feelixbragais@gmail.com";
+
+    // Debugging email sending process
+    if (empty($receiver)) {
+      error_log("Receiver email is empty.");
+      return false;
+    }
+
+    if (mail($receiver, $subject, $message, $sender)) {
+      return true;
+    } else {
+      error_log("Mail function failed for $receiver");
+      return false;
+    }
+  }
+
   // Method to sanitize inputs
   public function testInput($data)
   {

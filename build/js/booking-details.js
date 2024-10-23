@@ -47,6 +47,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const paginationContainer = document.getElementById('pagination-container');
   const searchInput = document.getElementById('js-search-bar');
   const statusFilter = document.getElementById('status-filter');
+  const serviceTypeFilter = document.getElementById('service-type-filter');
 
   // Function to toggle sorting icons
   const toggleSortIcon = (th, order) => {
@@ -69,8 +70,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const fetchAll = async (page = 1, column = 'id', order = 'desc', query = '', status = '') => {
     const searchQuery = searchInput.value.trim() || query;
     const statusQuery = status || statusFilter.value; // Get status from dropdown or passed value
+    const serviceQuery = status || serviceTypeFilter.value;
 
-    const data = await fetch(`./backend/booking-details_action.php?readAll=1&page=${page}&column=${column}&order=${order}&query=${searchQuery}&status=${statusQuery}`, {
+    const data = await fetch(`./backend/booking-details_action.php?readAll=1&page=${page}&column=${column}&order=${order}&query=${searchQuery}&status=${statusQuery}&service=${serviceQuery}`, {
       method: 'GET',
     });
     const response = await data.json();
@@ -108,6 +110,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Handle status filter change
   statusFilter.addEventListener('change', () => {
+    fetchAll();
+  });
+
+  // Handle service type filter change
+  serviceTypeFilter.addEventListener('change', () => {
     fetchAll();
   });
 

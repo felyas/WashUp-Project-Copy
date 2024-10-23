@@ -21,10 +21,11 @@ if (isset($_GET['readAll'])) {
   $order = isset($_GET['order']) ? $_GET['order'] : 'desc';  // Sorting order
   $query = isset($_GET['query']) ? $_GET['query'] : ''; // Search query
   $status = isset($_GET['status']) ? $_GET['status'] : ''; // Status filter
+  $service = isset($_GET['service']) ? $_GET['service'] : ''; // Service filter
 
   // Get filtered and paginated bookings
-  $bookings = $db->readAll($start, $limit, $column, $order, $query, $status);
-  $totalRows = $db->getTotalRows($query, $status); // Total rows matching search query and status
+  $bookings = $db->readAll($start, $limit, $column, $order, $query, $status, $service);
+  $totalRows = $db->getTotalRows($query, $status, $service); // Total rows matching search query and status
   $totalPages = ceil($totalRows / $limit);
 
   // Output data
@@ -62,54 +63,59 @@ if (isset($_GET['readAll'])) {
           <td class="px-4 py-2">' . $row['id'] . '</td>
           <td class="px-4 py-2">' . $row['fname'] . ' ' . $row['lname'] . '</td>
           <td class="px-4 py-2">' . $row['phone_number'] . '</td>
+           <td class="px-4 py-2">
+            <div class="w-auto py-1 px-2 font-bold rounded-lg text-start">
+              ' . strtoupper($row['service_type']) . '
+            </div>
+          </td>
           <td class="px-4 py-2">' . $row['address'] . '</td>
           <td class="px-4 py-2 border-b border-left text-sm border-gray-200 align-middle">
             ';
 
-            // Check if 'image_proof' is not empty and display image or fallback text
-            if (!empty($row['image_proof'])) {
-              $output .= '
+      // Check if 'image_proof' is not empty and display image or fallback text
+      if (!empty($row['image_proof'])) {
+        $output .= '
                 <img class="w-12 h-12 cursor-pointer image-proof" src="./backend/' . $row['image_proof'] . '" alt="">
               ';
-            } else {
-              $output .= '
+      } else {
+        $output .= '
                 <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
               ';
-            }
+      }
 
-            $output .= '
+      $output .= '
           </td>
           <td class="px-4 py-2 border-b border-left text-sm border-gray-200 align-middle">
             ';
 
-            // Check if 'delivery_proof' is not empty and display image or fallback text
-            if (!empty($row['delivery_proof'])) {
-              $output .= '
+      // Check if 'delivery_proof' is not empty and display image or fallback text
+      if (!empty($row['delivery_proof'])) {
+        $output .= '
                 <img class="w-12 h-12 cursor-pointer image-proof" src="./backend/' . $row['delivery_proof'] . '" alt="">
               ';
-            } else {
-              $output .= '
+      } else {
+        $output .= '
                 <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
               ';
-            }
+      }
 
-            $output .= '
+      $output .= '
           </td>
           <td class="px-4 py-2 border-b border-left text-sm border-gray-200 align-middle">
             ';
 
-            // Check if 'receipt' is not empty and display image or fallback text
-            if (!empty($row['receipt'])) {
-              $output .= '
+      // Check if 'receipt' is not empty and display image or fallback text
+      if (!empty($row['receipt'])) {
+        $output .= '
                 <img class="w-12 h-12 cursor-pointer image-proof" src="./backend/' . $row['receipt'] . '" alt="">
               ';
-            } else {
-              $output .= '
+      } else {
+        $output .= '
                 <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
               ';
-            }
+      }
 
-            $output .= '
+      $output .= '
           </td>
 
           <td class="px-4 py-2">
@@ -205,9 +211,17 @@ if (isset($_GET['view'])) {
 
 // Handle Done Process Ajax Request
 if (isset($_GET['done'])) {
-  $id = $_GET['id'];
+  $booking_id = $_GET['id'];
+  $id = $db->readOne($booking_id);
+  $user_id = $id['user_id'];
+  $user = $db->user($user_id);
 
-  if ($db->done($id)) {
+  if ($db->done($booking_id)) {
+    $receiver = $user['email'];
+    $subject = "Booking Update";
+    $message = "Your booking with ID " . $booking_id . " has been updated to 'For delivery'.";
+    $util->sendEmail($receiver, $subject, $message);
+
     echo $util->showMessage('successs', 'Booking status updated successfully');
   }
 }

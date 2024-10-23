@@ -5,6 +5,17 @@ require_once './db_connection.php';
 class Database extends Config
 {
 
+  // FETCH SPECIFIC USER FROM DATABASE
+  public function user($id)
+  {
+    $sql = "SELECT * FROM users WHERE id = :id";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['id' => $id]);
+    $result = $stmt->fetch();
+
+    return $result;
+  }
+
   // FETCH ROWS WHO HAS A STATUS OF 'FOR PICK-UP' & 'FOR DELIVERY'
   public function readAll($start, $limit, $column, $order, $query, $status, $date)
   {

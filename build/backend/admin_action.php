@@ -87,18 +87,34 @@ if (isset($_GET['view'])) {
 
 // Handle Admit Booking Ajax Request
 if (isset($_GET['admit'])) {
-  $id = $_GET['id'];
+  $booking_id = $_GET['id'];
+  $id = $db->readOne($booking_id);
+  $user_id = $id['user_id'];
+  $user = $db->user($user_id);
 
-  if ($db->admitBooking($id)) {
+  if ($db->admitBooking($booking_id)) {
+    $receiver = $user['email'];
+    $subject = "Booking Update";
+    $message = "Your booking with ID " . $booking_id . " has been updated to 'For Pickup'.";
+    $util->sendEmail($receiver, $subject, $message);
+
     echo $util->showMessage('success', 'Booking admited successfully');
   }
 }
 
 // Handle Denied Booking Ajax Request
 if (isset($_GET['denied'])) {
-  $id = $_GET['id'];
+  $booking_id = $_GET['id'];
+  $id = $db->readOne($booking_id);
+  $user_id = $id['user_id'];
+  $user = $db->user($user_id);
 
-  if ($db->deniedBooking($id)) {
+  if ($db->deniedBooking($booking_id)) {
+    $receiver = $user['email'];
+    $subject = "Booking Update";
+    $message = "Your booking with ID " . $booking_id . " has been denied due to invalid inputs.";
+    $util->sendEmail($receiver, $subject, $message);
+
     echo $util->showMessage('success', 'Booking denied successfully');
   }
 }
@@ -196,6 +212,3 @@ if (isset($_GET['delete_event'])) {
     echo json_encode(['success' => false, 'message' => 'Failed to delete event.']);
   }
 }
-
-
-

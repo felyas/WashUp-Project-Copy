@@ -201,8 +201,11 @@ if (isset($_GET['info-for-kilo-update'])) {
 }
 
 if (isset($_POST['add-kilo'])) {
-  $id = $util->testInput($_POST['booking_id']);
+  $booking_id = $util->testInput($_POST['booking_id']);
   $kilo = $util->testInput($_POST['kilo']);
+  $id = $db->viewSummary($booking_id);
+  $user_id = $id['user_id'];
+  $user = $db->user($user_id);
 
   // Handle file upload
   $target_dir = "uploads/";
@@ -214,9 +217,14 @@ if (isset($_POST['add-kilo'])) {
     // Move uploaded file to target directory
     if (move_uploaded_file($_FILES["file-upload"]["tmp_name"], $target_file)) {
       // Update booking in the database
-      $result = $db->updateKiloAndProof($id, $kilo, $target_file);
+      $result = $db->updateKiloAndProof($booking_id, $kilo, $target_file);
 
       if ($result === true) {
+        $receiver = $user['email'];
+        $subject = "Booking Update";
+        $message = "The proof of kilo for your booking with ID " . $booking_id . " has been added. We're now processing your laundry.";
+        $util->sendEmail($receiver, $subject, $message);
+
         echo json_encode([
           'status' => 'success',
           'message' => 'Kilo and image updated successfully!'
@@ -250,7 +258,10 @@ if (isset($_GET['info-for-proof-receipt'])) {
 }
 
 if (isset($_POST['add-receipt'])) {
-  $id = $util->testInput($_POST['booking_id']);
+  $booking_id = $util->testInput($_POST['booking_id']);
+  $id = $db->viewSummary($booking_id);
+  $user_id = $id['user_id'];
+  $user = $db->user($user_id);
 
   //Set up file upload directories
   $target_dir = "uploads/receipt/";
@@ -270,9 +281,14 @@ if (isset($_POST['add-receipt'])) {
 
     if ($proof_upload_success && $receipt_upload_success) {
       // Update booking in the database
-      $result = $db->updateProofAndReceipt($id, $proof_file, $receipt_file);
+      $result = $db->updateProofAndReceipt($booking_id, $proof_file, $receipt_file);
 
       if ($result === true) {
+        $receiver = $user['email'];
+        $subject = "Booking Update";
+        $message = "Your booking with ID " . $booking_id . " has been successfully delivered. A receipt and proof of delivery have been sent to your dashboard.";
+        $util->sendEmail($receiver, $subject, $message);
+
         echo json_encode([
           'status' => 'success',
           'message' => 'Delivery proof and receipt updated successfully!',

@@ -132,15 +132,6 @@ if (isset($_GET['view'])) {
 }
 
 // Handle Update Status From Pickup to On Process Ajax Request
-// if (isset($_GET['update-pickup'])) {
-//   $id = $_GET['id'];
-
-//   if ($db->updatePickup($id)) {
-//     echo $util->showMessage('success', 'Status updated successfully');
-//   }
-// }
-
-// Handle Update Status From Pickup to On Process Ajax Request
 if (isset($_GET['update-delivery'])) {
   $id = $_GET['id'];
 
@@ -384,20 +375,49 @@ if (isset($_GET['read-pending'])) {
 
 // Handle Admit Ajax Request
 if (isset($_GET['admit'])) {
-  $id = $_GET['id'];
+  $booking_id = $_GET['id'];
+  $id = $db->viewSummary($booking_id);
+  $user_id = $id['user_id'];
+  $user = $db->user($user_id);
 
-  if ($db->admit($id)) {
-    echo $util->showMessage('success', 'Booking admitted successfully!');
+  if ($db->admit($booking_id)) {
+    $receiver = $user['email'];
+    $subject = "Booking Update";
+    $message = "Your booking with ID " . $booking_id . " was admitted and is now marked as 'For Pickup'.";
+    $util->sendEmail($receiver, $subject, $message);
+
+    echo json_encode([
+      'status' => 'success',
+      'message' => 'Booking admitted successfully',
+    ]);
   }
 }
 
 // Handle Denied Ajax Request
 if (isset($_GET['denied'])) {
-  $id = $_GET['id'];
+  $booking_id = $_GET['id'];
+  $id = $db->viewSummary($booking_id);
+  $user_id = $id['user_id'];
+  $user = $db->user($user_id);
 
-  if ($db->denied($id)) {
-    echo $util->showMessage('success', 'Booking denied successfully!');
+  if ($db->denied($booking_id)) {
+    $receiver = $user['email'];
+    $subject = "Booking Update";
+    $message = "Your booking with ID " . $booking_id . " has been denied due to invalid inputs.";
+    $util->sendEmail($receiver, $subject, $message);
+
+    echo json_encode([
+      'status' => 'success',
+      'message' => 'Booking denied successfully !',
+    ]);
   }
+}
+
+// Handle fetching unavailable times for a specific date
+if (isset($_GET['get_unavailable_times'])) {
+  $date = $_GET['date'];
+  $unavailableTimes = $db->getUnavailableTimesForDate($date);
+  echo json_encode($unavailableTimes);
 }
 
 // Handle fetching unavailable times for a specific date
@@ -421,5 +441,38 @@ if (isset($_POST['update'])) {
 
   if ($db->updateBooking($id, $pickup_date, $pickup_time)) {
     echo $util->showMessage('success', 'Booking updated successfully!');
+  }
+}
+
+// Handle Display Pickup & Deliveries Ajax Request
+if (isset($_GET['pickup-and-deliveries'])) {
+  $timeInterval = isset($_GET['time_interval']) ? intval($_GET['time_interval']) : 30; // default to 30 if not set
+  $pickupAndDeliveries = $db->pickupAndDeliveries($timeInterval);
+  $output = '';
+
+  if ($pickupAndDeliveries) {
+    foreach ($pickupAndDeliveries as $row) {
+      $output .= '
+        <div class="border text-sm border-solid border-celestial rounded-md p-2 flex items-center justify-between w-full mb-2">
+          <div class="flex flex-col items-start">
+            <p>Customer Name:</p>
+            <p>Date & Time:</p>
+            <p>Address:</p>
+            <p>Status:</p>
+          </div>
+          <div class="flex flex-col items-end">
+            <p class="js-customer-fullname">' . $row['fname'] .  ' ' . $row['lname'] . '</p>
+            <p class="js-date-time">' . $row['pickup_date'] .  ' - ' . $row['pickup_time'] . '</p>
+            <p class="js-customer-address">' . $row['address'] . '</p>
+            <p class="js-status">' . $row['status'] . '</p>
+          </div>
+        </div>
+      ';
+    }
+    echo $output;
+  } else {
+    echo '<div class="border text-sm border-solid border-celestial rounded-md p-2 flex items-center justify-center w-full h-full mb-2">
+            <p>No pickup & delivery yet</p>
+          </div>';
   }
 }

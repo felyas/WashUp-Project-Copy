@@ -114,12 +114,12 @@ if (!isset($_SESSION['user_id'])) {
           <div class="grid grid-cols-2 gap-x-4 mb-2 align-top">
             <div class="grid grid-cols-1 justify-start">
               <label for="fname" class="text-sm text-gray-500">First Name</label>
-              <input type="text" name="fname" class="p-2 border border-ashblack rounded-md" value="<?= $_SESSION['first_name'] ?? '' ?>" required>
+              <input id="js-fname" type="text" name="fname" class="p-2 border border-ashblack rounded-md" placeholder="Felix" required>
               <div class="text-red-500 text-sm hidden">First name is required!</div>
             </div>
             <div class="grid grid-cols-1 justify-start">
               <label for="lname" class="text-sm text-gray-500">Last Name</label>
-              <input type="text" name="lname" class="p-2 border border-ashblack rounded-md" value="<?= $_SESSION['last_name'] ?? '' ?>" required>
+              <input id="js-lname" type="text" name="lname" class="p-2 border border-ashblack rounded-md" placeholder="Bragais" required>
               <div class="text-red-500 text-sm hidden">Last name is required!</div>
             </div>
           </div>
@@ -127,12 +127,12 @@ if (!isset($_SESSION['user_id'])) {
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 mb-2">
             <div class="grid grid-cols-1 justify-start">
               <label for="phone_number" class="text-sm text-gray-500">Phone Number</label>
-              <input type="text" name="phone_number" class="p-2 border border-ashblack rounded-md" placeholder="e.g., +63 912 345 6789" required>
+              <input id="js-phone_number" type="text" name="phone_number" class="p-2 border border-ashblack rounded-md" placeholder="e.g., +63 912 345 6789" required>
               <div class="text-red-500 text-sm hidden">Phone number is required!</div>
             </div>
-            <div class="grid grid-cols-1 justify-start">
+            <div class="grid grid-cols-1">
               <label for="address" class="text-sm text-gray-500">Address</label>
-              <input type="text" name="address" class="p-2 border border-ashblack rounded-md" placeholder="e.g., Villa Rizza, Blk 2 Lot 3, Paciano Rizal" required>
+              <input id="js-address" type="text" name="address" class="p-2 border border-ashblack rounded-md" placeholder="e.g., Villa Rizza, Blk 2 Lot 3, Paciano Rizal" required>
               <div class="text-red-500 text-sm hidden">Address is required!</div>
             </div>
           </div>

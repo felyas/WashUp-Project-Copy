@@ -9,18 +9,21 @@ backToDashboardBtn.addEventListener('click', () => {
   window.location.href = './customer-dashboard.php';
 });
 
-// Function to set the minimum date and display the current date in the pick-up date input
+// Function to set the minimum and maximum dates for the pick-up date input
 function setMinDate() {
   const today = new Date();
   const yyyy = today.getFullYear();
   const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
   const dd = String(today.getDate()).padStart(2, '0');
+
   const currentDate = `${yyyy}-${mm}-${dd}`;
+  const lastDayOfYear = `${yyyy}-12-31`; // Last date of the current year
 
   const dateInput = document.getElementById('pickup-date');
 
-  // Set both min and value attributes to today's date
+  // Set both min and max attributes
   dateInput.setAttribute('min', currentDate);
+  dateInput.setAttribute('max', lastDayOfYear);
 }
 
 // Function to generate 20-minute interval time options from 8:00 AM to 9:00 PM, with unavailable times disabled
@@ -79,40 +82,6 @@ function populateTimeOptions(unavailableTimes = []) {
   }
 }
 
-// Previous Code for populateTimeOptions
-// function populateTimeOptions(unavailableTimes = []) {
-//   const selectTime = document.getElementById('pickup-time');
-//   selectTime.innerHTML = ''; // Clear previous options
-
-//   const startTime = 8 * 60; // 8:00 AM in minutes
-//   const endTime = 21 * 60; // 9:00 PM in minutes
-//   const interval = 20; // 20 minutes
-
-//   for (let time = startTime; time <= endTime; time += interval) {
-//     const hours = Math.floor(time / 60);
-//     const minutes = time % 60;
-
-//     const isPM = hours >= 12;
-//     const displayHours = hours % 12 || 12; // Convert to 12-hour format
-//     const displayMinutes = minutes.toString().padStart(2, '0');
-//     const ampm = isPM ? 'PM' : 'AM';
-
-//     const timeFormatted = `${displayHours}:${displayMinutes} ${ampm}`;
-
-//     const option = document.createElement('option');
-//     option.value = timeFormatted;
-//     option.textContent = timeFormatted;
-
-//     // Disable the option if it's in the unavailable times array
-//     if (unavailableTimes.includes(timeFormatted)) {
-//       option.disabled = true; // Disable the option if it's already booked
-//       option.textContent += ' (Unavailable)'; // Append (Unavailable) to the text
-//     }
-
-//     selectTime.appendChild(option);
-//   }
-// }
-
 // Add an event listener to update the time options when the date is changed
 document.getElementById('pickup-date').addEventListener('change', function () {
   populateTimeOptions(); // Call the function to repopulate the time options when the date changes
@@ -123,10 +92,28 @@ document.getElementById('pickup-date').addEventListener('change', function () {
 
 const addBookingForm = document.getElementById('add-booking-form');
 const addBookingBtn = document.getElementById('add-booking-btn');
+const fnameInput = document.getElementById('js-fname');
+const lnameInput = document.getElementById('js-lname');
+const phoneInput = document.getElementById('js-phone_number');
+const addressInput = document.getElementById('js-address');
 // Initialize date/time when the page loads
 document.addEventListener("DOMContentLoaded", () => {
   setMinDate();
   populateTimeOptions();
+
+  // Fetch Previous Data from Previous Booking Ajax Request
+  const previousData = async () => {
+    const data = await fetch(`./backend/customer_action.php?previous-data=1`, {
+      method: 'GET',
+    });
+    const response = await data.json();
+    fnameInput.value = response.fname ?? "";
+    lnameInput.value = response.lname ?? "";
+    phoneInput.value = response.phone_number ?? "";
+    addressInput.value = response.address ?? "";
+
+  }
+  previousData();
 
   document.getElementById('pickup-date').addEventListener('change', async function () {
     const selectedDate = this.value; // Get the selected date
@@ -159,11 +146,34 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  // Function to validate a phone number in the format 09691026692
+  const isPhoneNumberValid = (phoneNumber) => {
+    // Check if the phone number starts with 09 and has exactly 11 digits
+    const phoneRegex = /^09\d{9}$/;
+    return phoneRegex.test(phoneNumber);
+  };
+
+
   addBookingForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const formData = new FormData(addBookingForm);
     formData.append('add', 1);
+
+    const phoneInput = document.getElementById('js-phone_number');
+    const phoneFeedback = phoneInput.nextElementSibling; // Feedback element for phone number
+
+    // Validate the phone number format
+    if (!isPhoneNumberValid(phoneInput.value)) {
+      phoneInput.classList.add('border-red-500');
+      phoneFeedback.classList.remove('hidden');
+      phoneFeedback.textContent = 'Phone number must be a valid 11-digit number';
+      document.querySelector('#top').scrollIntoView({ behavior: 'smooth' });
+      return;
+    } else {
+      phoneInput.classList.remove('border-red-500');
+      phoneFeedback.classList.add('hidden');
+    }
 
     if (addBookingForm.checkValidity() === false) {
       e.stopPropagation();
@@ -185,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         }
       });
-      // Scroll to the top of the page smoothly
+
       document.querySelector('#top').scrollIntoView({ behavior: 'smooth' });
       const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
       errorWarningModal.show();
@@ -201,21 +211,20 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await data.text();
 
       if (response.includes('success')) {
-        const green600 = '#047857';
-        const green700 = '#065f46';
-        showToaster('Your booking has been placed !', 'check', green600, green700);
+        showToaster('Your booking has been placed!', 'check', '#047857', '#065f46');
 
-        // Disable the submit button to prevent further clicks
         addBookingBtn.disabled = true;
-        addBookingBtn.classList.add('opacity-50', 'cursor-not-allowed'); // Optionally change the button style
+        addBookingBtn.classList.add('opacity-50', 'cursor-not-allowed');
         window.location.href = './customer-dashboard.php';
 
       } else {
-        const red600 = '#d95f5f';
-        const red700 = '#c93c3c';
-        showToaster('Something went wrong !', 'exclamation-error', red600, red700);
+        showToaster('Something went wrong!', 'exclamation-error', '#d95f5f', '#c93c3c');
       }
     }
   });
+
+
+
+
 });
 

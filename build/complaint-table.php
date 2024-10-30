@@ -100,7 +100,7 @@ if ($_SESSION['role'] !== 'user') {
                 </button>
 
                 <!-- Notification Dropdown -->
-                <div class="js-notification hidden h-auto w-96 z-50 absolute top-[52px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
+                <div class="js-notification hidden h-auto min-w-72 sm:w-96 z-50 absolute top-[54px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
                   <div class="w-full p-4 flex items-center justify-between">
                     <h1 class="text- text-lg font-semibold">Notification</h1>
                     <p class="js-total-notifications"><!-- Dynamic Total Notification  -->0</p>
@@ -138,7 +138,7 @@ if ($_SESSION['role'] !== 'user') {
         <!--List-->
         <div class="h-auto w-full grid grid-cols-1 gap-2 text-sm mb-4">
           <!-- First div taking 3/4 of the width on large screens -->
-          <div class="h-auto w-full rounded-sm bg-white border border-solid border-gray-200 shadow-md">
+          <div class="w-full h-auto rounded-sm bg-white border border-solid border-gray-200 shadow-md">
             <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
               <p class="text-md font-semibold text-ashblack py-2">CUSTOMER COMPLAINTS</p>
               <div class="flex justify-between items-center relative">
@@ -148,8 +148,8 @@ if ($_SESSION['role'] !== 'user') {
                 </button>
               </div>
             </div>
-            <div class="overflow-x-auto h-auto px-2">
-              <table id="complaint-list" class="text-nowrap w-full text-left text-ashblack border-collapse border border-solid border-gray-200">
+            <div class="overflow-x-auto min-h-72 px-2">
+              <table id="complaint-list" class="text-nowrap w-full h-full text-left text-ashblack border-collapse border border-solid border-gray-200">
                 <thead class="bg-gray-200">
                   <tr>
                     <th data-column="complaint_id" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
@@ -169,7 +169,7 @@ if ($_SESSION['role'] !== 'user') {
                       <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
                     </th>
                     <th data-column="email" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
-                      ADDRESS
+                      EMAIL
                       <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
                     </th>
                     <!-- Adding the status dropdown filter -->
@@ -217,6 +217,88 @@ if ($_SESSION['role'] !== 'user') {
           </div>
         </div>
       </main>
+    </div>
+  </div>
+
+
+
+
+
+  <!-- Modal for View -->
+  <div class="toViewBookingModal p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
+    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2 max-h-96 overflow-y-auto">
+      <div class="w-full h-auto py-2 flex flex-col items-center text-nowrap text-gray-500">
+        <h4 class="text-lg font-bold">CUSTOMER COMPLAINT</h4>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 mb-4 text-gray-500">
+        <div class="flex justify-start">
+          <p class="text-sm">Date: </p>
+        </div>
+        <div class="flex justify-end">
+          <p id="created_at" class="text-sm"><!-- Dynamic Date --></p>
+        </div>
+      </div>
+      <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
+        <div class="grid grid-cols-2 gap-2">
+          <p>ID:</p>
+          <p id="display-id" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Customer Name:</p>
+          <p id="display-full-name" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Phone Number:</p>
+          <p id="display-phone-number" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Email:</p>
+          <p id="display-email" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>Reason:</p>
+          <p id="display-reason" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2 mt-4">
+          <p>Description:</p>
+          <p id="display-description" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+
+
+      </div>
+
+      <div class="flex justify-center items-center w-full">
+        <button type="button" class="closeViewBookingModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md mr-2">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Warning Modal Overlay -->
+  <div id="warning-modal" class="hidden p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+    <div class="bg-white px-4 py-4 rounded-md shadow-lg w-full max-w-sm flex items-center flex-col">
+      <div class="grid grid-cols-4 mb-4">
+        <!-- First child taking 1/4 of the parent's width -->
+        <div class="col-span-1 flex items-center">
+          <div class="flex justify-center items-center col-span-1 bg-[#f9d6a0] rounded-full w-16 h-16">
+            <img class="w-8 h-8" src="./img/icons/triangle-warning.svg" alt="">
+          </div>
+        </div>
+        <!-- Second child taking 3/4 of the parent's width -->
+        <div class="col-span-3">
+          <h1 id="modal-title" class="text-lg font-bold mb-2">Warning!</h1>
+          <p id="modal-message" class="text-md text-gray-500 text-wrap">Do you really want to perform this action?</p>
+        </div>
+      </div>
+
+      <div class="w-full flex justify-end items-center space-x-2 text-sm font-semibold">
+        <button id="confirm-modal" class="bg-[#e69500] border-2 border-solid border-[#e69500] text-white hover:bg-[#cc8400] hover:border-[#cc8400] py-2 px-4 rounded transition">
+          Yes
+        </button>
+        <button id="close-modal" class="bg-white border-2 border-solid border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white py-2 px-4 rounded transition">
+          No
+        </button>
+      </div>
     </div>
   </div>
 

@@ -7,6 +7,20 @@ require_once './utils/util.php';
 $db = new Database();
 $util = new Util();
 
+// HANDLE PREVIOUS DATA AJAX REQUEST
+if (isset($_GET['previous-data'])) {
+  $user_id = $_SESSION['user_id'];
+
+  $data = $db->previousData($user_id);
+  if($data) {
+    echo json_encode($data);
+  } else {
+    echo json_encode([
+      'status' => 'no data',
+    ]);
+  }
+}
+
 // Handle Add New Booking Ajax Request
 if (isset($_POST['add'])) {
 

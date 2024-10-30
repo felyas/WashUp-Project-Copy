@@ -117,7 +117,7 @@ if ($_SESSION['role'] !== 'admin') {
                 </button>
 
                 <!-- Notification Dropdown -->
-                <div class="js-notification hidden h-auto w-96 z-50 absolute top-[52px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
+                <div class="js-notification hidden h-auto min-w-72 sm:w-96 z-50 absolute top-[54px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
                   <div class="w-full p-4 flex items-center justify-between">
                     <h1 class="text- text-lg font-semibold">Notification</h1>
                     <p class="js-total-notifications"><!-- Dynamic Total Notification  -->0</p>

@@ -201,6 +201,14 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
+  validateForm(editBookingForm);
+  // Function to validate a phone number in the format 09691026692
+  const isPhoneNumberValid = (phoneNumber) => {
+    // Check if the phone number starts with 09 and has exactly 11 digits
+    const phoneRegex = /^09\d{9}$/;
+    return phoneRegex.test(phoneNumber);
+  };
+
   // Update Booking Ajax Request
   editBookingForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -208,22 +216,39 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData(editBookingForm);
     formData.append('update', 1);
 
+    const phoneInput = document.getElementById('phone_number');
+    const phoneFeedback = phoneInput.nextElementSibling;
+
+    // Validate the phone number format
+    if (!isPhoneNumberValid(phoneInput.value)) {
+      phoneInput.classList.add('border-red-500');
+      phoneFeedback.classList.remove('hidden');
+      phoneFeedback.textContent = 'Phone number must be a valid 11-digit number';
+      return;
+    } else {
+      phoneInput.classList.remove('border-red-500');
+      phoneFeedback.classList.add('hidden');
+    }
+
     // Form validation
     if (editBookingForm.checkValidity() === false) {
       e.stopPropagation();
 
       // Add validation error handling
       [...editBookingForm.elements].forEach((input) => {
-        const feedback = input.nextElementSibling;
+        if (input.tagName === 'INPUT' && (input.type === 'text' || input.type === 'number')) {
+          const feedback = input.nextElementSibling;
 
-        if (input.tagName === 'INPUT' && (input.type === 'text' || input.type === 'date' || input.type === 'time')) {
-          // Handle text input validation feedback
           if (!input.checkValidity()) {
             input.classList.add('border-red-500');
-            feedback.classList.remove('hidden');
+            if (feedback && feedback.classList.contains('text-red-500')) {
+              feedback.classList.remove('hidden');
+            }
           } else {
             input.classList.remove('border-red-500');
-            feedback.classList.add('hidden');
+            if (feedback && feedback.classList.contains('text-red-500')) {
+              feedback.classList.add('hidden');
+            }
           }
         }
       });
@@ -231,6 +256,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
       errorWarningModal.show();
       return false;
+
     } else {
       document.getElementById('edit-booking-btn').value = 'Please Wait...';
 
@@ -364,6 +390,7 @@ document.addEventListener("DOMContentLoaded", () => {
         fetchAllBookings();
         fetchBookingCounts();
       } else {
+        totalNotificationsElement.innerText = '0';
         notificationDot.classList.add('hidden');
       }
 
@@ -566,7 +593,7 @@ document.addEventListener("DOMContentLoaded", () => {
       body: formData,
     });
     const response = await data.json();
-    if(response.status === 'success') {
+    if (response.status === 'success') {
       submitFeedbackBtn.value = 'Submit';
       showToaster(response.message, 'check', '#047857', '#065f46');
       feedbackForm.reset();

@@ -7,6 +7,86 @@ openModal('updateKiloTrigger', 'toUpdateKiloModal', 'closeUpdateKiloModal', 'clo
 openModal('updateProofOfDeliveryTrigger', 'toUpdateDeliveryProofModal', 'closeUpdateDeliveryProofModal', 'closeUpdateDeliveryProofModal2');
 openModal('editModalTrigger', 'toEditBookingModal', 'closeEditBookingModal', 'closeEditBookingModal2');
 
+// Function to set the minimum and maximum dates for the pick-up date input
+function setMinDate() {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+  const dd = String(today.getDate()).padStart(2, '0');
+
+  const currentDate = `${yyyy}-${mm}-${dd}`;
+  const lastDayOfYear = `${yyyy}-12-31`; // Last date of the current year
+
+  const dateInput = document.getElementById('pickup-date');
+
+  // Set both min and max attributes
+  dateInput.setAttribute('min', currentDate);
+  dateInput.setAttribute('max', lastDayOfYear);
+}
+
+// Function to generate 20-minute interval time options from 8:00 AM to 9:00 PM, with unavailable times disabled
+function populateTimeOptions(unavailableTimes = []) {
+  const selectTime = document.getElementById('pickup-time');
+  selectTime.innerHTML = ''; // Clear previous options
+
+  const startTime = 8 * 60; // 8:00 AM in minutes
+  const endTime = 21 * 60; // 9:00 PM in minutes
+  const interval = 20; // 20 minutes
+
+  // Get the current date and time
+  const currentDate = new Date();
+  const currentDay = currentDate.getDate();
+  const currentMonth = currentDate.getMonth(); // Zero-indexed months
+  const currentYear = currentDate.getFullYear();
+  const currentTimeInMinutes = currentDate.getHours() * 60 + currentDate.getMinutes(); // Current time in minutes
+
+  // Get the selected date from the date input
+  const selectedDate = new Date(document.getElementById('pickup-date').value);
+  const isToday = selectedDate.getDate() === currentDay &&
+    selectedDate.getMonth() === currentMonth &&
+    selectedDate.getFullYear() === currentYear;
+
+  for (let time = startTime; time <= endTime; time += interval) {
+    const hours = Math.floor(time / 60);
+    const minutes = time % 60;
+
+    const isPM = hours >= 12;
+    const displayHours = hours % 12 || 12; // Convert to 12-hour format
+    const displayMinutes = minutes.toString().padStart(2, '0');
+    const ampm = isPM ? 'PM' : 'AM';
+
+    const timeFormatted = `${displayHours}:${displayMinutes} ${ampm}`;
+
+    const option = document.createElement('option');
+    option.value = timeFormatted;
+    option.textContent = timeFormatted;
+
+    // Disable the option if it's in the unavailable times array
+    if (unavailableTimes.includes(timeFormatted)) {
+      option.disabled = true;
+      option.textContent += ' (Unavailable)';
+    }
+
+    // Only apply past hour restriction if the selected date is today
+    if (isToday) {
+      const todayTime = new Date(currentYear, currentMonth, currentDay, hours, minutes); // Time being checked
+      if (todayTime < currentDate) {
+        option.disabled = true;
+        option.textContent += ' (Past)';
+      }
+    }
+
+    selectTime.appendChild(option);
+  }
+}
+// Add an event listener to update the time options when the date is changed
+document.getElementById('pickup-date').addEventListener('change', function () {
+  populateTimeOptions(); // Call the function to repopulate the time options when the date changes
+});
+
+
+
+
 
 // Handle the input validation from add items
 function validateForm(form) {
@@ -29,53 +109,39 @@ function validateForm(form) {
   });
 }
 
-// Function to set the minimum date and display the current date in the pick-up date input
-function setMinDate() {
-  const today = new Date();
-  const yyyy = today.getFullYear();
-  const mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-  const dd = String(today.getDate()).padStart(2, '0');
-  const currentDate = `${yyyy}-${mm}-${dd}`;
-
-  const dateInput = document.getElementById('pickup-date');
-
-  // Set both min and value attributes to today's date
-  dateInput.setAttribute('min', currentDate);
-}
-
 // Function to generate 20-minute interval time options from 8:00 AM to 9:00 PM, with unavailable times disabled
-function populateTimeOptions(unavailableTimes = []) {
-  const selectTime = document.getElementById('pickup-time');
-  selectTime.innerHTML = ''; // Clear previous options
+// function populateTimeOptions(unavailableTimes = []) {
+//   const selectTime = document.getElementById('pickup-time');
+//   selectTime.innerHTML = ''; // Clear previous options
 
-  const startTime = 8 * 60; // 8:00 AM in minutes
-  const endTime = 21 * 60; // 9:00 PM in minutes
-  const interval = 20; // 20 minutes
+//   const startTime = 8 * 60; // 8:00 AM in minutes
+//   const endTime = 21 * 60; // 9:00 PM in minutes
+//   const interval = 20; // 20 minutes
 
-  for (let time = startTime; time <= endTime; time += interval) {
-    const hours = Math.floor(time / 60);
-    const minutes = time % 60;
+//   for (let time = startTime; time <= endTime; time += interval) {
+//     const hours = Math.floor(time / 60);
+//     const minutes = time % 60;
 
-    const isPM = hours >= 12;
-    const displayHours = hours % 12 || 12; // Convert to 12-hour format
-    const displayMinutes = minutes.toString().padStart(2, '0');
-    const ampm = isPM ? 'PM' : 'AM';
+//     const isPM = hours >= 12;
+//     const displayHours = hours % 12 || 12; // Convert to 12-hour format
+//     const displayMinutes = minutes.toString().padStart(2, '0');
+//     const ampm = isPM ? 'PM' : 'AM';
 
-    const timeFormatted = `${displayHours}:${displayMinutes} ${ampm}`;
+//     const timeFormatted = `${displayHours}:${displayMinutes} ${ampm}`;
 
-    const option = document.createElement('option');
-    option.value = timeFormatted;
-    option.textContent = timeFormatted;
+//     const option = document.createElement('option');
+//     option.value = timeFormatted;
+//     option.textContent = timeFormatted;
 
-    // Disable the option if it's in the unavailable times array
-    if (unavailableTimes.includes(timeFormatted)) {
-      option.disabled = true; // Disable the option if it's already booked
-      option.textContent += ' (Unavailable)'; // Append (Unavailable) to the text
-    }
+//     // Disable the option if it's in the unavailable times array
+//     if (unavailableTimes.includes(timeFormatted)) {
+//       option.disabled = true; // Disable the option if it's already booked
+//       option.textContent += ' (Unavailable)'; // Append (Unavailable) to the text
+//     }
 
-    selectTime.appendChild(option);
-  }
-}
+//     selectTime.appendChild(option);
+//   }
+// }
 
 document.addEventListener("DOMContentLoaded", () => {
   const tbody = document.getElementById('users-booking-list');
@@ -115,7 +181,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // Fetch All items with pagination, search, sorting, and filtering
   const dateFilter = document.getElementById('date-filter');
   let currentDateFilter = '';
-  
+
   const fetchAll = async (page = 1, column = 'id', order = 'desc', query = '') => {
     const searchQuery = searchInput.value.trim() || query;
     const statusQuery = status || statusFilter.value; // Get status from dropdown or passed value
@@ -255,6 +321,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('display-phone-number-editInfo').innerText = response.phone_number;
   }
 
+
   const editForm = document.getElementById('edit-booking-form');
 
   editForm.addEventListener('submit', async (e) => {
@@ -312,12 +379,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = await fetch(`./backend/delivery_action.php?admit=1&id=${id}`, {
       method: 'GET',
     });
-    const response = await data.text();
-    if (response.includes('success')) {
+    const response = await data.json();
+    if (response.status === 'success') {
       showToaster('Booking admitted successfully !', 'check', '#047857', '#065f46');
       fetchAll();
       fetchAllPendingBooking();
       fetchBookingCounts();
+    } else {
+      showToaster('Something went wrong!', 'exclamation-error', '#dc2626', '#b91c1c');
     }
   }
 
@@ -325,12 +394,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const data = await fetch(`./backend/delivery_action.php?denied=1&id=${id}`, {
       method: 'GET',
     });
-    const response = await data.text();
-    if (response.includes('success')) {
-      showToaster('Booking denied !', 'check', '#047857', '#065f46');
+    const response = await data.json();
+    if (response.status === 'success') {
+      showToaster(response.message, 'check', '#047857', '#065f46');
       fetchAll();
       fetchAllPendingBooking();
       fetchBookingCounts();
+    } else {
+      showToaster('Something went wrong!', 'exclamation-error', '#dc2626', '#b91c1c');
     }
   }
 
@@ -729,6 +800,23 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //Initial Fetch
   fetchAllPendingBooking();
+
+  // Listen for changes on the dropdown and call displayPickupAndDeliveries with selected time
+  document.querySelector("select[name='time']").addEventListener("change", (event) => {
+    const selectedTime = parseInt(event.target.value) || 30; // default to 30 minutes if none selected
+    displayPickupAndDeliveries(selectedTime);
+  });
+
+  const displayPickupAndDeliveries = async (timeInterval = 30) => {
+    const data = await fetch(`./backend/delivery_action.php?pickup-and-deliveries=1&time_interval=${timeInterval}`, {
+      method: 'GET',
+    });
+    const response = await data.text();
+    const datetimeElm = document.getElementById('delivery-displays');
+    datetimeElm.innerHTML = response;
+  };
+  displayPickupAndDeliveries(); // initial call with default 30 minutes
+
 
 
 });

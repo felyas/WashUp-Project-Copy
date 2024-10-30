@@ -197,6 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
           notificationDot.classList.remove('hidden');  // Show red dot
 
         } else {
+          totalNotificationsElement.innerText = '0';
           notificationDot.classList.add('hidden');  // Hide red dot if no new notifications
         }
 

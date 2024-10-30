@@ -100,7 +100,7 @@ if ($_SESSION['role'] !== 'delivery') {
                 </button>
 
                 <!-- Notification Dropdown -->
-                <div class="js-notification hidden h-auto w-96 z-50 absolute top-[52px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
+                <div class="js-notification hidden h-auto min-w-72 sm:w-96 z-50 absolute top-[54px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
                   <div class="w-full p-4 flex items-center justify-between">
                     <h1 class="text- text-lg font-semibold">Notification</h1>
                     <p class="js-total-notifications"><!-- Dynamic Total Notification  -->0</p>
@@ -197,9 +197,8 @@ if ($_SESSION['role'] !== 'delivery') {
         </div>
 
         <!--List-->
-        <div class="h-96 w-full grid grid-cols-1 gap-2 text-sm mb-4">
-          <!-- First div taking 3/4 of the width on large screens -->
-          <div class="h-auto w-full rounded-sm bg-white border border-solid border-gray-200 shadow-md">
+        <div class="w-full h-auto grid grid-cols-1 lg:grid-cols-2 mt-16 md:mt-20 gap-y-2 sm:gap-2 text-sm mb-4">
+          <div class="w-full border border-solid border-gray-200 shadow-md">
             <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
               <p class="text-md font-semibold text-ashblack py-2">MANAGE BOOKING</p>
               <div class="flex justify-between items-center relative">
@@ -281,8 +280,26 @@ if ($_SESSION['role'] !== 'delivery') {
             <div id="pagination-container" class="w-full py-2 justify-center items-center flex text-sm">
             </div>
           </div>
+
+          <div class="h-72 md:h-auto w-full bg-white border border-solid border-gray-200 shadow-md">
+            <div class="border-b border-solid border-gray-200 p-2 flex items-center justify-between w-full">
+              <p class="text-md sm: text-lg font-semibold text-ashblack ">Pickup & Deliveries</p>
+              <div class="p-1 border border-solid border-celestial rounded-md">
+                <select name="time" id="">
+                  <option value="30">30 minutes</option>
+                  <option value="20">20 minutes</option>
+                  <option value="10">10 minutes</option>
+                </select>
+              </div>
+            </div>
+            <div id="delivery-displays" class="flex flex-col items-center p-2 max-h-60 lg:max-h-96 overflow-y-auto">
+              <!-- Dynamic Data -->
+            </div>
+          </div>
         </div>
 
+
+        <!-- Second List -->
         <div class="w-full h-auto grid grid-cols-1 lg:grid-cols-4 mt-16 md:mt-20 gap-y-2 sm:gap-2 text-sm mb-4">
           <div class="w-full col-span-3 border border-solid border-gray-200 shadow-md">
             <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
@@ -308,12 +325,12 @@ if ($_SESSION['role'] !== 'delivery') {
                   <!-- Dynamic Data -->
                 </tbody>
               </table>
-              <div id="pagination-container-pending" class="bg-white w-full p-4 mb-4 justify-center items-center flex text-sm">
-                <!-- Pagination links will be populated here -->
-              </div>
             </div>
-
+            <div id="pagination-container-pending" class="bg-white w-full p-2 justify-center items-center flex text-sm">
+              <!-- Pagination links will be populated here -->
+            </div>
           </div>
+
           <div class="col-span-1 h-72 md:h-auto lg:col-span-1 w-full bg-white border border-solid border-gray-200 shadow-md p-2">
             <div id="calendar">
               <!-- Calendar goes here -->

@@ -5,6 +5,18 @@ require_once './db_connection.php';
 class Database extends Config
 {
 
+  // FETCH PREVIOUS DATA FROM DATABASE
+  public function previousData($user_id)
+  {
+    $sql = 'SELECT * FROM booking WHERE user_id = :user_id ORDER BY created_at DESC LIMIT 1';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['user_id' => $user_id]);
+    $result = $stmt->fetch();
+
+    return $result;
+  }
+
+
   // Insert New Booking Into Database
   public function insertBooking($user_id, $fname, $lname, $phone_number, $address, $pickup_date, $pickup_time, $service_selection, $suggestions, $service_type)
   {
@@ -204,7 +216,8 @@ class Database extends Config
   }
 
   // Add New Complain Request to DATABASE
-  public function addComplaint($user_id, $first_name, $last_name, $phone_number, $email, $reason, $description){
+  public function addComplaint($user_id, $first_name, $last_name, $phone_number, $email, $reason, $description)
+  {
     $sql = 'INSERT INTO complaints (user_id, first_name, last_name, phone_number, email, reason, description) VALUES (:user_id, :first_name, :last_name, :phone_number, :email, :reason, :description)';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
@@ -221,7 +234,8 @@ class Database extends Config
   }
 
   // INSERT NEW FEEDBACK INTO DATABASE
-  public function insertFeedback($user_id, $first_name, $last_name, $rating, $description) {
+  public function insertFeedback($user_id, $first_name, $last_name, $rating, $description)
+  {
     $sql = 'INSERT INTO feedback (user_id, first_name, last_name, rating, description) VALUES (:user_id, :first_name, :last_name, :rating, :description)';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
@@ -236,7 +250,8 @@ class Database extends Config
   }
 
   // FETCH 3 FEEDBACK FROM DARATABASE
-  public function fetchFeedback(){
+  public function fetchFeedback()
+  {
     $sql = 'SELECT * FROM feedback ORDER BY id DESC LIMIT 3';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute();
@@ -244,5 +259,4 @@ class Database extends Config
 
     return $result;
   }
-
 }

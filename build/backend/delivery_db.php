@@ -103,20 +103,6 @@ class Database extends Config
   }
 
   // UPDATE PICKUP STATUS FROM DATABASE
-  // public function updatePickup($id)
-  // {
-  //   $sql = 'UPDATE booking SET status = :status, is_read = :is_read WHERE id = :id';
-  //   $stmt = $this->conn->prepare($sql);
-  //   $stmt->execute([
-  //     'status' => 'on process',
-  //     'is_read' => 0,
-  //     'id' => $id
-  //   ]);
-
-  //   return true;
-  // }
-
-  // UPDATE PICKUP STATUS FROM DATABASE
   public function updateDelivery($id)
   {
     $sql = 'UPDATE booking SET status = :status, is_read = :is_read WHERE id = :id';
@@ -296,5 +282,28 @@ class Database extends Config
     ]);
 
     return true;
+  }
+
+  public function pickupAndDeliveries($timeInterval)
+  {
+    $sql = "
+        SELECT * FROM booking 
+        WHERE (status = 'for pick-up' OR status = 'for delivery')
+          AND pickup_date = CURDATE() -- Only today's bookings
+          AND TIMESTAMPDIFF(
+              MINUTE,
+              NOW(),
+              CONCAT(pickup_date, ' ', STR_TO_DATE(pickup_time, '%h:%i %p'))
+          ) <= :timeInterval
+          AND TIMESTAMPDIFF(
+              MINUTE,
+              NOW(),
+              CONCAT(pickup_date, ' ', STR_TO_DATE(pickup_time, '%h:%i %p'))
+          ) >= 0
+    ";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindParam(':timeInterval', $timeInterval, PDO::PARAM_INT);
+    $stmt->execute();
+    return $stmt->fetchAll();
   }
 }

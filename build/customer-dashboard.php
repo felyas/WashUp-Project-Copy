@@ -97,7 +97,7 @@ if ($_SESSION['role'] !== 'user') {
                 </button>
 
                 <!-- Notification Dropdown -->
-                <div class="js-notification hidden h-auto w-96 z-10000 absolute top-[52px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
+                <div class="js-notification hidden h-auto min-w-72 sm:w-96 z-50 absolute top-[54px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
                   <div class="w-full p-4 flex items-center justify-between">
                     <h1 class="text- text-lg font-semibold">Notification</h1>
                     <p class="js-total-notifications"><!-- Dynamic Total Notification  -->0</p>
@@ -421,28 +421,28 @@ if ($_SESSION['role'] !== 'user') {
           </svg>
         </button>
       </div>
-      <form id="edit-booking-form" class="mt-4">
+      <form id="edit-booking-form" class="mt-4" novalidate>
         <input type="hidden" name="id" id="id">
         <div class="grid grid-cols-2 gap-2">
           <div class="mb-4">
             <label for="fname" class="block text-sm font-medium text-gray-500">First Name</label>
-            <input type="text" id="fname" name="fname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" First Name: ">
+            <input type="text" id="fname" name="fname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" First Name: " required>
             <div class="text-red-500 text-sm hidden">First name is required!</div>
           </div>
           <div class="mb-4">
             <label for="lname" class="block text-sm font-medium text-gray-500">Last Name</label>
-            <input type="text" id="lname" name="lname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" Last Name: ">
+            <input type="text" id="lname" name="lname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" Last Name: " required>
             <div class="text-red-500 text-sm hidden">Last name is required!</div>
           </div>
         </div>
         <div class="mb-4">
           <label for="phone_number" class="block text-sm font-medium text-gray-500">Phone Number</label>
-          <input type="text" id="phone_number" name="phone_number" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder="e.g., +63 912 345 6789">
+          <input type="text" id="phone_number" name="phone_number" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder="e.g., +63 912 345 6789" required>
           <div class="text-red-500 text-sm hidden">Phone number is required!</div>
         </div>
         <div class="mb-4">
           <label for="address" class="block text-sm font-medium text-gray-500">Address</label>
-          <input type="text" id="address" name="address" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder="e.g., Villa Rizza, Blk 2 Lot 3, Paciano Rizal">
+          <input type="text" id="address" name="address" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder="e.g., Villa Rizza, Blk 2 Lot 3, Paciano Rizal" required>
           <div class="text-red-500 text-sm hidden">Address is required!</div>
         </div>
 

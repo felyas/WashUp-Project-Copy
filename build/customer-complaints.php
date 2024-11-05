@@ -134,7 +134,7 @@ if ($_SESSION['role'] !== 'delivery') {
       <!-- Main Content Area -->
       <main class="flex-1 p-6 relative min-h-screen">
 
-        <div id="toaster" class="fixed top-4 right-4 w-72 sm:w-auto text-wrap hidden text-white shadow-lg z-30">
+        <div id="toaster" class="fixed top-4 right-4 ml-4 text-wrap text-white shadow-lg z-30">
           <!-- Dynamic Toaster Content -->
         </div>
 

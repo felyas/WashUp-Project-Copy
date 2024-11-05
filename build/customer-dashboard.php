@@ -129,7 +129,7 @@ if ($_SESSION['role'] !== 'user') {
 
       <!-- Main Content Area -->
       <!-- Toaster -->
-      <div id="toaster" class="fixed top-4 right-4 hidden text-white shadow-lg z-50">
+      <div id="toaster" class="fixed top-4 right-4 hidden ml-4 text-white shadow-lg z-50">
         <!-- Dynamic Toaster Content -->
       </div>
 
@@ -275,7 +275,7 @@ if ($_SESSION['role'] !== 'user') {
               <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center"> <!-- Added border-b for a clean separation -->
                 <p class="text-md font-semibold text-ashblack py-2">MANAGE BOOKING</p>
                 <div class="flex justify-between items-center relative">
-                  <input id="search-input" type="text" placeholder="Search bookings..." class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
+                  <input id="search-input" type="text" placeholder="Search " class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
                   <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
                     <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
                   </button>
@@ -517,7 +517,7 @@ if ($_SESSION['role'] !== 'user') {
   <!-- Modal for Confirmation -->
   <div class="toConfirmReceiveModal p-2 fixed inset-0 hidden bg-gray-900 bg-opacity-50 flex justify-center items-center z-20">
     <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2">
-      <div class="w-full h-auto py-2 flex flex-col items-center text-nowrap text-gray-500">
+      <div class="w-full h-auto py-2 flex flex-col items-center text-wrap text-gray-500">
         <div class="relative">
           <div class="w-44 h-44 p-4 rounded-full border-8 border-solid border-federal flex items-center justify-center">
             <img class="w-32 h-28" src="./img/original-logo.png" alt="">
@@ -530,7 +530,7 @@ if ($_SESSION['role'] !== 'user') {
         </div>
         <h1 class="text-2xl text-federal font-bold mb-4">Washup Laundry</h1>
 
-        <p class="text-md text-gray-500">Did you receive your laundry with an ID of <span id="bookingId-text"></span>?</p>
+        <p class="text-md text-center text-gray-500">Did you receive your laundry with an ID of <span id="bookingId-text"></span>?</p>
       </div>
 
       <form action="" class="w-full flex justify-center items-center space-x-4">

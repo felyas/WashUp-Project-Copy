@@ -106,19 +106,56 @@ document.addEventListener("DOMContentLoaded", () => {
         const confirmNoBtn = document.getElementById('confirmNo');
 
         confirmYesBtn.addEventListener('click', async () => {
+          // Send confirmation request
           const data = await fetch(`./backend/customer_action.php?confirmYes=1&id=${bookingId}`, {
             method: 'GET',
           });
           const response = await data.text();
-          console.log(response);
+
+          // Check if confirmation was successful
           if (response.includes('success')) {
+            // Hide the modal and refresh bookings
             isReceiveModal.classList.add('hidden');
             fetchAllBookings();
+
+            // Show success toaster
             const green600 = '#047857';
             const green700 = '#065f46';
             showToaster('Booking is completed, thank you so much!', 'check', green600, green700);
+
+            // Now, initialize feedback form submission logic
+            const feedbackForm = document.getElementById('feedback-form');
+            const submitFeedbackBtn = document.getElementById('submit-review');
+
+            feedbackForm.addEventListener('submit', async (e) => {
+              e.preventDefault();
+
+              // Prepare form data for feedback
+              const formData = new FormData(feedbackForm);
+              formData.append('new-feedback', 1);
+              formData.append('booking_id', bookingId);
+              submitFeedbackBtn.value = 'Please wait...';
+
+              // Submit feedback via AJAX request
+              const feedbackResponse = await fetch('./backend/customer_action.php', {
+                method: 'POST',
+                body: formData,
+              });
+              const feedbackResult = await feedbackResponse.json();
+
+              // Handle feedback submission result
+              if (feedbackResult.status === 'success') {
+                submitFeedbackBtn.value = 'Submit';
+                showToaster(feedbackResult.message, 'check', '#047857', '#065f46');
+                feedbackForm.reset();
+                document.querySelector('.toViewFeedbackModal').classList.add('hidden');
+              } else {
+                showToaster('Something went wrong!', 'exclamation-error', '#dc2626', '#b91c1c');
+              }
+            });
           }
-        })
+        });
+
 
         confirmNoBtn.addEventListener('click', async () => {
           const data = await fetch(`./backend/customer_action.php?confirmNo=1&id=${bookingId}`, {
@@ -578,30 +615,30 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
 
-  const feedbackForm = document.getElementById('feedback-form');
-  const submitFeedbackBtn = document.getElementById('submit-review');
-  // Submit Feedback Ajax Request
-  feedbackForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
+  // const feedbackForm = document.getElementById('feedback-form');
+  // const submitFeedbackBtn = document.getElementById('submit-review');
+  // // Submit Feedback Ajax Request
+  // feedbackForm.addEventListener('submit', async (e) => {
+  //   e.preventDefault();
 
-    const formData = new FormData(feedbackForm);
-    formData.append('new-feedback', 1);
-    submitFeedbackBtn.value = 'Please wait...';
+  //   const formData = new FormData(feedbackForm);
+  //   formData.append('new-feedback', 1);
+  //   submitFeedbackBtn.value = 'Please wait...';
 
-    const data = await fetch('./backend/customer_action.php', {
-      method: 'POST',
-      body: formData,
-    });
-    const response = await data.json();
-    if (response.status === 'success') {
-      submitFeedbackBtn.value = 'Submit';
-      showToaster(response.message, 'check', '#047857', '#065f46');
-      feedbackForm.reset();
-      document.querySelector('.toViewFeedbackModal').classList.add('hidden');
-    } else {
-      showToaster('Something went wrong !', 'exclamation-error', '#dc2626', '#b91c1c');
-    }
-  })
+  //   const data = await fetch('./backend/customer_action.php', {
+  //     method: 'POST',
+  //     body: formData,
+  //   });
+  //   const response = await data.json();
+  //   if (response.status === 'success') {
+  //     submitFeedbackBtn.value = 'Submit';
+  //     showToaster(response.message, 'check', '#047857', '#065f46');
+  //     feedbackForm.reset();
+  //     document.querySelector('.toViewFeedbackModal').classList.add('hidden');
+  //   } else {
+  //     showToaster('Something went wrong !', 'exclamation-error', '#dc2626', '#b91c1c');
+  //   }
+  // })
 
   // Fetch Feedback Ajax Request 
   const fetchFeedback = async () => {

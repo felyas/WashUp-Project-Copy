@@ -326,8 +326,13 @@ if (isset($_POST['new-feedback'])) {
   $last_name = $_SESSION['last_name'];
   $rating = $util->testInput($_POST['rating']);
   $description = $util->testInput($_POST['description']);
+  $booking_id = $util->testInput($_POST['booking_id']);
+  
+  // Fetch email and phone number from the latest booking
+  $booking_data = $db->getEmailPhone($user_id);
+  $phone_number = $booking_data['phone_number'];  // Remove $ from key
 
-  if ($db->insertFeedback($user_id, $first_name, $last_name, $rating, $description)) {
+  if ($db->insertFeedback($user_id, $first_name, $last_name, $rating, $description, $booking_id, $phone_number)) {
     echo json_encode([
       'status' => 'success',
       'message' => 'Thank you, your feedback was recorded!',
@@ -339,6 +344,7 @@ if (isset($_POST['new-feedback'])) {
     ]);
   }
 }
+
 
 // Handle Fetch Feedback Ajax Request
 if (isset($_GET['fetch-feedback'])) {

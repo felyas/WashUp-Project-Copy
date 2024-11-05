@@ -234,28 +234,64 @@ class Database extends Config
   }
 
   // INSERT NEW FEEDBACK INTO DATABASE
-  public function insertFeedback($user_id, $first_name, $last_name, $rating, $description)
-  {
-    $sql = 'INSERT INTO feedback (user_id, first_name, last_name, rating, description) VALUES (:user_id, :first_name, :last_name, :rating, :description)';
+  public function insertFeedback($user_id, $first_name, $last_name, $rating, $description, $booking_id, $phone_number)
+{
+    // Determine the value of isGoodReview based on the rating
+    $isGoodReview = $rating >= 3 ? 1 : 0;
+
+    // Insert feedback into the feedback table with the isGoodReview column
+    $sql = 'INSERT INTO feedback (user_id, first_name, last_name, rating, description, isGoodReview, booking_id) 
+            VALUES (:user_id, :first_name, :last_name, :rating, :description, :isGoodReview, :booking_id)';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
-      'user_id' => $user_id,
-      'first_name' => $first_name,
-      'last_name' => $last_name,
-      'rating' => $rating,
-      'description' => $description,
+        'user_id' => $user_id,
+        'first_name' => $first_name,
+        'last_name' => $last_name,
+        'rating' => $rating,
+        'description' => $description,
+        'isGoodReview' => $isGoodReview,
+        'booking_id' => $booking_id,
     ]);
 
+    // If the rating is less than or equal to 2, also insert into the complaint table
+    if ($rating <= 2) {
+        $sqlComplaint = 'INSERT INTO complaints (user_id, first_name, last_name, email, phone_number, reason, description, booking_id) 
+                         VALUES (:user_id, :first_name, :last_name, :email, :phone_number, :reason, :description, :booking_id)';
+        $stmtComplaint = $this->conn->prepare($sqlComplaint);
+        $stmtComplaint->execute([
+            'user_id' => $user_id,
+            'first_name' => $first_name,
+            'last_name' => $last_name,
+            'phone_number' => $phone_number,
+            'reason' => 'Low rate',
+            'email' => 'No Email',
+            'description' => $description,
+            'booking_id' => $booking_id,
+        ]);
+    }
+
     return true;
-  }
+}
+
+
 
   // FETCH 3 FEEDBACK FROM DARATABASE
   public function fetchFeedback()
   {
-    $sql = 'SELECT * FROM feedback ORDER BY id DESC LIMIT 3';
+    $sql = 'SELECT * FROM feedback WHERE isGoodReview = 1 ORDER BY id DESC LIMIT 3';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute();
     $result = $stmt->fetchAll();
+
+    return $result;
+  }
+
+  // GET EMAIL AND PHONE_NUMBER OF USER IN DATABASE
+  public function getEmailPhone($user_id){
+    $sql = 'SELECT * FROM booking WHERE user_id = :user_id ORDER BY created_at DESC LIMIT 1';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['user_id' => $user_id]);
+    $result = $stmt->fetch();
 
     return $result;
   }

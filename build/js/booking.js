@@ -17,14 +17,23 @@ function setMinDate() {
   const dd = String(today.getDate()).padStart(2, '0');
 
   const currentDate = `${yyyy}-${mm}-${dd}`;
-  const lastDayOfYear = `${yyyy}-12-31`; // Last date of the current year
+
+  // Calculate the date 10 days from today
+  const futureDate = new Date(today);
+  futureDate.setDate(today.getDate() + 10);
+  const futureYyyy = futureDate.getFullYear();
+  const futureMm = String(futureDate.getMonth() + 1).padStart(2, '0');
+  const futureDd = String(futureDate.getDate()).padStart(2, '0');
+
+  const maxDate = `${futureYyyy}-${futureMm}-${futureDd}`;
 
   const dateInput = document.getElementById('pickup-date');
 
   // Set both min and max attributes
   dateInput.setAttribute('min', currentDate);
-  dateInput.setAttribute('max', lastDayOfYear);
+  dateInput.setAttribute('max', maxDate);
 }
+
 
 // Function to generate 20-minute interval time options from 8:00 AM to 9:00 PM, with unavailable times disabled
 function populateTimeOptions(unavailableTimes = []) {

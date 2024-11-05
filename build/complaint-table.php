@@ -131,7 +131,7 @@ if ($_SESSION['role'] !== 'user') {
       <!-- Main Content Area -->
       <main class="flex-1 p-6 relative h-full flex items-center justify-center">
 
-        <div id="toaster" class="fixed top-4 right-4 hidden text-white shadow-lg z-30">
+        <div id="toaster" class="fixed top-4 right-4 hidden ml-4 text-white shadow-lg z-30">
           <!-- Dynamic Toaster Content -->
         </div>
 

@@ -1,24 +1,55 @@
 <?php
 
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\SMTP;
+use PHPMailer\PHPMailer\Exception;
+
+require __DIR__ . '/../../../vendor/autoload.php';
+
 class Util
 {
 
-  // Method to send an email
-  public function sendEmail($receiver, $subject, $message)
+  private $mail;
+
+  public function __construct()
   {
-    $sender = "From: feelixbragais@gmail.com";
+    // Initialize PHPMailer
+    $this->mail = new PHPMailer(true);
+    $this->mail->isSMTP();
+    $this->mail->Host = 'smtp.gmail.com';
+    $this->mail->SMTPAuth = true;
+    $this->mail->Username = 'feelixbragais@gmail.com';
+    $this->mail->Password = 'qeqw apte rfpg arzn';
+    $this->mail->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
+    $this->mail->Port = 465;
+    $this->mail->setFrom('feelixbragais@gmail.com', 'Washup Laundry');
+    $this->mail->addReplyTo('feelixbragais@gmail.com', 'Admin');
+    $this->mail->isHTML(true);
+  }
 
-    // Debugging email sending process
-    if (empty($receiver)) {
-      error_log("Receiver email is empty.");
-      return false;
-    }
+  // Method to send an email
+  public function sendEmail($toEmail, $subject, $body)
+  {
+    try {
+      // Set recipient
+      $this->mail->addAddress($toEmail);
 
-    if (mail($receiver, $subject, $message, $sender)) {
-      return true;
-    } else {
-      error_log("Mail function failed for $receiver");
-      return false;
+      // Set email content
+      $this->mail->Subject = $subject;
+      $this->mail->Body = $body;
+
+      // Send email
+      $this->mail->send();
+
+      return [
+        'status' => 'success',
+        'message' => 'Email has been sent successfully',
+      ];
+    } catch (Exception $e) {
+      return [
+        'status' => 'error',
+        'message' => 'Message could not be sent. Mailer Error: ' . $this->mail->ErrorInfo,
+      ];
     }
   }
 

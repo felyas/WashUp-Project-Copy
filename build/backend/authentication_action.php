@@ -68,6 +68,12 @@ if (isset($_POST['signup'])) {
   $password = $_POST['password'];
   $cpassword = $_POST['confirm_password'];
 
+  // Validate email format
+  if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo json_encode(['error' => 'Invalid email format']);
+    exit();
+  }
+
   // Validate passwords lenght
   if (strlen($password) < 8) {
     echo json_encode(['error' => 'Password must be at least 8 characters long']);
@@ -99,9 +105,10 @@ if (isset($_POST['signup'])) {
     $receiver = $email;
     $subject = "Verification Code";
     $body = "Your verification code is: $otp";
-    $sender = "From: feelixbragais@gmail.com";
 
-    if (mail($receiver, $subject, $body, $sender)) {
+    $mailed = $util->sendEmail($receiver, $subject, $body);
+
+    if ($mailed) {
       $_SESSION['email'] = $email;
       echo json_encode(['redirect' => './verify.php']);
       exit();
@@ -210,14 +217,15 @@ if (isset($_POST['forgot-password'])) {
         $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
         $headers .= "From: feelixbragais@gmail.com" . "\r\n";
 
-        if (mail($receiver, $subject, $body, $headers)) {
+        $mailed = $util->sendEmail($receiver, $subject, $body);
+
+        if ($mailed) {
           echo json_encode(['success' => 'Password reset link has been sent to ' . $email]);
           exit();
         } else {
           echo json_encode(['error' => 'Failed to send password reset email, please try again']);
           exit();
         }
-        
       } else {
         echo json_encode(['error' => 'Failed to store reset token, please try again']);
         exit();

@@ -165,7 +165,7 @@ if (!isset($_SESSION['user_id'])) {
               <input type="radio" class="peer sr-only" name="service_selection" value="wash, dry, fold" checked />
               <div class="w-auto max-w-xl rounded-md bg-white px-4 py-2 text-gray-600 ring-2 ring-transparent transition-all hover:shadow peer-checked:text-federal peer-checked:ring-federal peer-checked:ring-offset-2">
                 <div class="flex">
-                  <p class="text-sm font-bold">Wash, Dry, Fold</p>
+                  <p class="text-sm font-bold">Wash, Dry & Fold</p>
                 </div>
               </div>
             </label>
@@ -173,7 +173,7 @@ if (!isset($_SESSION['user_id'])) {
               <input type="radio" class="peer sr-only" name="service_selection" value="wash, dry, press" />
               <div class="w-auto max-w-xl rounded-md bg-white px-4 py-2 text-gray-600 ring-2 ring-transparent transition-all hover:shadow peer-checked:text-federal peer-checked:ring-federal peer-checked:ring-offset-2">
                 <div class="flex">
-                  <p class="text-sm font-bold">Wash, Dry, Press</p>
+                  <p class="text-sm font-bold">Wash, Dry & Press</p>
                 </div>
               </div>
             </label>

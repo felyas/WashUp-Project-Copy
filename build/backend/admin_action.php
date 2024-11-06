@@ -93,6 +93,8 @@ if (isset($_GET['admit'])) {
   $user = $db->user($user_id);
 
   if ($db->admitBooking($booking_id)) {
+    
+
     $receiver = $user['email'];
     $subject = "Booking Update";
     $message = "Your booking with ID " . $booking_id . " has been updated to 'For Pickup'.";

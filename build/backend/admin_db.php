@@ -110,7 +110,7 @@ class Database extends Config
   // Fetch all unread bookings
   public function fetch_new_bookings()
   {
-    $sql = 'SELECT id, created_at FROM booking WHERE admin_is_read = 0 ORDER BY id DESC';
+    $sql = 'SELECT id, created_at FROM booking WHERE new_onprocess = 0 AND status = "on process" ORDER BY id DESC';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute();
 
@@ -123,7 +123,7 @@ class Database extends Config
   // Mark booking as read for admin
   public function mark_admin_booking_as_read($bookingId)
   {
-    $sql = 'UPDATE booking SET admin_is_read = 1 WHERE id = :id';
+    $sql = 'UPDATE booking SET new_onprocess = 1 WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute(['id' => $bookingId]);
   }

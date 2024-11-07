@@ -374,6 +374,8 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   fetchBookingCounts();
 
+  let timeoutId = null; // Variable to store the timeout ID
+
   // Long polling function for fetching notifications
   const fetchNotifications = async (lastCheckTime) => {
     try {
@@ -381,21 +383,20 @@ document.addEventListener("DOMContentLoaded", () => {
       const notifications = await response.json();
 
       const notificationContainer = document.querySelector('.js-notification-messages');
-      const notificationDot = document.querySelector('.js-notification-dot'); // Red dot element
-      const totalNotificationsElement = document.querySelector('.js-total-notifications'); // Total notifications element
+      const notificationDot = document.querySelector('.js-notification-dot');
+      const totalNotificationsElement = document.querySelector('.js-total-notifications');
 
-      // If there are new notifications, display them
       if (notifications.length > 0) {
         // Clear existing messages
-        totalNotificationsElement.innerText = 0;
         notificationContainer.innerHTML = '';
+        totalNotificationsElement.innerText = '0';
 
         // Append each notification to the container
         notifications.forEach(notification => {
           const notificationElement = document.createElement('div');
           notificationElement.classList.add('flex', 'items-center', 'justify-between', 'bg-gray-200', 'mb-1');
 
-          // Check the status and modify the message accordingly
+          // Determine message based on status
           let message;
           if (notification.status === 'on process') {
             message = `The proof of kilo for your booking (ID: ${notification.id}) has been added. We're now processing your laundry.`;
@@ -423,7 +424,7 @@ document.addEventListener("DOMContentLoaded", () => {
         totalNotificationsElement.textContent = notifications.length;
         notificationDot.classList.remove('hidden');
 
-        // Calling other function to update the UI
+        // Update other UI components
         fetchAllBookings();
         fetchBookingCounts();
       } else {
@@ -431,19 +432,58 @@ document.addEventListener("DOMContentLoaded", () => {
         notificationDot.classList.add('hidden');
       }
 
-      // Continue long polling after 5 seconds
-      setTimeout(() => {
-        const currentTimestamp = new Date().toISOString(); // Use current time as last check
+      // Clear the previous timeout if it exists
+      if (timeoutId) {
+        clearTimeout(timeoutId);
+      }
+
+      // Set a new timeout and store its ID
+      timeoutId = setTimeout(() => {
+        const currentTimestamp = new Date().toISOString();
         fetchNotifications(currentTimestamp);
-      }, 10000); // Check every 10 seconds
+      }, 10000);
     } catch (error) {
       console.error('Error fetching notifications:', error);
     }
   };
 
+  // Handle closing individual notifications
+  document.addEventListener('click', async (e) => {
+    if (e.target.classList.contains('js-notification-close')) {
+      const id = e.target.dataset.id;
+
+      try {
+        const response = await fetch(`./backend/customer_action.php?mark_as_read=1&id=${id}`);
+        const result = await response.json();
+
+        if (result.success) {
+          // Remove the notification element
+          e.target.closest('.flex').remove();
+
+          // Update notification count
+          const totalElement = document.querySelector('.js-total-notifications');
+          const currentTotal = parseInt(totalElement.textContent);
+          const newTotal = currentTotal - 1;
+          totalElement.textContent = newTotal;
+
+          // Hide dot if no more notifications
+          if (newTotal === 0) {
+            document.querySelector('.js-notification-dot').classList.add('hidden');
+          }
+
+          // Refresh other UI components
+          fetchAllBookings();
+          fetchBookingCounts();
+        }
+      } catch (error) {
+        console.error('Error marking notification as read:', error);
+      }
+    }
+  });
+
 
   // Initial call to start long polling
-  let initialTimestamp = new Date().toISOString(); // Start with the current time
+  let initialTimestamp = new Date().toISOString();
   fetchNotifications(initialTimestamp);
 
   // Toggle notification dropdown visibility on bell icon click
@@ -457,24 +497,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // Hide the red dot once notifications are viewed
     if (!notificationDropdown.classList.contains('hidden')) {
       notificationDot.classList.add('hidden'); // Hide the red dot
-    }
-  });
-
-  // Handle closing individual notifications
-  document.addEventListener('click', async (e) => {
-    if (e.target.classList.contains('js-notification-close')) {
-      const notificationId = e.target.getAttribute('data-id');
-      e.target.parentElement.remove(); // Remove notification from UI
-
-      // Send a request to the server to mark this notification as read
-      const response = await fetch(`./backend/customer_action.php?mark_as_read=1&id=${notificationId}`);
-      const data = await response.json();
-
-      if (data.success) {
-        console.log('Notification marked as read.');
-      } else {
-        console.error('Failed to mark notification as read.');
-      }
     }
   });
 

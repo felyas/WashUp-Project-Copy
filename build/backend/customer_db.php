@@ -157,12 +157,11 @@ class Database extends Config
 
 
 
-  // Handle marking a notification as read
-  public function mark_as_read($notificationId)
-  {
+  // Mark notification as read method
+  public function mark_as_read($notificationId) {
     $sql = 'UPDATE booking SET is_read = 1 WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
-    $stmt->execute(['id' => $notificationId]);
+    return $stmt->execute(['id' => $notificationId]);
   }
 
   //CAlENDAR READ ALL

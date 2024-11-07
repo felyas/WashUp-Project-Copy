@@ -125,7 +125,7 @@ if ($_SESSION['role'] !== 'admin') {
                   </div>
                   <hr class="w-full py-0">
 
-                  <div class="js-notification-messages p-4 w-full text-wrap">
+                  <div class="js-notification-messages p-2 w-full text-wrap">
                     <!-- Dynamic Real-time Notification -->
 
                     <!-- <div class="p-2 flex items-center justify-between bg-gray-200 mb-1">

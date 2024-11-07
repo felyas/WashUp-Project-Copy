@@ -127,7 +127,7 @@ if (isset($_GET['resolved'])) {
 // HANDLE FETCH TOTAL COUNT FOR CARDS AJAX REQUEST
 if (isset($_GET['count_all'])) {
   // Fetch counts for different statuses
-  $pendingCount = $db->countByStatus('pending');
+  $pendingCount = $db->countByStatus('submitted');
   $resolvedCount = $db->countByStatus('resolved');
 
   // Return the counts as JSON

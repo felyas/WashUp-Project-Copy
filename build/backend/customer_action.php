@@ -252,14 +252,10 @@ if (isset($_GET['fetch_notifications'])) {
 }
 
 // Handle marking notification as read
-if (isset($_GET['mark_as_read'])) {
+if (isset($_GET['mark_as_read']) && isset($_GET['id'])) {
   $notificationId = $_GET['id'];
-
-  // Mark the specific notification as read
-  $db->mark_as_read($notificationId);
-
-  // Send a success response
-  echo json_encode(['success' => true]);
+  $success = $db->mark_as_read($notificationId);
+  echo json_encode(['success' => $success]);
 }
 
 // Handle fetch events Ajax Request

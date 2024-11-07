@@ -208,54 +208,55 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function notificationCopy() {
     // Long polling function for fetching new booking requests
+    let timeoutId; // Variable to store the timeout ID
+
     const fetchNewBookings = async () => {
       try {
         const response = await fetch(`./backend/admin_action.php?fetch_new_bookings=1`);
         const notifications = await response.json();
 
         const notificationContainer = document.querySelector('.js-notification-messages');
-        const notificationDot = document.querySelector('.js-notification-dot'); // Red dot element
-        const totalNotificationsElement = document.querySelector('.js-total-notifications'); // Total notifications element
+        const notificationDot = document.querySelector('.js-notification-dot');
+        const totalNotificationsElement = document.querySelector('.js-total-notifications');
 
-        // If there are new booking notifications, display them
         if (notifications.length > 0) {
-          // Clear existing messages
           notificationContainer.innerHTML = '';
 
-          // Append each notification to the container
           notifications.forEach(notification => {
             const notificationElement = document.createElement('div');
             notificationElement.classList.add('flex', 'items-center', 'justify-between', 'bg-gray-200', 'mb-1');
             notificationElement.innerHTML = `
-            <div class="flex items-center p-4 bg-blue-100 border border-blue-200 rounded-lg shadow-md">
-              <img src="./img/about-bg1.png" alt="Notification Image" class="w-12 h-12 mr-4 rounded-full">
-              <div class="flex-1">
-                <p class="text-sm">
-                  New booking request received 
-                  <span class="font-semibold text-celestial">
-                    (ID: ${notification.id})
-                  </span>
-                </p>
-              </div>
-              <button class="w-12 p-0 border-none font-bold js-notification-close" data-id="${notification.id}">
-                &#10005;
-              </button>
+          <div class="flex items-center p-4 bg-blue-100 border border-blue-200 rounded-lg shadow-md">
+            <img src="./img/about-bg1.png" alt="Notification Image" class="w-12 h-12 mr-4 rounded-full">
+            <div class="flex-1">
+              <p class="text-sm">
+                New booking request received 
+                <span class="font-semibold text-celestial">
+                  (ID: ${notification.id})
+                </span>
+              </p>
             </div>
-          `;
+            <button class="w-12 p-0 border-none font-bold js-notification-close" data-id="${notification.id}">
+              &#10005;
+            </button>
+          </div>
+        `;
             notificationContainer.appendChild(notificationElement);
           });
 
-          // Update total notification count
           totalNotificationsElement.textContent = notifications.length;
-          notificationDot.classList.remove('hidden');  // Show red dot
-
+          notificationDot.classList.remove('hidden');
         } else {
-          totalNotificationsElement.innerText = '0';
-          notificationDot.classList.add('hidden');  // Hide red dot if no new notifications
+          notificationDot.classList.add('hidden');
         }
 
-        // Continue long polling after 1 seconds
-        setTimeout(fetchNewBookings, 10000);  // Poll every 5 seconds
+        // Clear the previous timeout if it exists
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+
+        // Set a new timeout and store its ID
+        timeoutId = setTimeout(fetchNewBookings, 10000);
       } catch (error) {
         console.error('Error fetching new bookings:', error);
       }
@@ -278,20 +279,31 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Handle closing individual notifications
+    // Handle notification close clicks
     document.addEventListener('click', async (e) => {
       if (e.target.classList.contains('js-notification-close')) {
-        const bookingId = e.target.getAttribute('data-id');
-        e.target.parentElement.remove();  // Remove notification from UI
+        const id = e.target.dataset.id;
 
-        // Send a request to the server to mark this booking notification as read
-        const response = await fetch(`./backend/admin_action.php?mark_admin_booking_read=1&id=${bookingId}`);
-        const data = await response.json();
+        try {
+          const response = await fetch(`./backend/admin_action.php?mark_admin_booking_read=1&id=${id}`);
+          const result = await response.json();
 
-        if (data.success) {
-          console.log('Booking notification marked as read.');
-        } else {
-          console.error('Failed to mark booking notification as read.');
+          if (result.success) {
+            // Remove the notification element
+            e.target.closest('.flex').remove();
+
+            // Update notification count
+            const totalElement = document.querySelector('.js-total-notifications');
+            const currentTotal = parseInt(totalElement.textContent);
+            totalElement.textContent = currentTotal - 1;
+
+            // Hide dot if no more notifications
+            if (currentTotal - 1 === 0) {
+              document.querySelector('.js-notification-dot').classList.add('hidden');
+            }
+          }
+        } catch (error) {
+          console.error('Error marking notification as read:', error);
         }
       }
     });

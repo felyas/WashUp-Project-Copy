@@ -137,7 +137,6 @@ class Database extends Config
     return $result;
   }
 
-  // Fetch deliveries with status 'for pick-up' or 'for delivery' and delivery_is_read = 0
   public function fetch_new_deliveries()
   {
     $sql = 'SELECT id, status, created_at 
@@ -147,20 +146,33 @@ class Database extends Config
             ORDER BY id DESC';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute();
-
-    // Fetch all relevant delivery notifications
-    $notifications = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    return $notifications;
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  // Mark delivery notification as read
-  public function mark_delivery_as_read($deliveryId)
+  public function fetch_new_bookings()
+  {
+    $sql = 'SELECT id, created_at 
+            FROM booking 
+            WHERE admin_is_read = 0 
+            ORDER BY id DESC';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public function mark_delivery_as_read($id)
   {
     $sql = 'UPDATE booking SET delivery_is_read = 1 WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
-    $stmt->execute(['id' => $deliveryId]);
+    return $stmt->execute(['id' => $id]);
   }
+
+  // public function mark_booking_as_read($id)
+  // {
+  //   $sql = 'UPDATE booking SET admin_is_read = 1 WHERE id = :id';
+  //   $stmt = $this->conn->prepare($sql);
+  //   return $stmt->execute(['id' => $id]);
+  // }
 
   // Update Kilo and Proof of Kilo for an Existing Booking
   public function updateKiloAndProof($id, $kilo, $image_path)

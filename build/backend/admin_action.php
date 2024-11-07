@@ -93,7 +93,7 @@ if (isset($_GET['admit'])) {
   $user = $db->user($user_id);
 
   if ($db->admitBooking($booking_id)) {
-    
+
 
     $receiver = $user['email'];
     $subject = "Booking Update";
@@ -162,6 +162,12 @@ if (isset($_GET['mark_admin_booking_read'])) {
   $db->mark_admin_booking_as_read($bookingId);
 
   // Send a success response
+  echo json_encode(['success' => true]);
+}
+
+if (isset($_GET['mark_as_read']) && isset($_GET['id'])) {
+  $id = $_GET['id'];
+  $db->mark_booking_as_read($id);
   echo json_encode(['success' => true]);
 }
 

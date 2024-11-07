@@ -162,26 +162,29 @@ if (isset($_GET['fetch_events'])) {
   echo json_encode($events);
 }
 
-// Handle Fetch New Delivery Notifications
+// delivery_action.php
 if (isset($_GET['fetch_new_deliveries'])) {
-
-  // Fetch deliveries where the status is either 'for pick-up' or 'for delivery'
   $notifications = $db->fetch_new_deliveries();
-
-  // Send the notifications back as a JSON response
   echo json_encode($notifications);
 }
 
-// Handle marking delivery as read (admin viewed notification)
-if (isset($_GET['mark_delivery_read'])) {
-  $deliveryId = $_GET['id'];
-
-  // Mark the specific delivery as read by the admin
-  $db->mark_delivery_as_read($deliveryId);
-
-  // Send a success response
+if (isset($_GET['mark_as_read']) && isset($_GET['id'])) {
+  $id = $_GET['id'];
+  $db->mark_delivery_as_read($id);
   echo json_encode(['success' => true]);
 }
+
+// admin_action.php
+if (isset($_GET['fetch_new_bookings'])) {
+  $notifications = $db->fetch_new_bookings();
+  echo json_encode($notifications);
+}
+
+// if (isset($_GET['mark_as_read']) && isset($_GET['id'])) {
+//   $id = $_GET['id'];
+//   $db->mark_booking_as_read($id);
+//   echo json_encode(['success' => true]);
+// }
 
 // Handle Update Kilo Info Ajax Request
 if (isset($_GET['info-for-kilo-update'])) {

@@ -128,6 +128,13 @@ class Database extends Config
     $stmt->execute(['id' => $bookingId]);
   }
 
+  public function mark_booking_as_read($id)
+  {
+    $sql = 'UPDATE booking SET admin_is_read = 1 WHERE id = :id';
+    $stmt = $this->conn->prepare($sql);
+    return $stmt->execute(['id' => $id]);
+  }
+
   // Fetch total number of users per month
   public function fetchUserCountPerMonth()
   {

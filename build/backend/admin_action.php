@@ -154,6 +154,12 @@ if (isset($_GET['fetch_new_bookings'])) {
   echo json_encode($notifications);
 }
 
+// admin_action.php
+if (isset($_GET['fetch_new_bookings_delivery'])) {
+  $notifications = $db->fetch_new_bookings_delivery();
+  echo json_encode($notifications);
+}
+
 // Handle marking booking as read (admin viewed notification)
 if (isset($_GET['mark_admin_booking_read'])) {
   $bookingId = $_GET['id'];

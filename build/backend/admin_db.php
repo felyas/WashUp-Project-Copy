@@ -120,6 +120,24 @@ class Database extends Config
     return $notifications;
   }
 
+  public function fetch_new_bookings_delivery()
+  {
+    $sql = 'SELECT id, created_at 
+            FROM booking 
+            WHERE admin_is_read = 0 
+            ORDER BY id DESC';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public function mark_delivery_as_read($id)
+  {
+    $sql = 'UPDATE booking SET delivery_is_read = 1 WHERE id = :id';
+    $stmt = $this->conn->prepare($sql);
+    return $stmt->execute(['id' => $id]);
+  }
+
   // Mark booking as read for admin
   public function mark_admin_booking_as_read($bookingId)
   {

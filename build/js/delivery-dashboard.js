@@ -656,7 +656,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Fetch both types of notifications in parallel
         const [deliveryResponse, bookingResponse] = await Promise.all([
           fetch(`./backend/delivery_action.php?fetch_new_deliveries=1`),
-          fetch(`./backend/admin_action.php?fetch_new_bookings=1`)
+          fetch(`./backend/admin_action.php?fetch_new_bookings_delivery=1`)
         ]);
 
         const deliveryNotifications = await deliveryResponse.json();

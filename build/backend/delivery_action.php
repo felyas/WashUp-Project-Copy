@@ -175,8 +175,8 @@ if (isset($_GET['mark_as_read']) && isset($_GET['id'])) {
 }
 
 // admin_action.php
-if (isset($_GET['fetch_new_bookings'])) {
-  $notifications = $db->fetch_new_bookings();
+if (isset($_GET['fetch_new_bookings_delivery'])) {
+  $notifications = $db->fetch_new_bookings_delivery();
   echo json_encode($notifications);
 }
 

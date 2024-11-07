@@ -149,7 +149,7 @@ class Database extends Config
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
   }
 
-  public function fetch_new_bookings()
+  public function fetch_new_bookings_delivery()
   {
     $sql = 'SELECT id, created_at 
             FROM booking 

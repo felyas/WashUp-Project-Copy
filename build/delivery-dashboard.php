@@ -36,6 +36,10 @@ if ($_SESSION['role'] !== 'delivery') {
   <!-- Include Chart.js from CDN -->
   <script src="../node_modules/chart.js/dist/chart.umd.js" defer></script>
 
+  <!-- Include WebCamJs from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
+
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
@@ -136,13 +140,21 @@ if ($_SESSION['role'] !== 'delivery') {
         </div>
 
 
-        <div class="w-full flex flex-col justify-center mt-2 mb-4 p-4 border border-solid border-gray-200 rounded-lg ">
-          <h1 class="text-lg lg:text-md font-semibold">
-            Welcome back, <span><?php echo $_SESSION['first_name']; ?></span>
-          </h1>
-          <p class="text-gray-400 text-sm mt-2 lg:mt-1">
-            Manage your delivery tasks efficiently and stay on top of every booking, from pickup to drop-off.
-          </p>
+        <div class="w-full h-auto flex lg:flex-row justify-between items-center mt-2 mb-4 p-4 border border-solid border-gray-200 rounded-lg flex-col">
+          <div class="w-full lg:w-1/4 lg:mb-0">
+            <h1 class="text-lg lg:text-md font-semibold">
+              Welcome back, <span><?php echo $_SESSION['first_name']; ?></span>
+            </h1>
+            <p class="text-gray-400 text-sm mt-2 lg:mt-1">
+              Manage your delivery tasks efficiently and stay on top of every booking, from pickup to drop-off.
+            </p>
+          </div>
+
+          <div class="w-full lg:w-auto flex justify-end items-center mt-2 sm:mt-0">
+            <button id="js-open-report-modal" class="openGenerateReportModalTrigger w-full sm:w-auto border-2 text-md font-semibold border-federal py-2 px-6 rounded-md shadow-lg text-federal hover:bg-federal hover:text-white transition">
+              GENERATE REPORT
+            </button>
+          </div>
         </div>
 
         <!-- Grid for Booking Summaries -->
@@ -500,6 +512,28 @@ if ($_SESSION['role'] !== 'delivery') {
     </div>
   </div>
 
+  <!-- Modal for Camera -->
+  <div class="toOpenCameraModal hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+    <div class="bg-white shadow-lg sm:h-3/4 sm:rounded-3xl w-full h-screen sm:m-2 sm:w-full md:w-1/2">
+      <div id="" class="w-full h-full bg-gray-200 sm:rounded-3xl flex flex-col justify-end relative">
+        <div class="absolute right-4 top-4 z-50">
+          <button type="button" id="js-close-camera" class=" closeCameraModal text-gray-700">
+            <img src="./img/icons/x-gray-700.svg" class="w-5 h-5" alt="">
+          </button>
+        </div>
+
+        <div id="js-camera-parent" class="w-full h-full">
+          <div class="w-full h-full rounded-t-3xl" id="js-camera"></div>
+        </div>
+        <div class="flex items-center justify-center p-4 z-50">
+          <div class="border-2 border-solid border-gray-500 p-1 rounded-[50%] hover:opacity-90 active:opacity-90">
+            <button type="button" id="js-take-photo" class="p-5 bg-gray-700 rounded-[50%] z-50"></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- Modal for Upload Kilo -->
   <div class="toUpdateKiloModal hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-20">
     <div class="bg-white shadow-lg rounded-3xl m-2 w-full md:w-1/2">
@@ -532,18 +566,28 @@ if ($_SESSION['role'] !== 'delivery') {
         <form action="" id="upload-kilo-form" enctype="multipart/form-data" novalidate>
           <!-- Image Upload Section -->
           <p class="text-md font-semibold mb-2 text-gray-500">Upload Image</p>
-          <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-2">
+          <button type="button" id="js-open-camera" class="openCameraModalTrigger border border-dashed border-gray-500 p-4 w-full rounded-md mb-2">
+            <div class="flex flex-col items-center justify-center">
+              <img src="./img/icons/camera.svg" class="w-8 h-8" alt="">
+              <p class="z-10 text-md text-center text-gray-500">Take a picture</p>
+            </div>
+          </button>
+          <div class="mt-4 text-center flex w-full items-center justify-center">
+            <img id="image-preview" class="hidden w-32 h-32 object-cover rounded-md border border-gray-300" alt="Image Preview">
+          </div>
+
+          <!-- <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-2">
             <input type="file" id="file-upload" name="file-upload" class="hidden" accept="image/*" required>
             <div class="text-red-500 text-center text-sm hidden">Image is required!</div>
             <label for="file-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
               <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
               <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
             </label>
-            <!-- Image preview -->
+
             <div class="mt-4 text-center flex w-full items-center justify-center">
               <img id="image-preview" class="hidden w-32 h-32 object-cover rounded-md border border-gray-300" alt="Image Preview">
             </div>
-          </div>
+          </div> -->
 
           <div class="flex flex-col items-center justify-center mb-4">
 
@@ -630,6 +674,45 @@ if ($_SESSION['role'] !== 'delivery') {
           </div>
         </form>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal overlay -->
+  <div id="generate-report-modal" class="toOpenGenerateReportModal fixed hidden inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+    <!-- Modal content -->
+    <div class="bg-white rounded-lg p-6 w-full max-w-md">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-ashblack">Generate Report</h2>
+        <button id="close-modal-button" class="closeGenerateReport text-gray-500 hover:text-gray-700 font-bold text-3xl">&times;</button>
+      </div>
+      <div class="flex flex-col justify center w-full h-auto">
+        <form id="generate-report-form" action="./backend/generate_report.php" method="POST" class="text-sm">
+          <div class="w-full grid grid-cols-2 mb-2 text-gray-500">
+            <div>Current Date: </div>
+            <div class="flex justify-end">
+              <p class="js-today-date">11/11/2024</p>
+            </div>
+          </div>
+
+          <div class="w-full grid grid-cols-2 mb-4">
+            <div class="text-gray-500">Period of time</div>
+            <div class="flex justify-end">
+              <!-- Dropdown menu for period selection -->
+              <select name="period" class="border border-gray-300 rounded-md text-sm p-2 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="last-week">Last Week</option>
+                <option value="last-month">Last Month</option>
+              </select>
+            </div>
+          </div>
+          <div class="flex justify-center">
+            <input type="submit" id="confirm-generate-button" class="bg-green-700 hover:bg-green-800 text-white rounded-md px-4 py-2 mr-2" value="Confirm">
+            <button type="button" id="close-modal-button-2" class="closeGenerateReport2 bg-gray-500 hover:bg-gray-700 text-white rounded-md px-4 py-2">Cancel</button>
+          </div>
+        </form>
+      </div>
+
     </div>
   </div>
 

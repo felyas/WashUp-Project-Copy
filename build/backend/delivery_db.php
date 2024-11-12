@@ -318,4 +318,131 @@ class Database extends Config
     $stmt->execute();
     return $stmt->fetchAll();
   }
+
+  // TOTAL BOOKING IN DATABASE
+  public function getTotalBookings($period)
+  {
+    $query = "";
+    $params = [];
+
+    switch ($period) {
+      case 'today':
+        $query = "SELECT 
+                    COUNT(*) as total,
+                    SUM(CASE WHEN status = 'complete' THEN 1 ELSE 0 END) as complete
+                  FROM booking 
+                  WHERE DATE(created_at) = CURDATE()";
+        break;
+      case 'yesterday':
+        $query = "SELECT 
+                    COUNT(*) as total,
+                    SUM(CASE WHEN status = 'complete' THEN 1 ELSE 0 END) as complete
+                  FROM booking 
+                  WHERE DATE(created_at) = CURDATE() - INTERVAL 1 DAY";
+        break;
+      case 'last-week':
+        $query = "SELECT 
+                    COUNT(*) as total,
+                    SUM(CASE WHEN status = 'complete' THEN 1 ELSE 0 END) as complete
+                  FROM booking 
+                  WHERE DATE(created_at) >= CURDATE() - INTERVAL 1 WEEK";
+        break;
+      case 'last-month':
+        $query = "SELECT 
+                    COUNT(*) as total,
+                    SUM(CASE WHEN status = 'complete' THEN 1 ELSE 0 END) as complete
+                  FROM booking 
+                  WHERE DATE(created_at) >= CURDATE() - INTERVAL 1 MONTH";
+        break;
+      default:
+        return false;
+    }
+
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+  }
+
+  // TOTAL COMPLAINTS IN DATABASE
+  public function getTotalComplaints($period)
+  {
+    $query = "";
+    $params = [];
+
+    switch ($period) {
+      case 'today':
+        $query = "SELECT 
+                        COUNT(*) as total,
+                        SUM(CASE WHEN status = 'resolved' THEN 1 ELSE 0 END) as resolved
+                      FROM complaints 
+                      WHERE DATE(created_at) = CURDATE()";
+        break;
+      case 'yesterday':
+        $query = "SELECT 
+                        COUNT(*) as total,
+                        SUM(CASE WHEN status = 'resolved' THEN 1 ELSE 0 END) as resolved
+                      FROM complaints 
+                      WHERE DATE(created_at) = CURDATE() - INTERVAL 1 DAY";
+        break;
+      case 'last-week':
+        $query = "SELECT 
+                        COUNT(*) as total,
+                        SUM(CASE WHEN status = 'resolved' THEN 1 ELSE 0 END) as resolved
+                      FROM complaints 
+                      WHERE DATE(created_at) >= CURDATE() - INTERVAL 1 WEEK";
+        break;
+      case 'last-month':
+        $query = "SELECT 
+                        COUNT(*) as total,
+                        SUM(CASE WHEN status = 'resolved' THEN 1 ELSE 0 END) as resolved
+                      FROM complaints 
+                      WHERE DATE(created_at) >= CURDATE() - INTERVAL 1 MONTH";
+        break;
+      default:
+        return false;
+    }
+
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+  }
+
+  // TOTAL USERS IN DATABASE WITH ROLE 'user'
+  public function getTotalUsers($period)
+  {
+    $query = "";
+
+    switch ($period) {
+      case 'today':
+        $query = "SELECT 
+                        COUNT(*) as total
+                      FROM users 
+                      WHERE role = 'user' AND DATE(created_at) = CURDATE()";
+        break;
+      case 'yesterday':
+        $query = "SELECT 
+                        COUNT(*) as total
+                      FROM users 
+                      WHERE role = 'user' AND DATE(created_at) = CURDATE() - INTERVAL 1 DAY";
+        break;
+      case 'last-week':
+        $query = "SELECT 
+                        COUNT(*) as total
+                      FROM users 
+                      WHERE role = 'user' AND DATE(created_at) >= CURDATE() - INTERVAL 1 WEEK";
+        break;
+      case 'last-month':
+        $query = "SELECT 
+                        COUNT(*) as total
+                      FROM users 
+                      WHERE role = 'user' AND DATE(created_at) >= CURDATE() - INTERVAL 1 MONTH";
+        break;
+      default:
+        return false;
+    }
+
+    $stmt = $this->conn->prepare($query);
+    $stmt->execute();
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+  }
 }

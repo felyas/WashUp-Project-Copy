@@ -6,6 +6,8 @@ openModal('viewModalTrigger', 'toViewBookingModal', 'closeViewBookingModal', 'cl
 openModal('updateKiloTrigger', 'toUpdateKiloModal', 'closeUpdateKiloModal', 'closeUpdateKiloModal2');
 openModal('updateProofOfDeliveryTrigger', 'toUpdateDeliveryProofModal', 'closeUpdateDeliveryProofModal', 'closeUpdateDeliveryProofModal2');
 openModal('editModalTrigger', 'toEditBookingModal', 'closeEditBookingModal', 'closeEditBookingModal2');
+openModal('openCameraModalTrigger', 'toOpenCameraModal', 'closeCameraModal', 'closeCameraModal2');
+openModal('openGenerateReportModalTrigger', 'toOpenGenerateReportModal', 'closeGenerateReport', 'closeGenerateReport2');
 
 // Function to set the minimum and maximum dates for the pick-up date input
 function setMinDate() {
@@ -109,41 +111,8 @@ function validateForm(form) {
   });
 }
 
-// Function to generate 20-minute interval time options from 8:00 AM to 9:00 PM, with unavailable times disabled
-// function populateTimeOptions(unavailableTimes = []) {
-//   const selectTime = document.getElementById('pickup-time');
-//   selectTime.innerHTML = ''; // Clear previous options
-
-//   const startTime = 8 * 60; // 8:00 AM in minutes
-//   const endTime = 21 * 60; // 9:00 PM in minutes
-//   const interval = 20; // 20 minutes
-
-//   for (let time = startTime; time <= endTime; time += interval) {
-//     const hours = Math.floor(time / 60);
-//     const minutes = time % 60;
-
-//     const isPM = hours >= 12;
-//     const displayHours = hours % 12 || 12; // Convert to 12-hour format
-//     const displayMinutes = minutes.toString().padStart(2, '0');
-//     const ampm = isPM ? 'PM' : 'AM';
-
-//     const timeFormatted = `${displayHours}:${displayMinutes} ${ampm}`;
-
-//     const option = document.createElement('option');
-//     option.value = timeFormatted;
-//     option.textContent = timeFormatted;
-
-//     // Disable the option if it's in the unavailable times array
-//     if (unavailableTimes.includes(timeFormatted)) {
-//       option.disabled = true; // Disable the option if it's already booked
-//       option.textContent += ' (Unavailable)'; // Append (Unavailable) to the text
-//     }
-
-//     selectTime.appendChild(option);
-//   }
-// }
-
 document.addEventListener("DOMContentLoaded", () => {
+
   const tbody = document.getElementById('users-booking-list');
   const paginationContainer = document.getElementById('pagination-container');
   const searchInput = document.getElementById('js-search-bar');
@@ -439,6 +408,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const updateKiloForm = document.getElementById('upload-kilo-form');
   validateForm(updateKiloForm);
+
+  const openCameraBtn = document.getElementById('js-open-camera');
+  const closeCameraBtn = document.getElementById('js-close-camera');
+  const takePhotoBtn = document.getElementById('js-take-photo');
+
+  // Open Camera
+  openCameraBtn.addEventListener('click', () => {
+    Webcam.set({
+      width: 192,
+      height: 192,
+      image_format: 'jpeg',
+      jpeg_quality: 90
+    });
+    Webcam.attach('#js-camera');
+    document.querySelector('video').classList.add('w-full');
+    document.querySelector('video').classList.add('h-full');
+
+    const cameraText = document.querySelector('.webcamjs-ios-text');
+    const cameraImg = document.getElementById('js-camera-ios_img');
+    if (cameraText) cameraText.style.display = 'none';
+  });
+
+  // Capture Image
+  takePhotoBtn.addEventListener('click', () => {
+    Webcam.snap(function (dataUri) {
+      console.log(dataUri); // Log the data URI to the console
+    })
+  });
+
+  // Close Camera
+  closeCameraBtn.addEventListener('click', () => {
+    Webcam.reset();
+  })
 
   const warningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
   // Add Kilo and Proof of Kilo Ajax Request
@@ -777,26 +779,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const imagePreview = document.getElementById(imagePreviewId);
 
     // Add an event listener for when the user selects an image
-    fileInput.addEventListener('change', function (event) {
-      const file = event.target.files[0]; // Get the selected file
-      if (file) {
-        // Create a FileReader to read the file
-        const reader = new FileReader();
+    // fileInput.addEventListener('change', function (event) {
+    //   const file = event.target.files[0]; // Get the selected file
+    //   if (file) {
+    //     // Create a FileReader to read the file
+    //     const reader = new FileReader();
 
-        // When the file is read, update the image preview
-        reader.onload = function (e) {
-          imagePreview.src = e.target.result; // Set the image source to the file's data URL
-          imagePreview.classList.remove('hidden'); // Unhide the image preview
-        };
+    //     // When the file is read, update the image preview
+    //     reader.onload = function (e) {
+    //       imagePreview.src = e.target.result; // Set the image source to the file's data URL
+    //       imagePreview.classList.remove('hidden'); // Unhide the image preview
+    //     };
 
-        // Read the selected image file as a data URL
-        reader.readAsDataURL(file);
-      } else {
-        // If no file is selected, hide the image preview
-        imagePreview.src = '';
-        imagePreview.classList.add('hidden');
-      }
-    });
+    //     // Read the selected image file as a data URL
+    //     reader.readAsDataURL(file);
+    //   } else {
+    //     // If no file is selected, hide the image preview
+    //     imagePreview.src = '';
+    //     imagePreview.classList.add('hidden');
+    //   }
+    // });
   }
 
   // Call the function for each file input and its respective image preview

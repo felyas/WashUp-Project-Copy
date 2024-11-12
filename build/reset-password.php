@@ -49,8 +49,8 @@ if (empty($token)) {
   <main class="flex-grow flex bg-seasalt justify-center items-center">
     <section class="flex my-4 border border-solid justify-center items-center bg-white shadow-lg mx-2 sm:mx-0">
       <div class="flex flex-col w-full box-border text-ashblack p-4 items-center">
-        <p class="text-2xl w-full text-center sm:text-3xl my-4 font-semibold">Reset your password</p>
-        <p class="text-md w-full my-1 text-center">
+        <p class="text-2xl w-full text-center sm:text-3xl py-2 font-semibold">Reset your password</p>
+        <p class="text-md w-full text-center mb-2">
           Please provide a new password to reset your account
         </p>
 

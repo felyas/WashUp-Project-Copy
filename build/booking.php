@@ -153,7 +153,7 @@ if (!isset($_SESSION['user_id'])) {
 
           <div class="h-12 sm:h-8 w-full px-2 bg-orange-100 border-orange-500 border border-solid text-orange-800 flex items-center rounded-full text-sm font-semibold mb-2">
             <img class="h-4 w-4" src="./img/icons/danger-icon.svg" alt="">
-            <p class="ml-2">Pick-up hours are only available until 6pm</p>
+            <p class="ml-2">Pick-up hours are only available until 9 P.M</p>
           </div>
 
           <div class="w-full">

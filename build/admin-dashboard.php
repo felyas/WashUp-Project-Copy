@@ -268,9 +268,9 @@ if ($_SESSION['role'] !== 'admin') {
           <div class="h-auto w-full bg-white ">
             <div class="shadow-lg border border-solid border-gray-200 rounded-sm">
               <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
-                <p class="text-md font-semibold text-ashblack py-2">PENDING BOOKINGS</p>
+                <p class="text-md font-semibold text-ashblack py-2">CUSTOMER FEEDBACK</p>
                 <div class="flex justify-between items-center relative">
-                  <input id="search-input" type="text" placeholder="Search bookings..." class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
+                  <input id="js-search-input" type="text" placeholder="Search" class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
                   <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
                     <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
                   </button>
@@ -280,14 +280,36 @@ if ($_SESSION['role'] !== 'admin') {
                 <table class="text-nowrap w-full text-left text-ashblack border-collapse border border-solid border-gray-200">
                   <thead class="bg-gray-200">
                     <tr>
-                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ID</th>
-                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">CUSTOMER NAME</th>
-                      <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ADDRESS</th>
+                      <th data-column="user_id" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
+                        USER ID
+                        <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
+                      </th>
+                      <th data-column="first_name" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
+                        CUSTOMER NAME
+                        <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
+                      </th>
+                      <th data-column="rating" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
+                        RATING
+                        <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
+                      </th>
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ACTION</th>
                     </tr>
                   </thead>
                   <tbody id="js-pending-tbody">
-                    <!-- Dynamic Data -->
+                    <tr class="class=" border-b border-gray-200">
+                      <td class="px-4 py-2">1</td>
+                      <td class="px-4 py-2">Felix</td>
+                      <td class="px-4 py-2">Bragais</td>
+                      <td class="px-4 py-2">2</td>
+                      <td class="min-w-[100px] h-auto flex items-center justify-start space-x-2 flex-grow">
+                        <a href="#" id="" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition editLink">
+                          <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
+                        </a>
+                        <a href="#" id="" class="viewModalTrigger px-3 py-2 bg-[#0E4483] hover:bg-[#0C376A] rounded-md transition editLink">
+                          <img class="w-4 h-4" src="./img/icons/feedback-display.svg" alt="edit">
+                        </a>
+                      </td>
+                    </tr>
                   </tbody>
                 </table>
               </div>
@@ -319,59 +341,33 @@ if ($_SESSION['role'] !== 'admin') {
 
 
   <!-- Modal for View -->
-  <div class="toViewBookingModal fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20 p-2">
+  <div class="toViewBookingModal fixed hidden inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-20 p-2">
     <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2">
-      <div class="w-full h-auto py-2 flex flex-col items-center text-nowrap text-gray-500">
-        <h4 class="text-lg font-bold">WASHUP LAUNDRY</h4>
-        <p class="text-sm">Blk 1 lot 2 morales subdivision, Calamba Laguna</p>
-        <p class="text-sm">Phone: +63 930 520 5088</p>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2 mb-4 text-gray-500">
-        <div class="flex justify-start">
-          <p class="text-sm">Date: </p>
-        </div>
-        <div class="flex justify-end">
-          <p id="booking-date" class="text-sm"><!-- dynamic data --></p>
-        </div>
-      </div>
 
       <div class="w-full text-ashblack text-md font-semibold mb-2">
-        <p class="justify-start">Booking Summary</p>
+        <p class="justify-start">Feedback Summary</p>
       </div>
 
       <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
         <div class="grid grid-cols-2 gap-2">
+          <p>Date:</p>
+          <p id="display-date-feedback" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
+          <p>User ID:</p>
+          <p id="display-user-id-feedback" class="justify-end flex"><!-- dynamic data --></p>
+        </div>
+        <div class="grid grid-cols-2 gap-2">
           <p>Customer Name:</p>
-          <p id="display-full-name" class="justify-end flex"><!-- dynamic data --></p>
+          <p id="display-full-name-feedback" class="justify-end flex"><!-- dynamic data --></p>
         </div>
         <div class="grid grid-cols-2 gap-2">
-          <p>Phone Number:</p>
-          <p id="display-phone-number" class="justify-end flex"><!-- dynamic data --></p>
+          <p>Rating:</p>
+          <p id="display-rating-feedback" class="justify-end flex"><!-- dynamic data --></p>
         </div>
         <div class="grid grid-cols-2 gap-2">
-          <p>Address:</p>
-          <p id="display-address" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <p>Pick-up Date:</p>
-          <p id="display-pickup-date" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <p>Pick-up Time:</p>
-          <p id="display-pickup-time" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <p>Service:</p>
-          <p id="display-service-selection" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <p>Service Type:</p>
-          <p id="display-service-type" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <p>Suggestions:</p>
-          <p id="display-suggestions" class="justify-end flex"><!-- dynamic data --></p>
+          <p>Description:</p>
+          <p id="display-description-feedback" class="justify-end flex"><!-- dynamic data --></p>
         </div>
       </div>
 
@@ -418,7 +414,7 @@ if ($_SESSION['role'] !== 'admin') {
             <input type="hidden" id="event-id" name="event_id">
             <div class="text-red-500 text-sm hidden">ID is required!</div> <!-- Feedback -->
           </div>
-          
+
         </div>
 
         <div class="flex items-center justify-end mt-6 space-x-2">

@@ -211,4 +211,68 @@ class Database extends Config
     $stmt = $this->conn->prepare($sql);
     return $stmt->execute(['event_id' => $event_id]);
   }
+
+  // READ ALL FEEDBACK IN DATABASE
+  public function readAllFeedback($start, $limit, $column, $order, $query)
+  {
+
+    $searchQuery = '%' . $query . '%';
+    $sql = "SELECT * FROM feedback
+            WHERE (first_name LIKE :query OR last_name LIKE :query OR user_id like :query)
+            ORDER BY $column $order LIMIT :start, :limit";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(':query', $searchQuery, PDO::PARAM_STR);
+    $stmt->bindValue(':start', $start, PDO::PARAM_INT);
+    $stmt->bindValue(':limit', $limit, PDO::PARAM_INT);
+    $stmt->execute();
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+  }
+
+  public function getTotalRows($query)
+  {
+    $searchQuery = '%' . $query . '%';
+    $sql = "SELECT COUNT(*) as total FROM feedback
+            WHERE (first_name LIKe :query OR last_name LIKE :query)";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(':query', $searchQuery, PDO::PARAM_STR);
+    $stmt->execute();
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $row['total'];
+  }
+
+  public function getFeedbackDetails($id)
+  {
+    $sql = "SELECT * FROM feedback WHERE id = :id";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'id' => $id,
+    ]);
+
+    $result = $stmt->fetch();
+    return $result;
+  }
+
+  public function updatePageDisplay($id)
+  {
+    $sql = "UPDATE feedback SET `page-display` = :page_display WHERE id = :id";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'id' => $id,
+      'page_display' => 1,
+    ]);
+
+    return true;
+  }
+
+  public function getTestimonials()
+  {
+    $sql = "SELECT * FROM feedback WHERE `page-display` = 1 ORDER BY id DESC LIMIT 3";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+
+    $result = $stmt->fetchAll();
+    return $result;
+  }
 }

@@ -9,118 +9,135 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-  const pendingTbody = document.getElementById('js-pending-tbody');
+  const feedbackTbody = document.getElementById('js-pending-tbody');
   const paginationContainer = document.getElementById('pagination-container');
+  const searchInput = document.getElementById('js-search-input');
+  const statusFilter = document.getElementById('status-filter');
 
-  // Fetch All Pending Bookings with Pagination
-  const fetchAllPendingBooking = async (page = 1) => {
-    const searchQuery = document.getElementById('search-input').value.trim();
-    const data = await fetch(`./backend/admin_action.php?readPending=1&page=${page}&query=${searchQuery}`, {
+  // Function to toggle sorting icons
+  const toggleSortIcon = (th, order) => {
+    const allIcons = document.querySelectorAll('.sort-icon img');
+
+    // Reset all icons to caret-down by default
+    allIcons.forEach(icon => {
+      icon.setAttribute('src', './img/icons/caret-down.svg'); // Set to down arrow
+    });
+
+    const icon = th.querySelector('.sort-icon img');
+    if (order === 'desc') {
+      icon.setAttribute('src', './img/icons/caret-down.svg'); // Down arrow
+    } else {
+      icon.setAttribute('src', './img/icons/caret-up.svg'); // Up arrow
+    }
+  };
+
+  // Fetch All Feedback with pagiunation, search, and sorting
+  const fetchAllFeedback = async (page = 1, column = 'id', order = 'desc', query = '') => {
+    const searchQuery = searchInput.value.trim() || query;
+
+    const data = await fetch(`./backend/admin_action.php?readAllFeedback=1&page=${page}&column=${column}&order=${order}&query=${searchQuery}`, {
       method: 'GET',
     });
+
     const response = await data.json();
-    pendingTbody.innerHTML = response.bookings;
-    paginationContainer.innerHTML = response.pagination; // Pagination displayed here
+    feedbackTbody.innerHTML = response.feedback;
+    paginationContainer.innerHTML = response.pagination;
   }
 
-  // Search Input Event Listener
-  document.getElementById('search-input').addEventListener('input', function () {
-    fetchAllPendingBooking(); // Fetch data when search input changes
+  // Handle Column Sorting 
+  document.querySelectorAll('.sortable').forEach(th => {
+    th.addEventListener('click', () => {
+      const column = th.getAttribute('data-column');
+      let order = th.getAttribute('data-order');
+      order = order === 'desc' ? 'asc' : 'desc';
+
+      th.setAttribute('data-order', order);
+      toggleSortIcon(th, order);
+
+      fetchAllFeedback(1, column, order);
+    });
   });
 
-  // Pagination Links Event Delegation
-  paginationContainer.addEventListener('click', function (event) {
-    if (event.target.classList.contains('pagination-link')) {
-      event.preventDefault();
-      const page = event.target.getAttribute('data-page');
-      fetchAllPendingBooking(page); // Fetch data for the clicked page
+  // Handle search input
+  searchInput.addEventListener('input', () => {
+    fetchAllFeedback();
+  });
+
+  paginationContainer.addEventListener('click', (e) => {
+    if (e.target.classList.contains('pagination-link')) {
+      e.preventDefault();
+      const page = e.target.getAttribute('data-page');
+      fetchAllFeedback(page);
     }
   });
 
-  // Initial Fetch
-  fetchAllPendingBooking();
+  // Initial fetch
+  fetchAllFeedback();
 
   const tbodyList = document.querySelectorAll('tbody');
   tbodyList.forEach(tbody => {
     // View Booking Ajax Request
     tbody.addEventListener('click', (e) => {
 
-      // Target the viewLink
-      if (e.target && (e.target.matches('a.viewLink') || e.target.closest('a.viewLink'))) {
+      // Target the feedbackView
+      if (e.target && (e.target.matches('a.feedbackView') || e.target.closest('a.feedbackView'))) {
         e.preventDefault();
-        let targetElement = e.target.matches('a.viewLink') ? e.target : e.target.closest('a.viewLink');
+        let targetElement = e.target.matches('a.feedbackView') ? e.target : e.target.closest('a.feedbackView');
         let id = targetElement.getAttribute('id');
         // console.log(id);
-        bookingSummary(id);
+        feedbackSummary(id);
       }
 
-      // Target the admitLink
-      if (e.target && (e.target.matches('a.admitLink') || e.target.closest('a.admitLink'))) {
+      // Target the toDisplayLink
+      if (e.target && (e.target.matches('a.toDisplayLink') || e.target.closest('a.toDisplayLink'))) {
         e.preventDefault();
-        let targetElement = e.target.matches('a.admitLink') ? e.target : e.target.closest('a.admitLink');
+        let targetElement = e.target.matches('a.toDisplayLink') ? e.target : e.target.closest('a.toDisplayLink');
         let id = targetElement.getAttribute('id');
         const admitWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
-        admitWarningModal.show(admitBooking, id);
-      }
-
-      // Target the deniedLink
-      if (e.target && (e.target.matches('a.deniedLink') || e.target.closest('a.deniedLink'))) {
-        e.preventDefault();
-        let targetElement = e.target.matches('a.deniedLink') ? e.target : e.target.closest('a.deniedLink');
-        let id = targetElement.getAttribute('id');
-        const deniedWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
-        deniedWarningModal.show(deniedBooking, id);
+        admitWarningModal.show(displayFeedback, id);
       }
     });
   });
 
 
-
-  // Fetch Booking Details Ajax Request
-  const bookingSummary = async (id) => {
-    const data = await fetch(`./backend/admin_action.php?view=1&id=${id}`, {
+  // Fetch Feedback Details Ajax Request
+  const feedbackSummary = async (id) => {
+    const data = await fetch(`./backend/admin_action.php?feedback-view=1&id=${id}`, {
       method: 'GET',
     });
     const response = await data.json();
-    document.getElementById('booking-date').innerHTML = response.created_at;
-    document.getElementById('display-full-name').innerHTML = response.fname + " " + response.lname;
-    document.getElementById('display-phone-number').innerHTML = response.phone_number;
-    document.getElementById('display-address').innerHTML = response.address;
-    document.getElementById('display-pickup-date').innerHTML = response.pickup_date;
-    document.getElementById('display-pickup-time').innerHTML = response.pickup_time;
-    document.getElementById('display-service-selection').innerHTML = response.service_selection;
-    document.getElementById('display-service-type').innerHTML = response.service_type;
-    document.getElementById('display-suggestions').innerHTML = response.suggestions;
-  }
 
-  // Admit Booking and Update Status to For Pick-Up Ajax Request.
-  const admitBooking = async (id) => {
-    const data = await fetch(`./backend/admin_action.php?admit=1&id=${id}`, {
-      method: 'GET',
-    });
-    const response = await data.text();
-    if (response.includes('success')) {
-      const green600 = '#047857';
-      const green700 = '#065f46';
-      showToaster('Booking admitted successfully !', 'check', green600, green700);
-      fetchAllPendingBooking();
-      fetchCount();
+    // Set other feedback details
+    document.getElementById('display-date-feedback').innerText = response.details.created_at;
+    document.getElementById('display-user-id-feedback').innerText = response.details.user_id;
+    document.getElementById('display-full-name-feedback').innerText = response.details.first_name + ' ' + response.details.last_name;
+    document.getElementById('display-description-feedback').innerText = response.details.description;
+
+    // Display stars based on rating
+    const ratingContainer = document.getElementById('display-rating-feedback');
+    ratingContainer.innerHTML = ''; // Clear any previous stars
+
+    const starCount = response.details.rating; // Assume rating is between 1 and 5
+    for (let i = 0; i < starCount; i++) {
+      const starImg = document.createElement('img');
+      starImg.src = './img/icons/star-rating.svg';
+      starImg.alt = 'star';
+      starImg.classList.add('w-5', 'h-5');
+      ratingContainer.appendChild(starImg);
     }
-  }
+  };
 
-
-  // Denied Booking and Update Status to For Pick-Up Ajax Request.
-  const deniedBooking = async (id) => {
-    const data = await fetch(`./backend/admin_action.php?denied=1&id=${id}`, {
+  // DISPLAY FEEDBACK AJAX REQUEST
+  const displayFeedback = async (id) => {
+    const data = await fetch(`./backend/admin_action.php?display-feed=1&id=${id}`, {
       method: 'GET',
     });
-    const response = await data.text();
-    if (response.includes('success')) {
-      const green600 = '#047857';
-      const green700 = '#065f46';
-      showToaster('Booking denied !', 'check', green600, green700);
-      fetchAllPendingBooking();
-      fetchCount();
+    const response = await data.json();
+    if(response.status === 'success') {
+      showToaster('Feedback display successfully!', 'check', '#047857', '#065f46');
+      fetchAllFeedback();
+    } else {
+      showToaster('Something went wrong!', 'trash', '#dc2626', '#b91c1c');
     }
   }
 
@@ -376,9 +393,7 @@ document.addEventListener("DOMContentLoaded", () => {
           event.remove();  // Remove from the calendar view
         }
 
-        const red600 = '#dc2626';
-        const red700 = '#b91c1c';
-        showToaster('Event deleted successfully!', 'trash', red600, red700);
+        showToaster('Event deleted successfully!', 'trash', '#dc2626', '#b91c1c');
       } else {
         alert('Failed to delete event.');
       }
@@ -495,9 +510,7 @@ document.addEventListener("DOMContentLoaded", () => {
           end: end
         });
 
-        const green600 = '#047857';
-        const green700 = '#065f46';
-        showToaster('Event added successfully!', 'check', green600, green700);
+        showToaster('Event added successfully!', 'check', '#047857', '#065f46');
 
         // Reset and hide the form
         addEventForm.reset();
@@ -531,7 +544,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   calendar.render();
-
 
 
 });

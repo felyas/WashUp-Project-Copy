@@ -169,8 +169,18 @@ if ($_SESSION['role'] !== 'admin') {
         <div class="h-auto grid grid-cols-1 text-sm border border-solid border-gray-200">
           <!-- List of On Pick-up Booking -->
           <div class="h-auto w-full rounded-sm bg-white shadow-lg">
-            <div class="h-12 px-2 py-4 rounded-t-sm flex items-center border-solid border-ashblack">
+            <div class="h-12 px-2 py-4 rounded-t-sm flex items-center justify-between border-solid border-ashblack">
               <p class="text-md font-semibold text-ashblack">LIST OF ITEMS</p>
+
+              <div class="flex h-auto items-center justify-center">
+                <p class="text-xs text-gray-500 mr-2">Critical Point:</p>
+              <select name="critical-point" id="" class="border border-solid border-gray-500">
+                <option value="10">10%</option>
+                <option value="15">15%</option>
+                <option value="20">20%</option>
+                <option value="30">30%</option>
+              </select>
+              </div>
             </div>
             <div class="overflow-x-auto h-auto min-h-72x p-2 pt-0">
               <table class="text-nowrap w-full text-left text-ashblack border-collapse border border-solid border-gray-200">

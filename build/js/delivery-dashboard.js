@@ -7,7 +7,6 @@ openModal('updateKiloTrigger', 'toUpdateKiloModal', 'closeUpdateKiloModal', 'clo
 openModal('updateProofOfDeliveryTrigger', 'toUpdateDeliveryProofModal', 'closeUpdateDeliveryProofModal', 'closeUpdateDeliveryProofModal2');
 openModal('editModalTrigger', 'toEditBookingModal', 'closeEditBookingModal', 'closeEditBookingModal2');
 openModal('openCameraModalTrigger', 'toOpenCameraModal', 'closeCameraModal', 'closeCameraModal2');
-openModal('openGenerateReportModalTrigger', 'toOpenGenerateReportModal', 'closeGenerateReport', 'closeGenerateReport2');
 
 // Function to set the minimum and maximum dates for the pick-up date input
 function setMinDate() {

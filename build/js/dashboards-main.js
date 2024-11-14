@@ -121,12 +121,15 @@ const showToaster = (function () {
 
     // Set the styles directly using inline styles
     toaster.innerHTML = `
-      <div style="background-color: ${color600}; border: 2px solid ${color700};" class="h-14 py-2 px-4 rounded flex items-center justify-center w-full">
+      <div style="background-color: ${color600}; border: 2px solid ${color700};" class="h-14 py-2 px-4 rounded flex items-center justify-between w-full space-x-2">
         <div class="flex items-center justify-center space-x-2">
           <div id="toaster-icon" style="background-color: ${color700};" class="p-2 h-8 w-8 rounded-full flex items-center justify-center">
             <img class="w-5 h-5" src="./img/icons/${icon}.svg" alt="Check icon">
           </div>
           <p id="toaster-msg" class="text-sm font-semibold">${message}</p>
+        </div>
+        <div class="h-full flex items-center justify-center">
+          <button id="close-toaster" class="text-white hover:text-gray-200 font-bold text-3xl">&times;</button>
         </div>
       </div>
     `;
@@ -138,12 +141,20 @@ const showToaster = (function () {
       clearTimeout(timeoutId);
     }
 
-    // Hide toaster after 3 seconds (longer for readability)
+    // Hide toaster after 3 seconds
     timeoutId = setTimeout(() => {
       toaster.classList.add('hidden');
     }, 3000);
+
+    // Add event listener for close button to hide the toaster immediately
+    const closeToasterBtn = document.getElementById('close-toaster');
+    closeToasterBtn.addEventListener('click', () => {
+      clearTimeout(timeoutId); // Clear the timeout so it doesn't reappear
+      toaster.classList.add('hidden'); // Hide the toaster immediately
+    });
   };
 })();
+
 
 
 

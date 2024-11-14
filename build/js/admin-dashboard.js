@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
   handleDisplayCurrentTime();
   handleDropdown();
   openModal('viewModalTrigger', 'toViewBookingModal', 'closeViewBookingModal', 'closeViewBookingModal2');
+  openModal('openGenerateReportModalTrigger', 'toOpenGenerateReportModal', 'closeGenerateReport', 'closeGenerateReport2');
 
 
 

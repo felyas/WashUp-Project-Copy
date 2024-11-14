@@ -129,7 +129,7 @@ if ($_SESSION['role'] !== 'user') {
 
       <!-- Main Content Area -->
       <!-- Toaster -->
-      <div id="toaster" class="fixed top-4 right-4 hidden ml-4 text-white shadow-lg z-50">
+      <div id="toaster" class="fixed top-4 hidden right-4 ml-4 text-white shadow-lg z-50">
         <!-- Dynamic Toaster Content -->
       </div>
 

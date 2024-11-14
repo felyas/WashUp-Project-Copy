@@ -160,14 +160,23 @@ if ($_SESSION['role'] !== 'admin') {
           <!-- Dynamic Toaster Content -->
         </div>
 
-        <div class="w-full flex flex-col justify-center mt-2 mb-4 p-4 border border-solid border-gray-200 rounded-lg ">
-          <h1 class="text-lg lg:text-md font-semibold">
-            Welcome back, <span><?php echo $_SESSION['first_name']; ?></span>
-          </h1>
-          <p class="text-gray-400 text-sm mt-2 lg:mt-1">
-            Monitor and manage incoming laundry bookings effortlessly, ensuring a smooth and organized process for your business.
-          </p>
+        <div class="w-full h-auto flex lg:flex-row justify-between items-center mt-2 mb-4 p-4 border border-solid border-gray-200 rounded-lg flex-col">
+          <div class="w-full lg:w-1/2 lg:mb-0">
+            <h1 class="text-lg lg:text-md font-semibold">
+              Welcome back, <span><?php echo $_SESSION['first_name']; ?></span>
+            </h1>
+            <p class="text-gray-400 text-sm mt-2 lg:mt-1">
+              Monitor and manage incoming laundry bookings effortlessly, ensuring a smooth and organized process for your business.
+            </p>
+          </div>
+
+          <div class="w-full lg:w-auto flex justify-end items-center mt-2 sm:mt-0">
+            <button id="js-open-report-modal" class="openGenerateReportModalTrigger w-full sm:w-auto border-2 text-md font-semibold border-federal py-2 px-6 rounded-md shadow-lg text-federal hover:bg-federal hover:text-white transition">
+              GENERATE REPORT
+            </button>
+          </div>
         </div>
+
         <!-- Grid for Booking Summaries -->
         <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
           <!-- Pending Booking Card -->
@@ -424,6 +433,45 @@ if ($_SESSION['role'] !== 'admin') {
       </div>
     </div>
   </form>
+
+  <!-- Modal overlay -->
+  <div id="generate-report-modal" class="toOpenGenerateReportModal fixed hidden inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+    <!-- Modal content -->
+    <div class="bg-white rounded-lg p-6 w-full max-w-md">
+      <div class="flex justify-between items-center mb-4">
+        <h2 class="text-xl font-bold text-ashblack">Generate Report</h2>
+        <button id="close-modal-button" class="closeGenerateReport text-gray-500 hover:text-gray-700 font-bold text-3xl">&times;</button>
+      </div>
+      <div class="flex flex-col justify center w-full h-auto">
+        <form id="generate-report-form" action="./backend/generate_report.php" method="POST" class="text-sm">
+          <div class="w-full grid grid-cols-2 mb-2 text-gray-500">
+            <div>Current Date: </div>
+            <div class="flex justify-end">
+              <p class="js-today-date">11/11/2024</p>
+            </div>
+          </div>
+
+          <div class="w-full grid grid-cols-2 mb-4">
+            <div class="text-gray-500">Period of time</div>
+            <div class="flex justify-end">
+              <!-- Dropdown menu for period selection -->
+              <select name="period" class="border border-gray-300 rounded-md text-sm p-2 pr-4 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="last-week">Last Week</option>
+                <option value="last-month">Last Month</option>
+              </select>
+            </div>
+          </div>
+          <div class="flex justify-center">
+            <input type="submit" id="confirm-generate-button" class="bg-green-700 hover:bg-green-800 text-white rounded-md px-4 py-2 mr-2" value="Confirm">
+            <button type="button" id="close-modal-button-2" class="closeGenerateReport2 bg-gray-500 hover:bg-gray-700 text-white rounded-md px-4 py-2">Cancel</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
 
 
 

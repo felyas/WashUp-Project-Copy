@@ -507,16 +507,16 @@ if ($_SESSION['role'] !== 'delivery') {
   </div>
 
   <!-- Modal for Camera -->
-  <div class="toOpenCameraModal hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-    <div class="bg-white shadow-lg sm:h-3/4 sm:rounded-3xl w-full h-screen sm:m-2 sm:w-full md:w-1/2">
-      <div id="" class="w-full h-full bg-gray-200 sm:rounded-3xl flex flex-col justify-end relative">
+  <div id="camera-modal" class="toOpenCameraModal hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+    <div class="bg-white shadow-lg sm:h-auto sm:rounded-3xl w-full h-full sm:m-2 sm:w-[300px] flex flex-col items-center justify-center">
+      <div id="" class="w-full h-auto bg-gray-200 sm:rounded-3xl flex flex-col justify-end relative">
         <div class="absolute right-4 top-4 z-50">
           <button type="button" id="js-close-camera" class=" closeCameraModal text-gray-700">
             <img src="./img/icons/x-gray-700.svg" class="w-5 h-5" alt="">
           </button>
         </div>
 
-        <div id="js-camera-parent" class="w-full h-full">
+        <div id="js-camera-parent" class="w-full h-full mt-8">
           <div class="w-full h-full rounded-t-3xl" id="js-camera"></div>
         </div>
         <div class="flex items-center justify-center p-4 z-50">
@@ -560,28 +560,24 @@ if ($_SESSION['role'] !== 'delivery') {
         <form action="" id="upload-kilo-form" enctype="multipart/form-data" novalidate>
           <!-- Image Upload Section -->
           <p class="text-md font-semibold mb-2 text-gray-500">Upload Image</p>
-          <button type="button" id="js-open-camera" class="openCameraModalTrigger border border-dashed border-gray-500 p-4 w-full rounded-md mb-2">
-            <div class="flex flex-col items-center justify-center">
-              <img src="./img/icons/camera.svg" class="w-8 h-8" alt="">
-              <p class="z-10 text-md text-center text-gray-500">Take a picture</p>
-            </div>
-          </button>
-          <div class="mt-4 text-center flex w-full items-center justify-center">
-            <img id="image-preview" class="hidden w-32 h-32 object-cover rounded-md border border-gray-300" alt="Image Preview">
-          </div>
+          <div class="w-auto py-4 px-4 rounded-md mb-2">
+            <button type="button" id="js-open-camera" class="openCameraModalTrigger border border-dashed border-gray-500 p-4 w-full rounded-md" data-target="file-upload">
+              <div class="flex flex-col items-center justify-center">
+                <img src="./img/icons/camera.svg" class="w-8 h-8" alt="">
+                <p class="z-10 text-md text-center text-gray-500">Take a picture</p>
+              </div>
+            </button>
 
-          <!-- <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-2">
             <input type="file" id="file-upload" name="file-upload" class="hidden" accept="image/*" required>
             <div class="text-red-500 text-center text-sm hidden">Image is required!</div>
-            <label for="file-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
+            <label for="file-upload" class="hidden z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
               <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
               <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
             </label>
 
-            <div class="mt-4 text-center flex w-full items-center justify-center">
-              <img id="image-preview" class="hidden w-32 h-32 object-cover rounded-md border border-gray-300" alt="Image Preview">
+            <div class="mt-4 text-center flex w-full items-center justify-center" id="image-preview-file-upload">
             </div>
-          </div> -->
+          </div>
 
           <div class="flex flex-col items-center justify-center mb-4">
 
@@ -634,33 +630,46 @@ if ($_SESSION['role'] !== 'delivery') {
 
         <form action="" id="upload-proofAndReceipt-form" enctype="multipart/form-data" novalidate>
           <!-- Image Upload Section -->
+          <!-- Image Upload Section for Proof of Delivery -->
           <p class="text-md font-semibold mb-2 text-gray-500">Upload Proof of Delivery</p>
-          <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-4">
+          <div class="w-auto border border-dashed border-gray-500 rounded-md mb-4 flex flex-col items-center justify-center">
+            <button type="button" id="js-open-camera-proof" class="openCameraModalTrigger p-4 w-full rounded-md" data-target="file-proof-upload">
+              <div class="flex flex-col items-center justify-center">
+                <img src="./img/icons/camera.svg" class="w-8 h-8" alt="Camera Icon">
+                <p class="text-md text-center text-gray-500">Take Proof Photo</p>
+              </div>
+            </button>
             <input type="file" id="file-proof-upload" name="file-proof-upload" class="hidden" accept="image/*" required>
             <div class="text-red-500 text-center text-sm hidden">Proof of delivery is required!</div>
-            <label for="file-proof-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
+            <label for="file-proof-upload" class="hidden z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
               <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
               <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
             </label>
-            <!-- Image preview -->
-            <div class="mt-4 text-center flex w-full items-center justify-center">
-              <img id="image-preview-delivery-proof" class="hidden w-32 h-32 object-cover rounded-md border border-gray-300" alt="Image Preview">
+            <div class="mt-4 text-center flex w-full items-center justify-center" id="image-preview-file-proof-upload">
+              <!-- Image Preview for Proof -->
             </div>
           </div>
 
+          <!-- Image Upload Section for Receipt -->
           <p class="text-md font-semibold mb-2 text-gray-500">Upload Receipt</p>
-          <div class="w-auto border border-dashed border-gray-500 py-4 px-4 rounded-md mb-4">
+          <div class="border border-dashed border-gray-500 rounded-md mb-4 flex flex-col items-center justify-center w-full">
+            <button type="button" id="js-open-camera-receipt" class="openCameraModalTrigger p-4 w-full rounded-md" data-target="file-receipt-upload">
+              <div class="flex flex-col items-center justify-center">
+                <img src="./img/icons/camera.svg" class="w-8 h-8" alt="Camera Icon">
+                <p class="text-md text-center text-gray-500">Take Receipt Photo</p>
+              </div>
+            </button>
             <input type="file" id="file-receipt-upload" name="file-receipt-upload" class="hidden" accept="image/*" required>
             <div class="text-red-500 text-center text-sm hidden">Receipt is required!</div>
-            <label for="file-receipt-upload" class="z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
+            <label for="file-receipt-upload" class="hidden z-20 flex flex-col-reverse items-center justify-center w-full h-full cursor-pointer">
               <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
               <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
             </label>
-            <!-- Image preview -->
-            <div class="mt-4 text-center flex w-full items-center justify-center">
-              <img id="image-preview-receipt" class="hidden w-32 h-32 object-cover rounded-md border border-gray-300" alt="Image Preview">
+            <div class="mt-4 text-center flex w-full items-center justify-center" id="image-preview-file-receipt-upload">
+              <!-- Image Preview for Receipt -->
             </div>
           </div>
+
 
           <div class="flex items-center justify-center space-x-2">
             <input id="update-delivery-proof-button" type="submit" class="flex justify-center items-center px-4 py-2 bg-federal hover:bg-[#1a2479] text-white rounded-md mr-2" value="Submit">

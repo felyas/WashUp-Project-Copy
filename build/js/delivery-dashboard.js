@@ -359,6 +359,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // DENIED BOOKING AJAX REQUEST
   const deniedBooking = async (id) => {
     const data = await fetch(`./backend/delivery_action.php?denied=1&id=${id}`, {
       method: 'GET',
@@ -411,35 +412,68 @@ document.addEventListener("DOMContentLoaded", () => {
   const openCameraBtn = document.getElementById('js-open-camera');
   const closeCameraBtn = document.getElementById('js-close-camera');
   const takePhotoBtn = document.getElementById('js-take-photo');
+  const cameraModal = document.getElementById('camera-modal');
+  let targetInputId = ''; // Store target input ID
 
-  // Open Camera
-  openCameraBtn.addEventListener('click', () => {
-    Webcam.set({
-      width: 192,
-      height: 192,
-      image_format: 'jpeg',
-      jpeg_quality: 90
+  // Listen for clicks on any button that opens the camera
+  document.querySelectorAll('.openCameraModalTrigger').forEach(button => {
+    button.addEventListener('click', (event) => {
+      // Set the target input ID from the data-target attribute
+      targetInputId = event.currentTarget.getAttribute('data-target');
+
+      // Open the camera modal and attach the webcam
+      Webcam.set({
+        width: 300,
+        height: 300,
+        image_format: 'jpeg',
+        jpeg_quality: 90
+      });
+      Webcam.attach('#js-camera');
+      document.querySelector('video').classList.add('w-full', 'h-full');
     });
-    Webcam.attach('#js-camera');
-    document.querySelector('video').classList.add('w-full');
-    document.querySelector('video').classList.add('h-full');
-
-    const cameraText = document.querySelector('.webcamjs-ios-text');
-    const cameraImg = document.getElementById('js-camera-ios_img');
-    if (cameraText) cameraText.style.display = 'none';
   });
 
-  // Capture Image
+  // Capture the image and assign it to the specified input
   takePhotoBtn.addEventListener('click', () => {
     Webcam.snap(function (dataUri) {
-      console.log(dataUri); // Log the data URI to the console
-    })
+      Webcam.reset();
+      cameraModal.classList.add('hidden');
+
+      // Show preview in the correct preview div
+      document.getElementById(`image-preview-${targetInputId}`).innerHTML = `<img src="${dataUri}" alt="Captured Image" />`;
+      const capturedImageFile = dataURItoFile(dataUri);
+
+      // Assign the file to the specified input field
+      const fileInput = document.getElementById(targetInputId);
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(capturedImageFile);
+      fileInput.files = dataTransfer.files; // Assign a new file list to each input field
+    });
   });
 
   // Close Camera
   closeCameraBtn.addEventListener('click', () => {
     Webcam.reset();
-  })
+  });
+
+  // Helper function to convert dataUri to a File with a unique filename
+  function dataURItoFile(dataUri) {
+    const arr = dataUri.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+
+    while (n--) {
+      u8arr[n] = bstr.charCodeAt(n);
+    }
+
+    // Generate a unique filename with a timestamp
+    const filename = `captured-image-${Date.now()}.jpg`;
+
+    return new File([u8arr], filename, { type: mime });
+  }
+
 
   const warningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
   // Add Kilo and Proof of Kilo Ajax Request
@@ -515,6 +549,74 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('display-full-name-forProof').innerText = response.fname + ' ' + response.lname;
     document.getElementById('display-phone-number-forProof').innerText = response.phone_number;
   }
+
+  const openCameraBtnProof = document.getElementById('js-open-camera-proof');
+  const openCameraBtnReceipt = document.getElementById('js-open-camera-receipt');
+  let activeInputId; //
+
+  // Open Camera for Proof of Delivery
+  openCameraBtnProof.addEventListener('click', () => {
+    Webcam.set({
+      width: 300,
+      height: 300,
+      image_format: 'jpeg',
+      jpeg_quality: 90
+    });
+    Webcam.attach('#js-camera');
+    document.querySelector('video').classList.add('w-full', 'h-full');
+
+    activeInputId = 'file-proof-upload'; // Set active input to proof
+    cameraModal.classList.remove('hidden'); // Open camera modal
+  });
+
+  // Open Camera for Receipt
+  openCameraBtnReceipt.addEventListener('click', () => {
+    Webcam.set({
+      width: 300,
+      height: 300,
+      image_format: 'jpeg',
+      jpeg_quality: 90
+    });
+    Webcam.attach('#js-camera');
+    document.querySelector('video').classList.add('w-full', 'h-full');
+
+    activeInputId = 'file-receipt-upload'; // Set active input to receipt
+    cameraModal.classList.remove('hidden'); // Open camera modal
+  });
+
+  Webcam.on('load', function () {
+    console.log("Webcam.js is loaded and ready.");
+  });
+
+  Webcam.on('live', function () {
+    console.log("Webcam is live and ready to capture.");
+  });
+
+  // Capture Image
+  takePhotoBtn.addEventListener('click', () => {
+    Webcam.snap(function (dataUri) {
+      Webcam.reset();
+      cameraModal.classList.add('hidden');
+      console.log(dataUri);
+
+
+      // Show the preview of the captured image
+      if (activeInputId === 'file-proof-upload') {
+        document.getElementById('image-preview-delivery-proof').innerHTML = '<img src="' + dataUri + '" alt="Captured Proof Image" />';
+      } else if (activeInputId === 'file-receipt-upload') {
+        document.getElementById('image-preview-receipt').innerHTML = '<img src="' + dataUri + '" alt="Captured Receipt Image" />';
+      }
+
+      // Convert the data URI to a File object
+      capturedImageFile = dataURItoFile(dataUri, 'captured-image.jpg');
+
+      // Set the captured File object to the respective hidden file input
+      const fileInput = document.getElementById(activeInputId);
+      const dataTransfer = new DataTransfer();
+      dataTransfer.items.add(capturedImageFile); // Add the file to the DataTransfer object
+      fileInput.files = dataTransfer.files; // Assign the files to the input element
+    });
+  });
 
   const ProofAndReceiptForm = document.getElementById('upload-proofAndReceipt-form');
   validateForm(ProofAndReceiptForm);
@@ -707,6 +809,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // Update total notification count
         totalNotificationsElement.textContent = combinedNotifications.length;
         notificationDot.classList.remove('hidden');
+        fetchAll();
+        fetchAllPendingBooking();
       } else {
         notificationDot.classList.add('hidden');
       }

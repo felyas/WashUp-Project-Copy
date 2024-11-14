@@ -285,7 +285,8 @@ if (isset($_GET['confirmNo'])) {
 // Handle fetching unavailable times for a specific date
 if (isset($_GET['get_unavailable_times'])) {
   $date = $_GET['date'];
-  $unavailableTimes = $db->getUnavailableTimesForDate($date);
+  $deliveryCount = $db->getTotalNumberDeliveryPersonnel();
+  $unavailableTimes = $db->getUnavailableTimesForDate($date, $deliveryCount);
   echo json_encode($unavailableTimes);
 }
 

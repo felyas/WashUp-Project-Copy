@@ -158,7 +158,8 @@ class Database extends Config
 
 
   // Mark notification as read method
-  public function mark_as_read($notificationId) {
+  public function mark_as_read($notificationId)
+  {
     $sql = 'UPDATE booking SET is_read = 1 WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     return $stmt->execute(['id' => $notificationId]);
@@ -204,15 +205,37 @@ class Database extends Config
     return true;
   }
 
-  // Fetch unavailable times for a specific date
-  public function getUnavailableTimesForDate($date)
+  // GET TOTAL NUMBER OF DELIVERY PERSONNEL ON DATABASE
+  public function getTotalNumberDeliveryPersonnel()
   {
-    $sql = 'SELECT pickup_time FROM booking WHERE pickup_date = :pickup_date';
+    $sql = "SELECT COUNT(*) FROM USERS WHERE role = :role";
     $stmt = $this->conn->prepare($sql);
-    $stmt->execute(['pickup_date' => $date]);
+    $stmt->execute([
+      'role' => 'delivery',
+    ]);
+    $result = $stmt->fetchColumn(); // fetchColumn() retrieves the count directly
+    return $result;
+  }
+
+
+  public function getUnavailableTimesForDate($date, $deliveryCount)
+  {
+    $sql = '
+        SELECT pickup_time 
+        FROM booking 
+        WHERE pickup_date = :pickup_date 
+        GROUP BY pickup_time 
+        HAVING COUNT(pickup_time) >= :delivery_count
+    ';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'pickup_date' => $date,
+      'delivery_count' => $deliveryCount,
+    ]);
     $result = $stmt->fetchAll(PDO::FETCH_COLUMN); // Fetch only the pickup_time column
     return $result;
   }
+
 
   // Add New Complain Request to DATABASE
   public function addComplaint($user_id, $first_name, $last_name, $phone_number, $email, $reason, $description)
@@ -234,7 +257,7 @@ class Database extends Config
 
   // INSERT NEW FEEDBACK INTO DATABASE
   public function insertFeedback($user_id, $first_name, $last_name, $rating, $description, $booking_id, $phone_number)
-{
+  {
     // Determine the value of isGoodReview based on the rating
     $isGoodReview = $rating >= 3 ? 1 : 0;
 
@@ -243,34 +266,34 @@ class Database extends Config
             VALUES (:user_id, :first_name, :last_name, :rating, :description, :isGoodReview, :booking_id)';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
-        'user_id' => $user_id,
-        'first_name' => $first_name,
-        'last_name' => $last_name,
-        'rating' => $rating,
-        'description' => $description,
-        'isGoodReview' => $isGoodReview,
-        'booking_id' => $booking_id,
+      'user_id' => $user_id,
+      'first_name' => $first_name,
+      'last_name' => $last_name,
+      'rating' => $rating,
+      'description' => $description,
+      'isGoodReview' => $isGoodReview,
+      'booking_id' => $booking_id,
     ]);
 
     // If the rating is less than or equal to 2, also insert into the complaint table
     if ($rating <= 2) {
-        $sqlComplaint = 'INSERT INTO complaints (user_id, first_name, last_name, email, phone_number, reason, description, booking_id) 
+      $sqlComplaint = 'INSERT INTO complaints (user_id, first_name, last_name, email, phone_number, reason, description, booking_id) 
                          VALUES (:user_id, :first_name, :last_name, :email, :phone_number, :reason, :description, :booking_id)';
-        $stmtComplaint = $this->conn->prepare($sqlComplaint);
-        $stmtComplaint->execute([
-            'user_id' => $user_id,
-            'first_name' => $first_name,
-            'last_name' => $last_name,
-            'phone_number' => $phone_number,
-            'reason' => 'Low rate',
-            'email' => 'No Email',
-            'description' => $description,
-            'booking_id' => $booking_id,
-        ]);
+      $stmtComplaint = $this->conn->prepare($sqlComplaint);
+      $stmtComplaint->execute([
+        'user_id' => $user_id,
+        'first_name' => $first_name,
+        'last_name' => $last_name,
+        'phone_number' => $phone_number,
+        'reason' => 'Low rate',
+        'email' => 'No Email',
+        'description' => $description,
+        'booking_id' => $booking_id,
+      ]);
     }
 
     return true;
-}
+  }
 
 
 
@@ -286,7 +309,8 @@ class Database extends Config
   }
 
   // GET EMAIL AND PHONE_NUMBER OF USER IN DATABASE
-  public function getEmailPhone($user_id){
+  public function getEmailPhone($user_id)
+  {
     $sql = 'SELECT * FROM booking WHERE user_id = :user_id ORDER BY created_at DESC LIMIT 1';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute(['user_id' => $user_id]);

@@ -36,6 +36,44 @@ if (isset($_POST['add'])) {
   exit();
 }
 
+if (isset($_GET['get-current-critical-point'])) {
+  $currentCriticalPoint = $db->getCurrentCriticalPoint();
+
+  if ($currentCriticalPoint) {
+    echo json_encode([
+      'status' => 'success',
+      'current_critical_point' => $currentCriticalPoint['setting_value'],
+    ]);
+  } else {
+    echo json_encode([
+      'status' => 'error',
+    ]);
+  }
+}
+
+$data = json_decode(file_get_contents("php://input"), true);
+if(isset($data['criticalPoint'])) {
+  $newCriticalPoint = (int) $data['criticalPoint'];
+
+  // echo json_encode([
+  //   'new_critical_point' => $newCriticalPoint,
+  // ]);
+
+  $result = $db->updateCriticalPoint($newCriticalPoint);
+  if($result) {
+    echo json_encode([
+      'status' => 'success',
+    ]);
+  } else {
+    echo json_encode([
+      'status' => 'error',
+    ]);
+  }
+}
+
+// Fetch critical point from settings table
+$criticalPoint = $db->getSettingValue('critical_point') / 100;
+
 if (isset($_GET['readAll'])) {
   $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
   $limit = 7;
@@ -59,7 +97,7 @@ if (isset($_GET['readAll'])) {
       $currentStatus = $row['status']; // Get current status
 
       // Check if the quantity is less than 15% of the max quantity
-      if ($quantity < 0.15 * $maxQuantity) {
+      if ($quantity < $criticalPoint * $maxQuantity) {
         // Update status to 'critical' in the database
         if ($currentStatus !== 'critical') {
           $db->updateItemStatus($row['product_id'], 'critical'); // Update to 'critical'

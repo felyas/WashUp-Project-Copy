@@ -108,4 +108,40 @@ class Database extends Config
 
     return true;
   }
+
+  // Get the Critical Point on Database
+  public function getSettingValue($key)
+  {
+    $sql = "SELECT setting_value FROM settings WHERE setting_key = :key";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(':key', $key, PDO::PARAM_STR);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result ? (int)$result['setting_value'] : null;
+  }
+
+  // Get the current critical point value from the database
+  public function getCurrentCriticalPoint()
+  {
+    $sql = "SELECT * FROM settings WHERE setting_key = :setting_key LIMIT 1";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'setting_key' => 'critical_point',
+    ]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result;
+  }
+
+  // UPDATE CRITICAL POINT ON DATABASE
+  public function updateCriticalPoint($newCriticalPoint)
+  {
+    $sql = "UPDATE settings SET setting_value = :setting_value WHERE setting_key = :setting_key";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'setting_value' => $newCriticalPoint,
+      'setting_key' => 'critical_point',
+    ]);
+
+    return true;
+  }
 }

@@ -40,6 +40,46 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.getElementById('js-search-bar');
   const statusFilter = document.getElementById('status-filter');
 
+  const currentCriticalPoint = async () => {
+    // Fetch current critical point value from the server on page load
+    const data = await fetch(`./backend/inventory_action.php?get-current-critical-point=1`, {
+      method: 'GET',
+    });
+    const response = await data.json();
+    if (response.status === 'success') {
+      // Set the dropdown's selected option to the current critical point
+      document.getElementById('critical-point-dropdown').value = response.current_critical_point;
+      fetchAll();
+    } else {
+      console.error('Failed to fetch critical point:', response.message);
+    }
+  }
+  currentCriticalPoint();
+
+
+
+  // Event listener to handle dropdown change and update critical point in database
+  const criticalPointDropdown = document.getElementById('critical-point-dropdown');
+  criticalPointDropdown.addEventListener('change', async () => {
+    const newCriticalPoint = criticalPointDropdown.value;
+
+    // Send AJAX request to update the critical point in the database
+    const data = await fetch('./backend/inventory_action.php', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ criticalPoint: newCriticalPoint }),
+    });
+
+    const response = await data.json();
+    if (response.status === 'success') {
+      currentCriticalPoint();
+    } else {
+      showToaster('Something went wrong !', 'exclamation-error', '#dc2626', '#b91c1c');
+    }
+  });
+
   // Function to toggle sorting icons
   const toggleSortIcon = (th, order) => {
     const allIcons = document.querySelectorAll('.sort-icon img');

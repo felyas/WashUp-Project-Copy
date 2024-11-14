@@ -174,13 +174,14 @@ if ($_SESSION['role'] !== 'admin') {
 
               <div class="flex h-auto items-center justify-center">
                 <p class="text-xs text-gray-500 mr-2">Critical Point:</p>
-              <select name="critical-point" id="" class="border border-solid border-gray-500">
-                <option value="10">10%</option>
-                <option value="15">15%</option>
-                <option value="20">20%</option>
-                <option value="30">30%</option>
-              </select>
+                <select name="critical-point" id="critical-point-dropdown" class="border border-solid border-gray-500">
+                  <option value="10">10%</option>
+                  <option value="15">15%</option>
+                  <option value="20">20%</option>
+                  <option value="30">30%</option>
+                </select>
               </div>
+
             </div>
             <div class="overflow-x-auto h-auto min-h-72x p-2 pt-0">
               <table class="text-nowrap w-full text-left text-ashblack border-collapse border border-solid border-gray-200">
@@ -226,8 +227,8 @@ if ($_SESSION['role'] !== 'admin') {
     </div>
   </div>
 
-  <?php 
-    include './modal.php';
+  <?php
+  include './modal.php';
   ?>
 
   <!-- Modal for Edit -->

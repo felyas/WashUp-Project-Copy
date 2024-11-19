@@ -101,28 +101,24 @@ document.getElementById('pickup-date').addEventListener('change', function () {
 
 const addBookingForm = document.getElementById('add-booking-form');
 const addBookingBtn = document.getElementById('add-booking-btn');
-const fnameInput = document.getElementById('js-fname');
-const lnameInput = document.getElementById('js-lname');
-const phoneInput = document.getElementById('js-phone_number');
-const addressInput = document.getElementById('js-address');
 // Initialize date/time when the page loads
 document.addEventListener("DOMContentLoaded", () => {
   setMinDate();
   populateTimeOptions();
 
-  // Fetch Previous Data from Previous Booking Ajax Request
-  const previousData = async () => {
-    const data = await fetch(`./backend/customer_action.php?previous-data=1`, {
+  // Fetch Customer Data From Users Table
+  const customerInfo = async () => {
+    const data = await fetch(`./backend/customer_action.php?customer-data=1`, {
       method: 'GET',
     });
     const response = await data.json();
-    fnameInput.value = response.fname ?? "";
-    lnameInput.value = response.lname ?? "";
-    phoneInput.value = response.phone_number ?? "";
-    addressInput.value = response.address ?? "";
-
+    console.log(response);
+    document.getElementById('js-fname').value = response.first_name ?? "";
+    document.getElementById('js-lname').value = response.last_name ?? "";
+    document.getElementById('js-phone_number').value = response.phone_number ?? "";
+    document.getElementById('js-address').value = response.address ?? "";
   }
-  previousData();
+  customerInfo();
 
   document.getElementById('pickup-date').addEventListener('change', async function () {
     const selectedDate = this.value; // Get the selected date

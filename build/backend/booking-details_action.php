@@ -79,7 +79,7 @@ if (isset($_GET['readAll'])) {
               ';
       } else {
         $output .= '
-                <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
+                <p class="py-1 px-3 rounded-lg bg-gray-200 text-gray-500" >No upload yet</p>
               ';
       }
 
@@ -95,7 +95,7 @@ if (isset($_GET['readAll'])) {
               ';
       } else {
         $output .= '
-                <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
+                <p class="py-1 px-3 rounded-lg bg-gray-200 text-gray-500" >No upload yet</p>
               ';
       }
 
@@ -111,7 +111,7 @@ if (isset($_GET['readAll'])) {
               ';
       } else {
         $output .= '
-                <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
+                <p class="py-1 px-3 rounded-lg bg-gray-200 text-gray-500" >No upload yet</p>
               ';
       }
 

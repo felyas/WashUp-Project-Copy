@@ -28,15 +28,16 @@ class Database extends Config
   }
 
   // INSERT NEW USER INTO DATABASE
-  public function insertUser($first_name, $last_name, $email, $hashedPassword, $otp)
+  public function insertUser($first_name, $last_name, $email, $phone_number, $hashedPassword, $otp)
   {
-    $sql = "INSERT INTO users (first_name, last_name, email,password, otp, verification_status, role)
-            VALUES(:first_name, :last_name, :email, :password, :otp, :verification_status, :role)";
+    $sql = "INSERT INTO users (first_name, last_name, email, phone_number,password, otp, verification_status, role)
+            VALUES(:first_name, :last_name, :email, :phone_number, :password, :otp, :verification_status, :role)";
     $stmt = $this->conn->prepare($sql);
     $stmt->execute([
       'first_name' => $first_name,
       'last_name' => $last_name,
       'email' => $email,
+      'phone_number' => $phone_number,
       'password' => $hashedPassword,
       'otp' => $otp,
       'verification_status' => 0,

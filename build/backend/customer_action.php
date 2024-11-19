@@ -7,16 +7,17 @@ require_once './utils/util.php';
 $db = new Database();
 $util = new Util();
 
-// HANDLE PREVIOUS DATA AJAX REQUEST
-if (isset($_GET['previous-data'])) {
+
+// HANDLE CUSTOMER DATA AJAX REQUEST
+if(isset($_GET['customer-data'])) {
   $user_id = $_SESSION['user_id'];
 
-  $data = $db->previousData($user_id);
+  $data = $db->customerData($user_id);
   if($data) {
     echo json_encode($data);
   } else {
     echo json_encode([
-      'status' => 'no data',
+      'status' => 'error'
     ]);
   }
 }
@@ -97,7 +98,7 @@ if (isset($_GET['read'])) {
               ';
       } else {
         $output .= '
-                <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
+                <p class="py-1 px-3 rounded-lg bg-gray-200 text-gray-500" >No upload yet</p>
               ';
       }
 
@@ -113,7 +114,7 @@ if (isset($_GET['read'])) {
               ';
       } else {
         $output .= '
-                <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
+                <p class="py-1 px-3 rounded-lg bg-gray-200 text-gray-500" >No upload yet</p>
               ';
       }
 
@@ -129,7 +130,7 @@ if (isset($_GET['read'])) {
               ';
       } else {
         $output .= '
-                <p class="py-1 px-3 rounded-lg bg-red-400 text-red-700" >No upload yet</p>
+                <p class="py-1 px-3 rounded-lg bg-gray-200 text-gray-500" >No upload yet</p>
               ';
       }
 

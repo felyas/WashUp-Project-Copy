@@ -134,7 +134,7 @@ document.addEventListener("DOMContentLoaded", () => {
       method: 'GET',
     });
     const response = await data.json();
-    if(response.status === 'success') {
+    if (response.status === 'success') {
       showToaster('Feedback display successfully!', 'check', '#047857', '#065f46');
       fetchAllFeedback();
     } else {
@@ -177,10 +177,9 @@ document.addEventListener("DOMContentLoaded", () => {
             <img src="./img/about-bg1.png" alt="Notification Image" class="w-12 h-12 mr-4 rounded-full">
             <div class="flex-1">
               <p class="text-sm">
-                New booking request received 
-                <span class="font-semibold text-celestial">
+                A booking with ID <span class="font-semibold text-celestial">
                   (ID: ${notification.id})
-                </span>
+                </span> is ready to be processed.
               </p>
             </div>
             <button class="w-12 p-0 border-none font-bold js-notification-close" data-id="${notification.id}">

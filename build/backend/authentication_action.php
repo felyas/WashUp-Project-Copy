@@ -65,12 +65,24 @@ if (isset($_POST['signup'])) {
   $first_name = $util->testInput($_POST['fname']);
   $last_name = $util->testInput($_POST['lname']);
   $email = $util->testInput($_POST['email']);
+  $phone_number = $util->testInput($_POST['phone_number']);
   $password = $_POST['password'];
   $cpassword = $_POST['confirm_password'];
+
+  if (empty($first_name) || empty($last_name) || empty($email) || empty($phone_number) || empty($password) || empty($cpassword)) {
+    echo json_encode(['error' => 'Please fill out all required fields before submitting the form.']);
+    exit();
+  }
 
   // Validate email format
   if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     echo json_encode(['error' => 'Invalid email format']);
+    exit();
+  }
+
+  // Validate phone number format
+  if (!preg_match('/^09\d{9}$/', $phone_number)) {
+    echo json_encode(['error' => 'Invalid phone number. Enter a valid 11-digit number starting with 09.']);
     exit();
   }
 
@@ -98,7 +110,7 @@ if (isset($_POST['signup'])) {
   // Generate OTP
   $otp = mt_rand(1111, 9999);
 
-  $userInserted = $db->insertUser($first_name, $last_name, $email, $hashedPassword, $otp);
+  $userInserted = $db->insertUser($first_name, $last_name, $email, $phone_number, $hashedPassword, $otp);
 
   // Send OTP to user's email
   if ($userInserted) {

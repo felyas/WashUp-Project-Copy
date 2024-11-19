@@ -52,16 +52,28 @@ session_start();
 
         <form action="" id="signup-form" method="POST" class="flex flex-col my-4" novalidate>
           <div class="grid grid-cols-2 gap-2">
-            <label class="text-sm text-gray-500" for="fname">First Name</label>
-            <label class="text-sm text-gray-500" for="lname">Last Name</label>
-          </div>
-          <div class="grid grid-cols-2 gap-2">
-            <input type="text" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="fname" placeholder="First Name: " required>
-            <input type="text" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="lname" placeholder="Last Name: " required>
+            <div class="flex flex-col">
+              <label class="text-sm text-gray-500" for="fname">First Name</label>
+              <input type="text" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="fname" placeholder="Juan" required>
+            </div>
+            <div class="flex flex-col">
+              <label class="text-sm text-gray-500" for="lname">Last Name</label>
+              <input type="text" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="lname" placeholder="Dela Cruz" required>
+            </div>
+
           </div>
 
-          <label class="text-sm text-gray-500" for="email">Email</label>
-          <input type="email" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="email" placeholder="Email: " required>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div class="flex flex-col">
+              <label class="text-sm text-gray-500" for="email">Email</label>
+              <input type="email" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="email" placeholder="juan@gmail.com" required>
+            </div>
+            <div class="flex flex-col">
+              <label class="text-sm text-gray-500" for="fname">Phone Number</label>
+              <input type="text" class="w-full border border-solid border-federal rounded-lg mb-2 p-2" name="phone_number" placeholder="09123456789" required>
+            </div>
+          </div>
 
           <div class="mb-2">
             <label class="text-sm text-gray-500" for="password">Password</label>

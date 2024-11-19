@@ -2,10 +2,32 @@ import { handleDisplayCurrentTime, handleSidebar, openModal, showToaster, Modal 
 
 const bookNowBtn = document.querySelector('.js-book-now');
 const editBookingForm = document.getElementById('edit-booking-form');
+const userAccountBtn = document.getElementById('js-account-setting');
 
 bookNowBtn.addEventListener('click', () => {
   window.location.href = './booking.php';
 })
+
+userAccountBtn.addEventListener('click', () => {
+  window.location.href = './user-setting.php';
+})
+
+// TO OPEN AND CLOSE THE SETTING
+const settingBtn = document.getElementById('js-setting-button');
+const settingDiv = document.getElementById('js-setting');
+
+settingBtn.addEventListener('click', () => {
+  settingDiv.classList.toggle('hidden');
+});
+
+// Close the settingDiv when clicking outside of it
+document.addEventListener('click', (event) => {
+  if (!settingDiv.contains(event.target) && !settingBtn.contains(event.target)) {
+    settingDiv.classList.add('hidden');
+  }
+});
+
+
 
 // Select the modal and modal image elements
 const modal = document.getElementById('imageModal');

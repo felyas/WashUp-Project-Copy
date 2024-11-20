@@ -109,6 +109,11 @@ if (!isset($_SESSION['user_id'])) {
           <p class="text-red-700 text-center" id="error-message">Error<!-- Dynamic Error --></p>
         </div>
 
+        <!-- Div to display success. -->
+        <div id="success-container" class="w-full hidden flex items-center justify-center text-sm pt-2 pb-4 text-wrap">
+          <p class="text-green-700 text-center" id="success-message">Error<!-- Dynamic Error --></p>
+        </div>
+
         <div class="grid grid-cols-2 gap-2">
           <div class="mb-4">
             <label for="fname" class="block text-sm font-medium text-gray-500">First Name</label>

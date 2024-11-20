@@ -66,6 +66,7 @@ function validateForm(form) {
 
 document.addEventListener("DOMContentLoaded", () => {
   openModal('change-password-trigger', 'toViewChangePasswordModal', 'closeViewChangePasswordModal', 'closeViewChangePasswordModal2');
+  let timeoutId;
 
 
   // Fetch Customer Data From Users Table
@@ -85,17 +86,11 @@ document.addEventListener("DOMContentLoaded", () => {
   const saveBtn = document.getElementById('save-info-btn');
   const errorContainer = document.getElementById('error-container');
   const errorMessage = document.getElementById('error-message');
+  const successContainer = document.getElementById('success-container');
+  const successMessage = document.getElementById('success-message');
 
   // Handle the input validation from add bookings
   validateForm(updateUserInfoForm);
-
-
-  // Function to validate a phone number in the format 09691026692
-  // const isPhoneNumberValid = (phoneNumber) => {
-  //   // Check if the phone number starts with 09 and has exactly 11 digits
-  //   const phoneRegex = /^09\d{9}$/;
-  //   return phoneRegex.test(phoneNumber);
-  // };
 
 
 
@@ -137,10 +132,22 @@ document.addEventListener("DOMContentLoaded", () => {
         body: formData,
       });
       const response = await data.json();
-      console.log(response);
       if (response.redirect) {
         saveBtn.value = 'Save';
         window.location.href = response.redirect;
+      } else if (response.success) {
+        saveBtn.value = 'Save';
+        console.log(response);
+        successContainer.classList.remove('hidden');
+        successMessage.innerText = 'Profile updated successfully';
+
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+        timeoutId = setTimeout(() => {
+          successContainer.classList.add('hidden');
+          successMessage.innerText = '';
+        }, 3000);
       } else if (response.error) {
         errorContainer.classList.remove('hidden');
         errorMessage.innerText = response.error;
@@ -159,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const updatePasswordForm = document.getElementById('change-password-form');
   const changePasswordBtn = document.getElementById('change-password-btn');
 
-  let timeoutId;
+
 
   updatePasswordForm.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -182,7 +189,7 @@ document.addEventListener("DOMContentLoaded", () => {
       updatePasswordForm.reset();
       changePasswordBtn.value = 'Update Password';
 
-      if(timeoutId) {
+      if (timeoutId) {
         clearTimeout(timeoutId);
       }
 

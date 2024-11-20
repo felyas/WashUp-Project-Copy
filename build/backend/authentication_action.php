@@ -192,7 +192,7 @@ if (isset($_POST['forgot-password'])) {
       // Store the token into database
       $storedToken = $db->storeToken($email, $token, $expires);
       if ($storedToken) {
-        $reset_link = "http://localhost/Washup-Project/build/reset-password.php?token=" . $token;
+        $reset_link = "https://main.washup-laundry.online/build/reset-password.php?token=" . $token;
 
         // Prepare the email
         $receiver = $email;

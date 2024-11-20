@@ -18,6 +18,11 @@ if (isset($_POST['save'])) {
   $phone_number = $util->testInput($_POST['phone_number']);
   $email = $util->testInput($_POST['email']);
 
+  $user = $db->userInfo($user_id);
+  $current_email = $user['email'];
+
+
+
   // Validate phone number format
   if (!preg_match('/^09\d{9}$/', $phone_number)) {
     echo json_encode(['error' => 'Invalid phone number. Enter a valid 11-digit number starting with 09.']);
@@ -30,35 +35,37 @@ if (isset($_POST['save'])) {
     exit();
   }
 
-  // $emailExist = $db->checkEmailExists($email);
-  // if ($emailExist) {
-  //   echo json_encode(['error' => 'Email is already taken']);
-  //   exit();
-  // }
-
-  // Generate OTP
-  $otp = mt_rand(1111, 9999);
-
-  $saved = $db->updateUserInfo($user_id, $fname, $lname, $phone_number, $email, $otp);
-
-  if ($saved) {
-    $receiver = $email;
-    $subject = "Verification Code";
-    $body = "Your verification code is: $otp";
-
-    $mailed = $util->sendEmail($receiver, $subject, $body);
-
-    if ($mailed) {
-      $_SESSION['email'] = $email;
-      echo json_encode(['redirect' => './verify.php']);
-      exit();
-    } else {
-      echo json_encode(['error' => 'Unable to send OTP,   Please try again']);
-      exit();
+  if ($email === $current_email) {
+    if ($db->udpateUserInfoWithoutEmail($user_id, $fname, $lname, $phone_number, $email)) {
+      echo json_encode([
+        'success' => 'User data updated successfully!',
+      ]);
     }
   } else {
-    echo json_encode(['error' => 'Something went wrong, please try again!']);
-    exit();
+    // Generate OTP
+    $otp = mt_rand(1111, 9999);
+
+    $saved = $db->updateUserInfo($user_id, $fname, $lname, $phone_number, $email, $otp);
+
+    if ($saved) {
+      $receiver = $email;
+      $subject = "Verification Code";
+      $body = "Your verification code is: $otp";
+
+      $mailed = $util->sendEmail($receiver, $subject, $body);
+
+      if ($mailed) {
+        $_SESSION['email'] = $email;
+        echo json_encode(['redirect' => './verify.php']);
+        exit();
+      } else {
+        echo json_encode(['error' => 'Unable to send OTP,   Please try again']);
+        exit();
+      }
+    } else {
+      echo json_encode(['error' => 'Something went wrong, please try again!']);
+      exit();
+    }
   }
 }
 

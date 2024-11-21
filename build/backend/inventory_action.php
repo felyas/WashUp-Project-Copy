@@ -114,13 +114,13 @@ if (isset($_GET['readAll'])) {
       // Determine the color classes based on the status
       switch ($row['status']) {
         case 'good':
-          $statusClasses = 'bg-green-500 text-green-700';
+          $statusClasses = 'bg-green-700 text-white';
           break;
         case 'critical':
-          $statusClasses = 'bg-red-500 text-red-800';
+          $statusClasses = 'bg-red-700 text-white';
           break;
         default:
-          $statusClasses = 'bg-gray-400 text-gray-700';
+          $statusClasses = 'bg-gray-700 text-white';
           break;
       }
 
@@ -130,12 +130,12 @@ if (isset($_GET['readAll'])) {
                   <td class="px-4 py-2">' . htmlspecialchars($row['product_name']) . '</td>
                   <td class="px-4 py-2">' . htmlspecialchars($row['quantity']) . '</td>
                   <td class="px-4 py-2">
-                    <div class="sm:w-1/2 py-1 ' . $statusClasses . ' font-bold rounded-lg text-center">
+                    <div class="sm:w-1/2 py-1 ' . $statusClasses . ' font-bold rounded-lg text-center text-xs">
                       ' . strtoupper($row['status']) . '
                     </div>
                   </td>
                   <td class="min-w-[100px] h-auto flex items-center justify-start space-x-2 flex-grow">
-                      <a href="#" id="' . htmlspecialchars($row['product_id']) . '" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
+                      <a href="#" id="' . htmlspecialchars($row['product_id']) . '" class="editModalTrigger px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded-md transition editLink">
                           <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
                       </a>
                       <a href="#" id="' . htmlspecialchars($row['product_id']) . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">

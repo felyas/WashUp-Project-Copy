@@ -106,17 +106,25 @@ document.addEventListener("DOMContentLoaded", () => {
   setMinDate();
   populateTimeOptions();
 
+  // Fetch Customer Address From Previous Booking Ajax Request
+  const customerAddress = async () => {
+    const data = await fetch(`./backend/customer_action.php?customer-address=1`, {
+      method: 'GET',
+    });
+    const response = await data.json();
+    document.getElementById('js-address').value = response.address ?? "";
+  }
+  customerAddress();
+
   // Fetch Customer Data From Users Table
   const customerInfo = async () => {
     const data = await fetch(`./backend/customer_action.php?customer-data=1`, {
       method: 'GET',
     });
     const response = await data.json();
-    console.log(response);
     document.getElementById('js-fname').value = response.first_name ?? "";
     document.getElementById('js-lname').value = response.last_name ?? "";
     document.getElementById('js-phone_number').value = response.phone_number ?? "";
-    document.getElementById('js-address').value = response.address ?? "";
   }
   customerInfo();
 

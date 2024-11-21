@@ -8,6 +8,18 @@ $db = new Database();
 $util = new Util();
 
 
+// HANDLE CUSTOMER ADDRESS AJAX REQUEST
+if(isset($_GET['customer-address'])) {
+  $user_id = $_SESSION['user_id'];
+
+  $address = $db->customerAddress($user_id);
+  if($address) {
+    echo json_encode($address);
+  } else {
+    echo json_encode(['status' => 'error']);
+  }
+}
+
 // HANDLE CUSTOMER DATA AJAX REQUEST
 if(isset($_GET['customer-data'])) {
   $user_id = $_SESSION['user_id'];
@@ -59,25 +71,25 @@ if (isset($_GET['read'])) {
       $statusClasses = '';
       switch ($row['status']) {
         case 'pending':
-          $statusClasses = 'bg-yellow-400 text-yellow-700'; //oks
+          $statusClasses = 'bg-[#FFB000] text-white'; //oks
           break;
         case 'for pick-up':
-          $statusClasses = 'bg-[#A8C9D9] text-[#316988]'; // oks
+          $statusClasses = 'bg-sky-600 text-white'; // oks
           break;
         case 'on process':
-          $statusClasses = 'bg-[#A1B8D4] text-[#0E4483]';
+          $statusClasses = 'bg-[#316988] text-white';
           break;
         case 'for delivery':
-          $statusClasses = 'bg-[#B3CCE6] text-[#0E4483]'; // oks
+          $statusClasses = 'bg-[#0E4483] text-white'; // oks
           break;
         case 'isreceive':
-          $statusClasses = 'bg-orange-400 text-orange-700'; // oks
+          $statusClasses = 'bg-orange-700 text-white'; // oks
           break;
         case 'complete':
-          $statusClasses = 'bg-green-500 text-green-800'; // oks
+          $statusClasses = 'bg-green-800 text-white'; // oks
           break;
         default:
-          $statusClasses = 'bg-gray-400 text-gray-700';
+          $statusClasses = 'bg-gray-700 text-white';
           break;
       }
 
@@ -136,8 +148,8 @@ if (isset($_GET['read'])) {
 
       $output .= '
           </td>
-          <td class="px-4 py-2">
-            <div class="w-auto py-1 px-2 ' . $statusClasses . ' font-bold rounded-lg text-center">
+          <td class="px-4 py-2 border-b border-gray-300">
+            <div class="w-auto py-1 px-2 text-xs ' . $statusClasses . ' font-bold rounded-lg text-center">
               ' . strtoupper($row['status']) . '
             </div>
           </td>

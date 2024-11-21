@@ -27,6 +27,24 @@ if (isset($_GET['readAll'])) {
   $output = '';
   if ($complaints) {
     foreach ($complaints as $row) {
+
+      // Determine the color classes based on the status
+      $statusClasses = '';
+      switch ($row['status']) {
+        case 'submitted':
+          $statusClasses = 'bg-gray-700 text-white';
+          break;
+        case 'received':
+          $statusClasses = 'bg-[#0E4483] text-white';
+          break;
+        case 'resolved':
+          $statusClasses = 'bg-green-800 text-white';
+          break;
+        default:
+          $statusClasses = 'bg-gray-700 text-white';
+          break;
+      }
+
       $output .= '
                   <tr>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['complaint_id'] . '</td>
@@ -34,7 +52,11 @@ if (isset($_GET['readAll'])) {
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['last_name'] . '</td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['phone_number'] . '</td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['email'] . '</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle font-semibold">' . $row['status'] . '</td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle font-semibold">
+                      <div class="w-auto py-1 px-2 text-xs ' . $statusClasses . ' font-bold rounded-lg text-center">
+                        ' . strtoupper($row['status']) . '
+                      </div>
+                    </td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle min-w-[120px]">
                       <div class="flex justify-start space-x-2">
                         <a href="#" id="' . $row['complaint_id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
@@ -91,10 +113,10 @@ if (isset($_GET['read'])) {
 }
 
 // Handle Delete Complaint Record Ajax Request
-if(isset($_GET['delete'])) {
+if (isset($_GET['delete'])) {
   $id = $_GET['id'];
 
-  if($db->delete($id)) {
+  if ($db->delete($id)) {
     echo json_encode([
       'status' => 'success',
       'message' => 'Complaint record deleted successfully !'

@@ -35,13 +35,13 @@ if (isset($_GET['readAll'])) {
       $statusClasses = '';
       switch ($row['status']) {
         case 'for pick-up':
-          $statusClasses = 'bg-[#A8C9D9] text-[#316988]'; // oks
+          $statusClasses = 'bg-sky-600 text-white'; // oks
           break;
         case 'for delivery':
-          $statusClasses = 'bg-[#B3CCE6] text-[#0E4483]'; // oks
+          $statusClasses = 'bg-[#0E4483] text-white'; // oks
           break;
         default:
-          $statusClasses = 'bg-gray-400 text-gray-700';
+          $statusClasses = 'bg-gray-700 text-white';
           break;
       }
 
@@ -52,8 +52,8 @@ if (isset($_GET['readAll'])) {
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['lname'] . '</td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['phone_number'] . '</td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['address'] . '</td>
-                    <td class="px-4 py-2">
-                      <div class="w-auto py-1 px-2 ' . $statusClasses . ' font-bold rounded-lg text-center">
+                    <td class="px-4 py-2 border-b border-gray-300">
+                      <div class="w-auto py-1 px-2 text-xs ' . $statusClasses . ' font-bold rounded-lg text-center">
                         ' . strtoupper($row['status']) . '
                       </div>
                     </td>

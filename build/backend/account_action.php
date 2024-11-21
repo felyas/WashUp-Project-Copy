@@ -61,16 +61,16 @@ if (isset($_GET['readAll'])) {
 
       switch ($row['role']) {
         case 'user':
-          $roleClasses = 'bg-yellow-400 text-yellow-700'; //oks
+          $roleClasses = 'bg-sky-600 text-white';
           break;
         case 'admin':
-          $roleClasses = 'bg-[#A8C9D9] text-[#316988]'; // oks
+          $roleClasses = 'bg-[#316988] text-white';
           break;
         case 'delivery':
-          $roleClasses = 'bg-[#A1B8D4] text-[#0E4483]';
+          $roleClasses = 'bg-[#0E4483] text-white';
           break;
         default:
-          $roleClasses = 'bg-gray-400 text-gray-700';
+          $roleClasses = 'bg-gray-700 text-white';
           break;
       }
 
@@ -82,7 +82,7 @@ if (isset($_GET['readAll'])) {
           <td class="px-4 py-2">' . $row['email'] . '</td>
           
           <td class="px-4 py-2">
-            <div class="w-auto py-1 px-2 ' . $roleClasses . ' font-bold rounded-lg text-center">
+            <div class="w-1/2 py-1 px-2 ' . $roleClasses . ' font-bold rounded-lg text-center text-xs">
               ' . strtoupper($row['role']) . '
             </div>
           </td>

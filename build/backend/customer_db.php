@@ -5,6 +5,18 @@ require_once './db_connection.php';
 class Database extends Config
 {
 
+  // FETCH CUSTOMER ADDRESS FROM BOOKING TABLE
+  public function customerAddress($user_id) {
+    $sql = 'SELECT * FROM booking WHERE user_id = :user_id ORDER BY id DESC LIMIT 1';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'user_id' => $user_id,
+    ]);
+    $result = $stmt->fetch();
+
+    return $result;
+  }
+
   // FETCH CUSTOMER DATA FROM DATABASE
   public function customerData($user_id) {
     $sql = 'SELECT * FROM users WHERE id = :user_id';

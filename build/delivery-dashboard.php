@@ -517,7 +517,7 @@ if ($_SESSION['role'] !== 'delivery') {
         </div>
 
         <div id="js-camera-parent" class="w-full h-full mt-8">
-          <div class="w-full h-full rounded-t-3xl" id="js-camera"></div>
+          <video id="js-camera" autoplay playsinline></video>
         </div>
         <div class="flex items-center justify-center p-4 z-50">
           <div class="border-2 border-solid border-gray-500 p-1 rounded-[50%] hover:opacity-90 active:opacity-90">
@@ -575,8 +575,8 @@ if ($_SESSION['role'] !== 'delivery') {
               <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
             </label>
 
-            <div class="mt-4 text-center flex w-full items-center justify-center" id="image-preview-file-upload">
-            </div>
+            <canvas class="mt-4 hidden w-full" id="image-preview-file-upload">
+            </canvas>
           </div>
 
           <div class="flex flex-col items-center justify-center mb-4">
@@ -645,9 +645,9 @@ if ($_SESSION['role'] !== 'delivery') {
               <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
               <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
             </label>
-            <div class="mt-4 text-center flex w-full items-center justify-center" id="image-preview-file-proof-upload">
+            <canvas class="mt-4 hidden w-full" id="image-preview-file-proof-upload">
               <!-- Image Preview for Proof -->
-            </div>
+            </canvas>
           </div>
 
           <!-- Image Upload Section for Receipt -->
@@ -665,9 +665,9 @@ if ($_SESSION['role'] !== 'delivery') {
               <p class="z-10 text-md text-center text-gray-500">Drag & Drop your files here</p>
               <img class="z-10 w-8 h-8" src="./img/icons/upload-image.svg" alt="">
             </label>
-            <div class="mt-4 text-center flex w-full items-center justify-center" id="image-preview-file-receipt-upload">
+            <canvas class="mt-4 hidden w-full" id="image-preview-file-receipt-upload">
               <!-- Image Preview for Receipt -->
-            </div>
+            </canvas>
           </div>
 
 

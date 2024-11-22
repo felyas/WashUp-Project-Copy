@@ -409,57 +409,96 @@ document.addEventListener("DOMContentLoaded", () => {
   const updateKiloForm = document.getElementById('upload-kilo-form');
   validateForm(updateKiloForm);
 
-  // const openCameraBtn = document.getElementById('js-open-camera');
   const closeCameraBtn = document.getElementById('js-close-camera');
   const takePhotoBtn = document.getElementById('js-take-photo');
   const cameraModal = document.getElementById('camera-modal');
+  const videoElement = document.getElementById('js-camera'); // Video element in your modal
   let targetInputId = ''; // Store target input ID
+  let stream = null; // Store the camera stream
 
   // Listen for clicks on any button that opens the camera
   document.querySelectorAll('.openCameraModalTrigger').forEach(button => {
-    button.addEventListener('click', (event) => {
-      // Set the target input ID from the data-target attribute
-      targetInputId = event.currentTarget.getAttribute('data-target');
+    button.addEventListener('click', async (event) => {
+      try {
+        // Set the target input ID from the data-target attribute
+        targetInputId = event.currentTarget.getAttribute('data-target');
 
-      // Open the camera modal and attach the webcam
-      Webcam.set({
-        width: 300,
-        height: 300,
-        image_format: 'jpeg',
-        jpeg_quality: 90,
-        constraints: {
-          video: { facingMode: { exact: "environment" } } // Back camera
+        cameraModal.classList.remove('hidden');
+
+        // Access the back camera
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: {
+            facingMode: { exact: "environment" }
+          }
+        });
+
+        // Attach the stream to the video element
+        videoElement.srcObject = stream;
+      } catch (error) {
+        try {
+          cameraModal.classList.remove('hidden');
+
+          const stream = await navigator.mediaDevices.getUserMedia({
+            video: true
+          });
+          videoElement.srcObject = stream;
+        } catch (fallbackError) {
+          console.error("Error accessing the camera:", fallbackError.message);
+          alert("Camera access denied or not available.");
         }
-      });
-      Webcam.attach('#js-camera');
-      document.querySelector('video').classList.add('w-full', 'h-full');
+      }
     });
   });
 
   // Capture the image and assign it to the specified input
   takePhotoBtn.addEventListener('click', () => {
-    Webcam.snap(function (dataUri) {
-      Webcam.reset();
-      cameraModal.classList.add('hidden');
+    // GETTING THE CORRECT CANVAS TO DISPLAY IMAGE
+    const imagePreview = document.getElementById(`image-preview-${targetInputId}`)
 
-      // Show preview in the correct preview div
-      document.getElementById(`image-preview-${targetInputId}`).innerHTML = `<img src="${dataUri}" alt="Captured Image" />`;
+    imagePreview.classList.remove('hidden');
+
+    if (imagePreview) {
+      // Get the canvas context
+      const context = imagePreview.getContext('2d');
+
+      // Match the canvas size to the video dimensions
+      imagePreview.classList.add('w-auto');
+      imagePreview.classList.add('h-auto');
+
+      // Draw the video frame onto the imagePreview
+      context.drawImage(videoElement, 0, 0, imagePreview.width, imagePreview.height);
+
+      // Convert canvas to a Data URI (Base64)
+      const dataUri = imagePreview.toDataURL('image/jpeg');
+
+      // Convert Data URI to a File object
       const capturedImageFile = dataURItoFile(dataUri);
 
       // Assign the file to the specified input field
       const fileInput = document.getElementById(targetInputId);
       const dataTransfer = new DataTransfer();
       dataTransfer.items.add(capturedImageFile);
-      fileInput.files = dataTransfer.files; // Assign a new file list to each input field
-    });
+      fileInput.files = dataTransfer.files;
+      console.log(fileInput.files);
+
+      // Reset the camera and close the modal
+      closeCamera();
+    }
   });
 
-  // Close Camera
-  closeCameraBtn.addEventListener('click', () => {
-    Webcam.reset();
-  });
+  // Close the camera and stop the stream
+  closeCameraBtn.addEventListener('click', closeCamera);
 
-  // Helper function to convert dataUri to a File with a unique filename
+  function closeCamera() {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop()); // Stop all tracks
+      stream = null;
+    }
+    cameraModal.classList.add('hidden');
+    videoElement.srcObject = null; // Clear the video stream
+  }
+
+  // Helper function to convert Data URI to a File object with a unique filename
   function dataURItoFile(dataUri) {
     const arr = dataUri.split(',');
     const mime = arr[0].match(/:(.*?);/)[1];
@@ -476,6 +515,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     return new File([u8arr], filename, { type: mime });
   }
+
 
 
   const warningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');

@@ -74,6 +74,17 @@ if (isset($_POST['signup'])) {
     exit();
   }
 
+  // Filter to allow only letters and spaces
+  if (!preg_match("/^[a-zA-Z\s]*$/", $first_name)) {
+    echo json_encode(['error' => 'First name must contain only letters']);
+    exit();
+  }
+
+  if (!preg_match("/^[a-zA-Z\s]*$/", $last_name)) {
+    echo json_encode(['error' => 'Last name must contain only letters']);
+    exit();
+  }
+
   // Validate email format
   if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     echo json_encode(['error' => 'Invalid email format']);

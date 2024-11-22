@@ -155,8 +155,13 @@ if ($_SESSION['role'] !== 'admin') {
           <p class="text-3xl my-4 font-semibold">Create an Account</p>
 
           <!-- Div to display success and errors. -->
-          <div class="error-div hidden w-full  flex items-center justify-center py-2 px-4 border bg-red-100 border-red-500 border-solid text-red-800 rounded-lg">
+          <div id="error-div" class="w-full hidden flex items-center justify-center py-2 px-4 text-sm text-red-800 rounded-lg">
             <p id='js-error-message'><!-- Dynamic Error --></p>
+          </div>
+
+          <!-- Div to display success and errors. -->
+          <div id="success-div" class=" w-full hidden flex items-center justify-center py-2 px-4 rounded-lg text-green-700 text-sm">
+            <p id='js-success-message'><!-- Dynamic Error --></p>
           </div>
 
           <form id="add-user-form" class="mt-4" novalidate>
@@ -189,13 +194,33 @@ if ($_SESSION['role'] !== 'admin') {
             </div>
             <div class="mb-4">
               <label for="password" class="block text-sm font-medium text-gray-500">Password</label>
-              <input required type="password" id="password" name="password" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Password: ">
-              <div class="text-red-500 text-sm hidden">Password is required!</div>
+              <div class="w-full relative">
+                <input required type="password" id="js-password" name="password" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Password: ">
+                <div class="text-red-500 text-sm hidden">Password is required!</div>
+                <div class="flex items-center justify-center space-x-3 absolute top-2 right-2">
+                  <button type="button" id="generate-password" class="w-auto h-auto">
+                    <div class="flex flex-col items-center justify-center h-auto w-auto ">
+                      <img src="./img/icons/lock.svg" alt="" class="w-4 h-4">
+                      <div class="flex w-full items-center justify-between h-3">
+                        <img src="./img/icons/asterisk.svg" alt="" class="w-2 h-2">
+                        <img src="./img/icons/asterisk.svg" alt="" class="w-2 h-2">
+                        <img src="./img/icons/asterisk.svg" alt="" class="w-2 h-2">
+                      </div>
+                    </div>
+                  </button>
+
+                  <img src="./img/icons/eye-close.svg" alt="Toggle Password Visibility" class="show-password w-5 h-5 cursor-pointer">
+                </div>
+              </div>
             </div>
             <div class="mb-4">
               <label for="cpassword" class="block text-sm font-medium text-gray-500">Confirm Password</label>
-              <input required type="password" id="cpassword" name="cpassword" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Confirm Password: ">
-              <div class="text-red-500 text-sm hidden">Confirm Password is required!</div>
+              <div class="w-full relative">
+                <input required type="password" id="js-cpassword" name="cpassword" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Confirm Password: ">
+                <div class="text-red-500 text-sm hidden">Confirm Password is required!</div>
+
+                <img src="./img/icons/eye-close.svg" alt="Toggle Password Visibility" class="show-password w-5 h-5 absolute top-3 right-2 cursor-pointer">
+              </div>
             </div>
 
 

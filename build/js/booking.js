@@ -173,33 +173,65 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData(addBookingForm);
     formData.append('add', 1);
 
-    const phoneInput = document.getElementById('js-phone_number');
-    const phoneFeedback = phoneInput.nextElementSibling; // Feedback element for phone number
+    let hasError = false;
 
-    // Validate the phone number format
-    if (!isPhoneNumberValid(phoneInput.value)) {
+    // Validate Phone Number
+    const phoneInput = document.getElementById('js-phone_number');
+    const phoneFeedback = phoneInput?.nextElementSibling; // Feedback element for phone number
+    if (phoneInput && !isPhoneNumberValid(phoneInput.value)) {
       phoneInput.classList.add('border-red-500');
-      phoneFeedback.classList.remove('hidden');
-      phoneFeedback.textContent = 'Phone number must be a valid 11-digit number';
-      document.querySelector('#top').scrollIntoView({ behavior: 'smooth' });
-      return;
+      phoneFeedback?.classList.remove('hidden');
+      phoneFeedback.textContent = 'Phone number must be a valid 11-digit number.';
+      hasError = true;
     } else {
-      phoneInput.classList.remove('border-red-500');
-      phoneFeedback.classList.add('hidden');
+      phoneInput?.classList.remove('border-red-500');
+      phoneFeedback?.classList.add('hidden');
     }
 
-    if (addBookingForm.checkValidity() === false) {
-      e.stopPropagation();
+    // Validate First Name and Last Name
+    const fnameInput = document.getElementById('js-fname');
+    const lnameInput = document.getElementById('js-lname');
+    const fnameFeedback = fnameInput.nextElementSibling;
+    const lnameFeedback = lnameInput.nextElementSibling;
 
+    const nameRegex = /^[a-zA-Z\s]+$/; // Allows letters and spaces
+
+    if (!nameRegex.test(fnameInput.value)) {
+      fnameInput.classList.add('border-red-500');
+      fnameFeedback.classList.remove('hidden');
+      fnameFeedback.textContent = 'First name must contain only letters.';
+      hasError = true;
+    } else {
+      fnameInput.classList.remove('border-red-500');
+      fnameFeedback.classList.add('hidden');
+    }
+
+    if (!nameRegex.test(lnameInput.value)) {
+      lnameInput.classList.add('border-red-500');
+      lnameFeedback.classList.remove('hidden');
+      lnameFeedback.textContent = 'Last name must contain only letters.';
+      hasError = true;
+    } else {
+      lnameInput.classList.remove('border-red-500');
+      lnameFeedback.classList.add('hidden');
+    }
+
+    // Validate all inputs
+    if (!addBookingForm.checkValidity()) {
       [...addBookingForm.elements].forEach((input) => {
-        if (input.tagName === 'INPUT' && (input.type === 'text' || input.type === 'date' || input.type === 'time' || input.type === 'number')) {
+        if (
+          input.tagName === 'INPUT' &&
+          (input.type === 'text' || input.type === 'date' || input.type === 'time' || input.type === 'number')
+        ) {
           const feedback = input.nextElementSibling;
 
-          if (!input.checkValidity()) {
+          if (!input.value.trim()) {
             input.classList.add('border-red-500');
             if (feedback && feedback.classList.contains('text-red-500')) {
               feedback.classList.remove('hidden');
+              feedback.textContent = 'This field is required.';
             }
+            hasError = true;
           } else {
             input.classList.remove('border-red-500');
             if (feedback && feedback.classList.contains('text-red-500')) {
@@ -210,26 +242,29 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       document.querySelector('#top').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Show modal if there are errors
+    if (hasError) {
       const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
       errorWarningModal.show();
-
-      return false;
+      return;
     } else {
+      // If no errors, proceed to submit
       addBookingBtn.value = 'Please Wait...';
 
       const data = await fetch('./backend/customer_action.php', {
         method: 'POST',
         body: formData,
       });
+
       const response = await data.text();
 
       if (response.includes('success')) {
         showToaster('Your booking has been placed!', 'check', '#047857', '#065f46');
-
         addBookingBtn.disabled = true;
         addBookingBtn.classList.add('opacity-50', 'cursor-not-allowed');
         window.location.href = './customer-dashboard.php';
-
       } else {
         showToaster('Something went wrong!', 'exclamation-error', '#d95f5f', '#c93c3c');
       }

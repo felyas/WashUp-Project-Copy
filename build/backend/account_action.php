@@ -21,6 +21,40 @@ if (isset($_POST['add'])) {
   $password = $util->testInput($_POST['password']);
   $cpassword = $util->testInput($_POST['cpassword']);
 
+  if (empty($fname) || empty($lname) || empty($email) || empty($role) || empty($password) || empty($cpassword)) {
+    echo json_encode([
+      'status' => 'error',
+      'message' => 'All input fields are required'
+    ]);
+    exit();
+  }
+
+  // Filter to allow only letters and spaces
+  if (!preg_match("/^[a-zA-Z\s]*$/", $fname)) {
+    echo json_encode([
+      'status' => 'error',
+      'message' => 'First name must contain only letters',
+    ]);
+    exit();
+  }
+
+  if (!preg_match("/^[a-zA-Z\s]*$/", $lname)) {
+    echo json_encode([
+      'status' => 'error',
+      'message' => 'Last name must contain only letters',
+    ]);
+    exit();
+  }
+
+  // Validate email format
+  if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    echo json_encode([
+      'status' => 'error',
+      'message' => 'Invalid email format',
+    ]);
+    exit();
+  }
+
   // Call the method in db.php to handle the insertion
   $result = $db->insertAdmin($fname, $lname, $email, $role, $password, $cpassword);
 

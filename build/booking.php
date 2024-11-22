@@ -107,28 +107,28 @@ if (!isset($_SESSION['user_id'])) {
       <form id="add-booking-form" class="w-full px-6 border border-solid bg-white shadow-lg" novalidate>
         <div class="w-full">
           <p class="pb-2 pt-6 text-md font-semibold">Checkout Details</p>
-          <div class="grid grid-cols-2 gap-x-4 mb-2 align-top">
-            <div class="grid grid-cols-1 justify-start">
-              <label for="fname" class="text-sm text-gray-500">First Name</label>
-              <input id="js-fname" type="text" name="fname" class="p-2 border border-ashblack rounded-md" placeholder="Felix" required>
+          <div class="grid grid-cols-2 gap-4 mb-4">
+            <div class="">
+              <label for="fname" class="block text-sm text-gray-500">First Name</label>
+              <input type="text" id="js-fname" name="fname" class="mt-1 block w-full border-ashblack rounded-md py-2 px-2 border border-solid" placeholder=" First Name: " required>
               <div class="text-red-500 text-sm hidden">First name is required!</div>
             </div>
-            <div class="grid grid-cols-1 justify-start">
-              <label for="lname" class="text-sm text-gray-500">Last Name</label>
-              <input id="js-lname" type="text" name="lname" class="p-2 border border-ashblack rounded-md" placeholder="Bragais" required>
+            <div class="">
+              <label for="lname" class="block text-sm text-gray-500">Last Name</label>
+              <input type="text" id="js-lname" name="lname" class="mt-1 block w-full border-ashblack rounded-md py-2 px-2 border border-solid" placeholder=" Last Name: " required>
               <div class="text-red-500 text-sm hidden">Last name is required!</div>
             </div>
           </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-x-4 mb-2">
-            <div class="grid grid-cols-1 justify-start">
-              <label for="phone_number" class="text-sm text-gray-500">Phone Number</label>
-              <input id="js-phone_number" type="text" name="phone_number" class="p-2 border border-ashblack rounded-md" placeholder="e.g., +63 912 345 6789" required>
+          <div class="grid grid-cols-2 gap-4 mb-2">
+            <div class="">
+              <label for="phone_number" class="block text-sm text-gray-500">Phone Number</label>
+              <input type="text" id="js-phone_number" name="phone_number" class="mt-1 block w-full border-ashblack rounded-md py-2 px-2 border border-solid" placeholder="e.g., +63 912 345 6789" required>
               <div class="text-red-500 text-sm hidden">Phone number is required!</div>
             </div>
-            <div class="grid grid-cols-1">
-              <label for="address" class="text-sm text-gray-500">Address</label>
-              <input id="js-address" type="text" name="address" class="p-2 border border-ashblack rounded-md" placeholder="e.g., Villa Rizza, Blk 2 Lot 3, Paciano Rizal" required>
+            <div class="">
+              <label for="address" class="block text-sm text-gray-500">Address</label>
+              <input type="text" id="js-address" name="address" class="mt-1 block w-full border-ashblack rounded-md py-2 px-2 border border-solid" placeholder="e.g., Villa Rizza, Blk 2 Lot 3, Paciano Rizal" required>
               <div class="text-red-500 text-sm hidden">Address is required!</div>
             </div>
           </div>
@@ -136,15 +136,15 @@ if (!isset($_SESSION['user_id'])) {
           <div class="w-full">
             <p class="pb-2 pt-6 text-md font-semibold">Choose your prefered pick-up date & time</p>
           </div>
-          <div class="grid grid-cols-2 gap-x-4 mb-2">
-            <div class="grid grid-cols-1 justify-start">
-              <label for="pickup-date" class="text-sm text-gray-500">Pick-up Date</label>
-              <input type="date" id="pickup-date" name="pickup_date" class="p-2 border border-ashblack rounded-md" required>
+          <div class="grid grid-cols-2 gap-4 mb-2">
+            <div class="">
+              <label for="pickup-date" class="block text-sm text-gray-500">Pick-up Date</label>
+              <input type="date" id="pickup-date" name="pickup_date" class="mt-1 block w-full border-ashblack rounded-md py-2 px-2 border border-solid" required>
               <div class="text-red-500 text-sm hidden">Pick-up date is required!</div>
             </div>
-            <div class="grid grid-cols-1 justify-start">
-              <label for="pickup-time" class="text-sm text-gray-500">Pick-up Time</label>
-              <select id="pickup-time" name="pickup_time" class="p-2 border border-ashblack rounded-md max-h-12 overflow-auto" required>
+            <div class="">
+              <label for="pickup-time" class="block text-sm text-gray-500">Pick-up Time</label>
+              <select id="pickup-time" name="pickup_time" class="mt-1 block w-full border-ashblack rounded-md py-2 px-2 border border-solid p-2 max-h-12 overflow-auto" required>
                 <!-- Options will be dynamically populated by JavaScript -->
               </select>
               <div class="text-red-500 text-sm hidden">Pick-up time is required!</div>

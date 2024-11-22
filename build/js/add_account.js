@@ -5,92 +5,122 @@ document.addEventListener("DOMContentLoaded", () => {
   handleDisplayCurrentTime();
   handleDropdown();
 
+  document.querySelectorAll('.show-password').forEach((icon) => {
+    icon.addEventListener('click', () => {
+      const container = icon.closest('.relative');
+      const input = container.querySelector('input[type="password"], input[type="text"]');
+
+      // Toggle the type of the input field
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.src = './img/icons/eye-open.svg';
+      } else {
+        input.type = 'password';
+        icon.src = './img/icons/eye-close.svg';
+      }
+    });
+  });
+
+  const generatePasswordBtn = document.getElementById('generate-password');
+  generatePasswordBtn.addEventListener('click', () => {
+    const passwordInp = document.getElementById('js-password');
+    const cpasswordInp = document.getElementById('js-cpassword');
+
+    // Function to generate a random password
+    const generatePassword = (length) => {
+      const uppercase = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      const lowercase = "abcdefghijklmnopqrstuvwxyz";
+      const numbers = "0123456789";
+      const specialChars = "!@#$%&*_?";
+      const allChars = uppercase + lowercase + numbers + specialChars;
+
+      let password = "";
+
+      // Ensure the password includes at least one character of each type
+      password += uppercase[Math.floor(Math.random() * uppercase.length)];
+      password += lowercase[Math.floor(Math.random() * lowercase.length)];
+      password += numbers[Math.floor(Math.random() * numbers.length)];
+      password += specialChars[Math.floor(Math.random() * specialChars.length)];
+
+      // Fill the rest of the password with random characters
+      for (let i = password.length; i < length; i++) {
+        password += allChars[Math.floor(Math.random() * allChars.length)];
+      }
+
+      // Shuffle the password to randomize character positions
+      password = password.split('').sort(() => Math.random() - 0.5).join('');
+      return password;
+    };
+
+    // Generate a 12-character password
+    const newPassword = generatePassword(12);
+
+    // Set the generated password to the input fields
+    passwordInp.value = newPassword;
+    cpasswordInp.value = newPassword;
+  });
+
+
+
   const addUserForm = document.getElementById('add-user-form');
   const addUserBtn = document.getElementById('add-user-btn');
 
-  // Handle the input validation from add items
-  addUserForm.addEventListener('input', (e) => {
-    const target = e.target;
-    const feedback = target.nextElementSibling;
+  const errorDiv = document.getElementById('error-div');
+  const errorMsg = document.getElementById('js-error-message');
+  const successDiv = document.getElementById('success-div');
 
-    if (target.tagName === 'INPUT' && (target.type === 'text' || target.type === 'email' || target.type === 'password')) {
-      if (target.checkValidity()) {
-        target.classList.remove('border-red-500');
-        target.classList.add('border-green-700'); // Change border to green
-        feedback.classList.add('hidden');
-      } else {
-        target.classList.remove('border-green-700');
-        target.classList.add('border-red-500'); // Change border to red if still invalid
-        feedback.classList.remove('hidden');
-      }
-    }
-  });
-
+  let timeoutId;
 
   // Handle Add Administrator Ajax Request
   addUserForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+    addUserBtn.value = 'Please Wait...';
 
     const formData = new FormData(addUserForm);
     formData.append('add', 1);
 
-    if (addUserForm.checkValidity() === false) {
-      e.stopPropagation();
-
-      [...addUserForm.elements].forEach((input) => {
-        if (input.tagName === 'INPUT' && (input.type === 'text' || input.type === 'email' || input.type === 'password')) {
-          const feedback = input.nextElementSibling;
-
-          if (!input.checkValidity()) {
-            input.classList.add('border-red-500');
-            if (feedback && feedback.classList.contains('text-red-500')) {
-              feedback.classList.remove('hidden');
-            }
-          } else {
-            input.classList.remove('border-red-500');
-            if (feedback && feedback.classList.contains('text-red-500')) {
-              feedback.classList.add('hidden');
-            }
-          }
-        }
+    if (formData) {
+      const data = await fetch('./backend/account_action.php', {
+        method: 'POST',
+        body: formData,
       });
-      const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
-      errorWarningModal.show();
-      return false;
-    } else {
-      addUserBtn.value = 'Please Wait...';
 
-      try {
-        const data = await fetch('./backend/account_action.php', {
-          method: 'POST',
-          body: formData,
-        });
+      const response = await data.json();  // Expect a JSON response
 
-        const response = await data.json();  // Expect a JSON response
+      // Handle the response
+      if (response.status === 'success') {
+        showToaster('User added successfully !', 'check', '#047857', '#065f46');
+        addUserBtn.disabled = true;
+        addUserBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        addUserForm.reset();
+        addUserBtn.value = 'Add';
 
-        // Handle the response
-        if (response.status === 'success') {
-          const green600 = '#047857';
-          const green700 = '#065f46';
-          showToaster('User added successfully !', 'check', green600, green700);
-          addUserBtn.disabled = true;
-          addUserBtn.classList.add('opacity-50', 'cursor-not-allowed');
-
-          setTimeout(() => {
-            window.location.href = './account.php';
-            addUserForm.reset();
-          }, 500);
-        } else {
-          const red600 = '#d95f5f';
-          const red700 = '#c93c3c';
-          showToaster(`${response.message}`, 'exclamation-error', red600, red700);
-          document.getElementById('add-user-btn').value = 'Add User';
+        if (timeoutId) {
+          clearTimeout(timeoutId);
         }
-      } catch (error) {
-        const red600 = '#d95f5f';
-        const red700 = '#c93c3c';
-        showToaster(`Something went wrong !`, 'exclamation-error', red600, red700);
-        document.getElementById('add-user-btn').value = 'Add User';
+
+        timeoutId = setTimeout(() => {
+          window.location.href = './account.php';
+          addUserForm.reset();
+        }, 500);
+      } if (response.status === 'error') {
+        errorDiv.classList.remove('hidden');
+        errorMsg.innerText = response.message;
+        addUserBtn.value = 'Add';
+
+        if (timeoutId) {
+          clearTimeout(timeoutId);
+        }
+
+        timeoutId = setTimeout(() => {
+          errorDiv.classList.add('hidden');
+          errorMsg.innerText = '';
+        }, 3000);
+      } else {
+        console.log(response);
+        
+        showToaster(`${response.message}`, 'exclamation-error', '#d95f5f', '#c93c3c');
+        addUserBtn.value = 'Add';
       }
     }
   });

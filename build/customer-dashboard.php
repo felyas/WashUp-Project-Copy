@@ -448,23 +448,23 @@ if ($_SESSION['role'] !== 'user') {
         <input type="hidden" name="id" id="id">
         <div class="grid grid-cols-2 gap-2">
           <div class="mb-4">
-            <label for="fname" class="block text-sm font-medium text-gray-500">First Name</label>
+            <label for="fname" class="block text-sm text-gray-500">First Name</label>
             <input type="text" id="fname" name="fname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" First Name: " required>
             <div class="text-red-500 text-sm hidden">First name is required!</div>
           </div>
           <div class="mb-4">
-            <label for="lname" class="block text-sm font-medium text-gray-500">Last Name</label>
+            <label for="lname" class="block text-sm text-gray-500">Last Name</label>
             <input type="text" id="lname" name="lname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" Last Name: " required>
             <div class="text-red-500 text-sm hidden">Last name is required!</div>
           </div>
         </div>
         <div class="mb-4">
-          <label for="phone_number" class="block text-sm font-medium text-gray-500">Phone Number</label>
+          <label for="phone_number" class="block text-sm text-gray-500">Phone Number</label>
           <input type="text" id="phone_number" name="phone_number" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder="e.g., +63 912 345 6789" required>
           <div class="text-red-500 text-sm hidden">Phone number is required!</div>
         </div>
         <div class="mb-4">
-          <label for="address" class="block text-sm font-medium text-gray-500">Address</label>
+          <label for="address" class="block text-sm text-gray-500">Address</label>
           <input type="text" id="address" name="address" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder="e.g., Villa Rizza, Blk 2 Lot 3, Paciano Rizal" required>
           <div class="text-red-500 text-sm hidden">Address is required!</div>
         </div>
@@ -584,35 +584,35 @@ if ($_SESSION['role'] !== 'user') {
       <div class="h-auto w-full overflow-y-auto max-h-72 flex flex-col items-center">
         <p class="text-gray-500 text-md font-semibold mb-2">Customer Complaint Form</p>
         <form action="" id="report-complain-form" class="mt-2" novalidate>
-          <div class="grid grid-cols-2 gap-2">
+          <div id="top" class="grid grid-cols-2 gap-2">
             <div class="mb-4">
-              <label for="fname" class="block text-sm font-medium text-gray-500">First Name</label>
-              <input type="text" id="fname" name="fname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" First Name: " required>
+              <label for="fname" class="block text-sm text-gray-500">First Name</label>
+              <input type="text" id="complaint-fname" name="fname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" First Name: " required>
               <div class="text-red-500 text-sm hidden">First name is required!</div>
             </div>
             <div class="mb-4">
-              <label for="lname" class="block text-sm font-medium text-gray-500">Last Name</label>
-              <input type="text" id="lname" name="lname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" Last Name: " required>
+              <label for="lname" class="block text-sm text-gray-500">Last Name</label>
+              <input type="text" id="complaint-lname" name="lname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" Last Name: " required>
               <div class="text-red-500 text-sm hidden">Last name is required!</div>
             </div>
           </div>
           <div class="grid grid-cols-2 gap-2">
             <div class="mb-4">
-              <label for="phone_number" class="block text-sm font-medium text-gray-500">Phone Number</label>
-              <input type="text" id="phone_number" name="phone_number" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder="Phone Number: " required>
+              <label for="phone_number" class="block text-sm text-gray-500">Phone Number</label>
+              <input type="text" id="complaint-phone_number" name="phone_number" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder="Phone Number: " required>
               <div class="text-red-500 text-sm hidden">Phone number is required!</div>
             </div>
             <div class="mb-4">
-              <label for="email" class="block text-sm font-medium text-gray-500">Email</label>
-              <input type="text" id="email" name="email" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" Email: " required>
+              <label for="email" class="block text-sm text-gray-500">Email</label>
+              <input type="text" id="complaint-email" name="email" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" Email: " required>
               <div class="text-red-500 text-sm hidden">Email is required!</div>
             </div>
           </div>
 
           <!-- Common Problem Dropdown -->
           <div class="mb-4">
-            <label for="common_problem" class="block text-sm font-medium text-gray-500">Common Problem</label>
-            <select id="reason" name="reason" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" required>
+            <label for="common_problem" class="block text-sm text-gray-500">Common Problem</label>
+            <select id="complaint-reason" name="reason" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" required>
               <option value="" selected disabled>Select a common issue</option>
               <option value="delayed_pickup">Delayed Laundry Pickup</option>
               <option value="missing_items">Missing Items in Laundry</option>
@@ -627,8 +627,8 @@ if ($_SESSION['role'] !== 'user') {
 
           <!-- Description Textarea -->
           <div class="mb-4">
-            <label for="description" class="block text-sm font-medium text-gray-500">Describe Your Problem</label>
-            <textarea name="description" id="description" rows="4" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder="Describe the issue in detail" required></textarea>
+            <label for="description" class="block text-sm text-gray-500">Describe Your Problem</label>
+            <textarea name="description" id="complaint-description" rows="4" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder="Describe the issue in detail" required></textarea>
             <div class="text-red-500 text-sm hidden">Description is required!</div>
           </div>
 

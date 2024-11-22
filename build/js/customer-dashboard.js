@@ -275,34 +275,65 @@ document.addEventListener("DOMContentLoaded", () => {
     const formData = new FormData(editBookingForm);
     formData.append('update', 1);
 
-    const phoneInput = document.getElementById('phone_number');
-    const phoneFeedback = phoneInput.nextElementSibling;
+    let hasError = false;
 
-    // Validate the phone number format
-    if (!isPhoneNumberValid(phoneInput.value)) {
+    // Validate Phone Number
+    const phoneInput = document.getElementById('phone_number');
+    const phoneFeedback = phoneInput?.nextElementSibling; // Feedback element for phone number
+    if (phoneInput && !isPhoneNumberValid(phoneInput.value)) {
       phoneInput.classList.add('border-red-500');
-      phoneFeedback.classList.remove('hidden');
-      phoneFeedback.textContent = 'Phone number must be a valid 11-digit number';
-      return;
+      phoneFeedback?.classList.remove('hidden');
+      phoneFeedback.textContent = 'Phone number must be a valid 11-digit number.';
+      hasError = true;
     } else {
-      phoneInput.classList.remove('border-red-500');
-      phoneFeedback.classList.add('hidden');
+      phoneInput?.classList.remove('border-red-500');
+      phoneFeedback?.classList.add('hidden');
     }
 
-    // Form validation
-    if (editBookingForm.checkValidity() === false) {
-      e.stopPropagation();
+    // Validate First Name and Last Name
+    const fnameInput = document.getElementById('fname');
+    const lnameInput = document.getElementById('lname');
+    const fnameFeedback = fnameInput.nextElementSibling;
+    const lnameFeedback = lnameInput.nextElementSibling;
 
-      // Add validation error handling
+    const nameRegex = /^[a-zA-Z\s]+$/;
+
+    if (!nameRegex.test(fnameInput.value)) {
+      fnameInput.classList.add('border-red-500');
+      fnameFeedback.classList.remove('hidden');
+      fnameFeedback.textContent = 'First name must contain only letters.';
+      hasError = true;
+    } else {
+      fnameInput.classList.remove('border-red-500');
+      fnameFeedback.classList.add('hidden');
+    }
+
+    if (!nameRegex.test(lnameInput.value)) {
+      lnameInput.classList.add('border-red-500');
+      lnameFeedback.classList.remove('hidden');
+      lnameFeedback.textContent = 'Last name must contain only letters.';
+      hasError = true;
+    } else {
+      lnameInput.classList.remove('border-red-500');
+      lnameFeedback.classList.add('hidden');
+    }
+
+    // Validate all inputs
+    if (!editBookingForm.checkValidity()) {
       [...editBookingForm.elements].forEach((input) => {
-        if (input.tagName === 'INPUT' && (input.type === 'text' || input.type === 'number')) {
+        if (
+          input.tagName === 'INPUT' &&
+          (input.type === 'text' || input.type === 'number')
+        ) {
           const feedback = input.nextElementSibling;
 
-          if (!input.checkValidity()) {
+          if (!input.value.trim()) {
             input.classList.add('border-red-500');
             if (feedback && feedback.classList.contains('text-red-500')) {
               feedback.classList.remove('hidden');
+              feedback.textContent = 'This field is required.';
             }
+            hasError = true;
           } else {
             input.classList.remove('border-red-500');
             if (feedback && feedback.classList.contains('text-red-500')) {
@@ -312,10 +343,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       });
 
+      document.querySelector('#top').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Show modal if there are errors
+    if (hasError) {
       const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
       errorWarningModal.show();
-      return false;
-
+      return;
     } else {
       document.getElementById('edit-booking-btn').value = 'Please Wait...';
 
@@ -574,35 +609,90 @@ document.addEventListener("DOMContentLoaded", () => {
   const customerComplaintForm = document.getElementById('report-complain-form');
   const addComplaintBtn = document.getElementById('add-complaint-btn');
   validateForm(customerComplaintForm);
+
   customerComplaintForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
     const formData = new FormData(customerComplaintForm);
     formData.append('add-complaint', 1);
 
-    // Form Validation
-    if (customerComplaintForm.checkValidity() === false) {
-      e.stopPropagation();
+    let hasError = false;
 
-      // Add validation error handling
+    // Validate Phone Number
+    const phoneInput = document.getElementById('complaint-phone_number');
+    const phoneFeedback = phoneInput?.nextElementSibling; // Feedback element for phone number
+    if (phoneInput && !isPhoneNumberValid(phoneInput.value)) {
+      phoneInput.classList.add('border-red-500');
+      phoneFeedback?.classList.remove('hidden');
+      phoneFeedback.textContent = 'Phone number must be a valid 11-digit number.';
+      hasError = true;
+    } else {
+      phoneInput?.classList.remove('border-red-500');
+      phoneFeedback?.classList.add('hidden');
+    }
+
+    // Validate First Name and Last Name
+    const fnameInput = document.getElementById('complaint-fname');
+    const lnameInput = document.getElementById('complaint-lname');
+    const fnameFeedback = fnameInput.nextElementSibling;
+    const lnameFeedback = lnameInput.nextElementSibling;
+
+    const nameRegex = /^[a-zA-Z\s]+$/; // Allows letters and spaces
+
+    if (!nameRegex.test(fnameInput.value)) {
+      fnameInput.classList.add('border-red-500');
+      fnameFeedback.classList.remove('hidden');
+      fnameFeedback.textContent = 'First name must contain only letters.';
+      hasError = true;
+    } else {
+      fnameInput.classList.remove('border-red-500');
+      fnameFeedback.classList.add('hidden');
+    }
+
+    if (!nameRegex.test(lnameInput.value)) {
+      lnameInput.classList.add('border-red-500');
+      lnameFeedback.classList.remove('hidden');
+      lnameFeedback.textContent = 'Last name must contain only letters.';
+      hasError = true;
+    } else {
+      lnameInput.classList.remove('border-red-500');
+      lnameFeedback.classList.add('hidden');
+    }
+
+    // Validate all inputs
+    if (!customerComplaintForm.checkValidity()) {
       [...customerComplaintForm.elements].forEach((input) => {
-        const feedback = input.nextElementSibling;
+        if (
+          input.tagName === 'INPUT' &&
+          (input.type === 'text' || input.type === 'email' || input.tagName === 'TEXTAREA' || input.type === 'number')
+        ) {
+          const feedback = input.nextElementSibling;
 
-        // Validation for text, number, email, and textarea fields
-        if ((input.tagName === 'INPUT' && (input.type === 'text' || input.type === 'number' || input.type === 'email')) || input.tagName === 'TEXTAREA') {
-          if (!input.checkValidity()) {
+          if (!input.value.trim()) {
             input.classList.add('border-red-500');
-            feedback.classList.remove('hidden');
+            if (feedback && feedback.classList.contains('text-red-500')) {
+              feedback.classList.remove('hidden');
+              feedback.textContent = 'This field is required.';
+            }
+            hasError = true;
           } else {
             input.classList.remove('border-red-500');
-            feedback.classList.add('hidden');
+            if (feedback && feedback.classList.contains('text-red-500')) {
+              feedback.classList.add('hidden');
+            }
           }
         }
       });
+
+      document.querySelector('#top').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Show modal if there are errors
+    if (hasError) {
+      document.querySelector('#top').scrollIntoView({ behavior: 'smooth' });
       const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
       errorWarningModal.show();
-      return false;
-
+      return;
     } else {
       addComplaintBtn.value = "Please wait...";
       const data = await fetch('./backend/customer_action.php', {

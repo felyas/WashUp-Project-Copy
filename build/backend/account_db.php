@@ -5,6 +5,18 @@ require_once './db_connection.php';
 class Database extends Config
 {
 
+  // CHECK IF EMAIL IS ALREADY IN THE DATABASE
+  // CHECK IF EMAIL EXIST IN DATABASE
+  public function checkEmailExists($email)
+  {
+    $sql = 'SELECT * FROM users WHERE email = :email';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['email' => $email]);
+    $result = $stmt->rowCount() > 0;
+
+    return $result;
+  }
+
   // Insert New Admin Account into Database
   public function insertAdmin($fname, $lname, $email, $role, $password, $cpassword)
   {
@@ -86,7 +98,8 @@ class Database extends Config
   }
 
   // View Users Detail from Database
-  public function viewDetails($id) {
+  public function viewDetails($id)
+  {
     $sql = 'SELECT * FROM users WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute(['id' => $id]);
@@ -96,7 +109,8 @@ class Database extends Config
   }
 
   // Delete User from Database
-  public function deleteUser($id) {
+  public function deleteUser($id)
+  {
     $sql = 'DELETE FROM users WHERE id = :id';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute(['id' => $id]);

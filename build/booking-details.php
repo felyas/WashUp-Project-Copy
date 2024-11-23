@@ -344,7 +344,8 @@ if ($_SESSION['role'] !== 'admin') {
               <div class="grid grid-cols-2 gap-4 border border-solid border-gray-200 p-2 shadow-sm rounded-md" id="item-set-1">
                 <div>
                   <label for="item-1" class="block text-sm font-medium text-gray-500">Item Used</label>
-                  <input type="text" id="item-1" name="item1" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., Detergent" required>
+                  <select name="item1" id="item-1" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid 'border-ashblack" required>
+                  </select>
                   <div class="text-red-500 text-sm hidden">Item is required!</div>
                 </div>
                 <div>

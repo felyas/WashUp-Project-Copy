@@ -354,10 +354,38 @@ document.addEventListener("DOMContentLoaded", () => {
   const addItemButton = document.getElementById('add-item');
   const itemContainer = document.getElementById('item-quantity-container');
 
+  const fetchInventory = async () => {
+    const data = await fetch(`./backend/booking-details_action.php?items=1`, {
+      method: 'GET',
+    });
+    const response = await data.json();
+
+    return response;
+  }
+
+  const firstSelection = async () => {
+    const inventory = await fetchInventory();
+    const selection1 = document.getElementById('item-1');
+    const defaultOption = document.createElement('option');
+    defaultOption.textContent = 'Select a product';
+    defaultOption.value = '';
+    selection1.appendChild(defaultOption);
+
+    inventory.forEach(product => {
+      const option = document.createElement('option');
+      option.value = product.product_name;
+      option.textContent = product.product_name;
+      selection1.appendChild(option);
+    });
+  }
+  firstSelection();
+
   // Function to add new item and quantity inputs
-  function addItem() {
+  const addItem = async () => {
     if (itemCount < maxInputs) {
       itemCount++;
+
+      const inventory = await fetchInventory();
 
       // Create a new div for item and quantity, with relative positioning for the delete button
       const newItemDiv = document.createElement('div');
@@ -367,28 +395,40 @@ document.addEventListener("DOMContentLoaded", () => {
       // Create a div for the first column (Item Used label and input)
       const itemDiv = document.createElement('div');
 
-      // Create the input for item name
+      // Create the label for the dropdown/
       const itemLabel = document.createElement('label');
       itemLabel.setAttribute('for', `item${itemCount}`);
       itemLabel.classList.add('block', 'text-sm', 'font-medium', 'text-gray-500');
       itemLabel.textContent = 'Item Used';
 
-      const itemInput = document.createElement('input');
-      itemInput.setAttribute('type', 'text');
-      itemInput.setAttribute('id', `item${itemCount}`);
-      itemInput.setAttribute('name', `item${itemCount}`); // Unique name
-      itemInput.setAttribute('placeholder', 'e.g., Detergent');
-      itemInput.setAttribute('required', '');
-      itemInput.classList.add('mt-1', 'block', 'w-full', 'border-gray-300', 'rounded-sm', 'py-2', 'px-2', 'border', 'border-solid', 'border-ashblack');
+      // Create the dropdown
+      const itemSelect = document.createElement('select');
+      itemSelect.setAttribute('id', `item${itemCount}`);
+      itemSelect.setAttribute('name', `item${itemCount}`); // Unique name
+      itemSelect.setAttribute('required', '');
+      itemSelect.classList.add('mt-1', 'block', 'w-full', 'border-gray-300', 'rounded-sm', 'py-2', 'px-2', 'border', 'border-solid', 'border-ashblack');
 
-      // Error message for item input
+      // Populate dropdown options
+      const defaultOption = document.createElement('option');
+      defaultOption.textContent = 'Select a product';
+      defaultOption.value = '';
+      itemSelect.appendChild(defaultOption);
+
+      inventory.forEach(product => {
+        const option = document.createElement('option');
+        option.value = product.product_name;
+        option.textContent = product.product_name;
+        itemSelect.appendChild(option);
+      })
+
+      // Error message for item dropdown
       const itemError = document.createElement('div');
       itemError.classList.add('text-red-500', 'text-sm', 'hidden');
       itemError.textContent = 'Item is required!';
 
-      // Append label, input, and error to the item div
+      // Append label, dropdown, and error to the item div
       itemDiv.appendChild(itemLabel);
-      itemDiv.appendChild(itemInput);
+      itemDiv.appendChild(itemSelect);
       itemDiv.appendChild(itemError);
 
       // Create a div for the second column (Quantity label and input)
@@ -445,7 +485,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Append the new div to the container
       itemContainer.appendChild(newItemDiv);
-      // Append the wrapper div to the new item div
       newItemDiv.appendChild(deleteButtonDiv);
 
       // Hide "Add More Items" button if the limit is reached

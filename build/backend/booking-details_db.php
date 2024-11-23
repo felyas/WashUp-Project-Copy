@@ -71,7 +71,7 @@ class Database extends Config
     $stmt->bindValue(':query', $searchQuery, PDO::PARAM_STR);
     if ($status) {
       $stmt->bindValue(':status', $status, PDO::PARAM_STR);
-    } 
+    }
     if ($service) {
       $stmt->bindValue(':service_type', $service, PDO::PARAM_STR);
     }
@@ -169,5 +169,15 @@ class Database extends Config
     $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
     return $result ? $result['quantity'] : 0;
+  }
+
+  // GET ALL THE ITEMS FROM INVENTORY TABLE
+  public function fethcItems() {
+    $sql = 'SELECT * FROM inventory';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetchAll();
+
+    return $result;
   }
 }

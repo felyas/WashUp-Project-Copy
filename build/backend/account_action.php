@@ -38,6 +38,15 @@ if (isset($_POST['add'])) {
     exit();
   }
 
+  $emailExist = $db->checkEmailExists($email);
+  if ($emailExist) {
+    echo json_encode([
+      'status' => 'error',
+      'message' => 'Email is already taken',
+    ]);
+    exit();
+  }
+
   if (!preg_match("/^[a-zA-Z\s]*$/", $lname)) {
     echo json_encode([
       'status' => 'error',
@@ -55,15 +64,31 @@ if (isset($_POST['add'])) {
     exit();
   }
 
+  if ($password !== $cpassword) {
+    echo json_encode([
+      'status' => 'error',
+      'message' => 'Passwords do not match',
+    ]);
+    exit();
+  }
+
   // Call the method in db.php to handle the insertion
   $result = $db->insertAdmin($fname, $lname, $email, $role, $password, $cpassword);
 
   // Check the result and return a JSON response
-  if ($result === true) {
-    echo json_encode([
-      'status' => 'success',
-      'message' => 'User added successfully.'
-    ]);
+  if ($result) {
+    $receiver = $email;
+    $subject = "Washup Laundry Account Password";
+    $body = "Your password is: $password";
+
+    $mailed = $util->sendEmail($receiver, $subject, $body);
+
+    if ($mailed) {
+      echo json_encode([
+        'status' => 'success',
+        'message' => 'User added successfully.'
+      ]);
+    }
   } else {
     echo json_encode([
       'status' => 'error',

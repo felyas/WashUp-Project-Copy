@@ -313,3 +313,16 @@ if (isset($_POST['updatekilo'])) {
   ]);
   exit();
 }
+
+if (isset($_GET['items'])) {
+  $items = $db->fethcItems();
+
+  if($items) {
+    echo json_encode($items);
+  } else {
+    echo json_encode([
+      'status' => 'error',
+      'message' => 'Something went wrong!',
+    ]);
+  }
+}

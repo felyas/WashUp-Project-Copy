@@ -284,9 +284,13 @@ document.addEventListener("DOMContentLoaded", () => {
       method: 'GET',
     });
     const response = await data.json();
+
     document.getElementById('display-id-editInfo').innerText = response.id;
     document.getElementById('display-full-name-editInfo').innerText = response.fname + ' ' + response.lname;
     document.getElementById('display-phone-number-editInfo').innerText = response.phone_number;
+    document.getElementById('display-pickup-time-editInfo').innerText = response.pickup_time;
+    document.getElementById('display-pickup-date-editInfo').innerText = response.pickup_date;
+
   }
 
 
@@ -304,19 +308,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Add validation error handling
       [...editForm.elements].forEach((input) => {
-        const feedback = input.nextElementSibling;
+        const feedback = input.nextElementSibling; // Assume error message follows the input
 
-        if (input.tagName === 'INPUT' && (input.type === 'text' || input.type === 'date' || input.type === 'time')) {
-          // Handle text input validation feedback
-          if (!input.checkValidity()) {
+        if (['INPUT', 'SELECT'].includes(input.tagName)) {
+          const isInvalid = input.tagName === 'SELECT' ? !input.value : !input.checkValidity();
+
+          if (isInvalid) {
             input.classList.add('border-red-500');
-            feedback.classList.remove('hidden');
+            if (feedback) feedback.classList.remove('hidden');
           } else {
             input.classList.remove('border-red-500');
-            feedback.classList.add('hidden');
+            if (feedback) feedback.classList.add('hidden');
           }
         }
       });
+
       const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
       errorWarningModal.show();
       return false;
@@ -333,7 +339,8 @@ document.addEventListener("DOMContentLoaded", () => {
         successModal.show();
         document.getElementById('edit-booking-btn').value = 'Save';
         editForm.reset();
-        fetchAllBookings();
+        fetchAll();
+        fetchAllPendingBooking();
         document.querySelector('.toEditBookingModal').classList.add('hidden');
       } else {
         showToaster('Something went wrong !', 'exclamation-error', '#dc2626', '#b91c1c');
@@ -354,6 +361,7 @@ document.addEventListener("DOMContentLoaded", () => {
       fetchAllPendingBooking();
       fetchBookingCounts();
       fetchAllNotifications();
+      displayPickupAndDeliveries();
     } else {
       showToaster('Something went wrong!', 'exclamation-error', '#dc2626', '#b91c1c');
     }
@@ -370,6 +378,7 @@ document.addEventListener("DOMContentLoaded", () => {
       fetchAll();
       fetchAllPendingBooking();
       fetchBookingCounts();
+      displayPickupAndDeliveries();
     } else {
       showToaster('Something went wrong!', 'exclamation-error', '#dc2626', '#b91c1c');
     }
@@ -519,32 +528,47 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   const warningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
+  const updateKiloInp = document.querySelector('.update-kilo');
   // Add Kilo and Proof of Kilo Ajax Request
   updateKiloForm.addEventListener('submit', async (e) => {
     e.preventDefault();
+
+    // Form Validation
+    let isValid = true;
 
     const formData = new FormData(updateKiloForm);
     formData.append('add-kilo', 1); // To differentiate request in backend
     formData.append('booking_id', document.getElementById('display-id-forkilo').textContent); // Append booking ID dynamically
 
-    // Form Validation
-    if (updateKiloForm.checkValidity() === false) {
-      e.stopPropagation();
+    [...updateKiloForm.elements].forEach((input) => {
+      const feedback = input.nextElementSibling;
 
-      [...updateKiloForm.elements].forEach((input) => {
-        const feedback = input.nextElementSibling;
+      if (input.tagName === 'INPUT' && input.type === 'number') {
+        const value = parseInt(input.value, 10); // Convert value to integer
 
-        if (input.tagName === 'INPUT' && (input.type === 'file' || input.type === 'number')) {
-          if (!input.checkValidity()) {
-            input.classList.add('border-red-500');
-            feedback.classList.remove('hidden');
-          } else {
-            input.classList.remove('border-red-500');
-            feedback.classList.add('hidden');
-          }
+        // Check range and validity
+        if (!input.checkValidity() || value < 3 || value > 22) {
+          isValid = false;
+          input.classList.add('border-red-500');
+          if (feedback) feedback.classList.remove('hidden');
+        } else {
+          input.classList.remove('border-red-500');
+          if (feedback) feedback.classList.add('hidden');
         }
-      });
+      } else if (input.tagName === 'INPUT' && input.type === 'file') {
+        // Handle file validation (if needed)
+        if (!input.checkValidity()) {
+          isValid = false;
+          input.classList.add('border-red-500');
+          if (feedback) feedback.classList.remove('hidden');
+        } else {
+          input.classList.remove('border-red-500');
+          if (feedback) feedback.classList.add('hidden');
+        }
+      }
+    });
 
+    if (!isValid) {
       const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
       errorWarningModal.show();
       return false;
@@ -569,6 +593,7 @@ document.addEventListener("DOMContentLoaded", () => {
           document.getElementById('update-kilo-button').value = 'Submit';
           fetchAll();
           fetchBookingCounts();
+          displayPickupAndDeliveries();
 
           // Remove validation classes after reset
           [...updateKiloForm.elements].forEach((input) => {

@@ -145,7 +145,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const green700 = '#065f46';
             showToaster('Booking is completed, thank you so much!', 'check', green600, green700);
 
-            // Now, initialize feedback form submission logic
             const feedbackForm = document.getElementById('feedback-form');
             const submitFeedbackBtn = document.getElementById('submit-review');
 

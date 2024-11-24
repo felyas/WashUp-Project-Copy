@@ -406,7 +406,7 @@ if (isset($_GET['denied'])) {
   if ($db->denied($booking_id)) {
     $receiver = $user['email'];
     $subject = "Booking Update";
-    $message = "Your booking with ID " . $booking_id . " has been denied due to invalid inputs.";
+    $message = "Your booking with ID " . $booking_id . " has been denied due to invalid inputs or other reason.";
     $util->sendEmail($receiver, $subject, $message);
 
     echo json_encode([

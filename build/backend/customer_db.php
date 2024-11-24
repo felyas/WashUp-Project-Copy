@@ -267,7 +267,7 @@ class Database extends Config
   }
 
   // INSERT NEW FEEDBACK INTO DATABASE
-  public function insertFeedback($user_id, $first_name, $last_name, $rating, $description, $booking_id, $phone_number)
+  public function insertFeedback($user_id, $first_name, $last_name, $rating, $description, $booking_id, $phone_number, $email)
   {
     // Determine the value of isGoodReview based on the rating
     $isGoodReview = $rating >= 3 ? 1 : 0;
@@ -297,7 +297,7 @@ class Database extends Config
         'last_name' => $last_name,
         'phone_number' => $phone_number,
         'reason' => 'Low rate',
-        'email' => 'No Email',
+        'email' => $email,
         'description' => $description,
         'booking_id' => $booking_id,
       ]);

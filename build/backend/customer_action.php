@@ -339,10 +339,12 @@ if (isset($_POST['new-feedback'])) {
   $booking_id = $util->testInput($_POST['booking_id']);
   
   // Fetch email and phone number from the latest booking
-  $booking_data = $db->getEmailPhone($user_id);
-  $phone_number = $booking_data['phone_number'];  // Remove $ from key
+  $booking_phone = $db->getEmailPhone($user_id);
+  $phone_number = $booking_phone['phone_number'];
+  $booking_email = $db->customerData($user_id);
+  $email = $booking_email['email'];
 
-  if ($db->insertFeedback($user_id, $first_name, $last_name, $rating, $description, $booking_id, $phone_number)) {
+  if ($db->insertFeedback($user_id, $first_name, $last_name, $rating, $description, $booking_id, $phone_number, $email)) {
     echo json_encode([
       'status' => 'success',
       'message' => 'Thank you, your feedback was recorded!',

@@ -380,7 +380,7 @@ if ($_SESSION['role'] !== 'delivery') {
 
   <!-- Modal for View -->
   <div class="toViewBookingModal p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
-    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2 max-h-96 overflow-y-auto">
+    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2 h-auto overflow-y-auto">
       <div class="w-full h-auto py-2 flex flex-col items-center text-nowrap text-gray-500">
         <h4 class="text-lg font-bold">WASHUP LAUNDRY</h4>
         <p class="text-sm">Blk 1 lot 2 morales subdivision, Calamba Laguna</p>
@@ -473,6 +473,14 @@ if ($_SESSION['role'] !== 'delivery') {
             <p>Phone Number:</p>
             <p id="display-phone-number-editInfo" class="justify-end flex"><!-- dynamic data --></p>
           </div>
+          <div class="grid grid-cols-2 gap-2">
+            <p>Pickup Time:</p>
+            <p id="display-pickup-time-editInfo" class="justify-end flex"><!-- dynamic data --></p>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <p>Pickup Date:</p>
+            <p id="display-pickup-date-editInfo" class="justify-end flex"><!-- dynamic data --></p>
+          </div>
         </div>
       </div>
 
@@ -485,7 +493,7 @@ if ($_SESSION['role'] !== 'delivery') {
             <div class="text-red-500 text-sm hidden">Pickup date is required!</div>
           </div>
           <div class="grid grid-cols-1 justify-start">
-            <label for="pickup-time" class="pickup-time-editInfo block text-sm font-medium text-gray-500">Pick-up Time</label>
+            <label for="pickup-time" class="pickup-time-editInfo block text-sm font-medium text-gray-500">Pickup Time</label>
             <select id="pickup-time" name="pickup_time" class="p-2 border border-ashblack rounded-md max-h-12 overflow-auto" required>
               <!-- Options will be dynamically populated by JavaScript -->
             </select>
@@ -585,8 +593,8 @@ if ($_SESSION['role'] !== 'delivery') {
             <!-- Laundry Kilo Section -->
             <div class="w-full">
               <label for="kilo" class="block text-sm font-medium text-gray-500">Laundry Kilos</label>
-              <input required type="number" id="kilo" name="kilo" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="e.g., 3">
-              <div class="text-red-500 text-sm hidden">Laundry kilo is required!</div>
+              <input required type="number" id="kilo" name="kilo" class="update-kilo mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" min="3" max="22" placeholder="e.g., 3">
+              <div class="text-red-500 text-sm hidden">Please enter a value between 3 and 22.</div>
             </div>
           </div>
 

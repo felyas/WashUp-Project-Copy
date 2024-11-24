@@ -141,9 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
             fetchAllBookings();
 
             // Show success toaster
-            const green600 = '#047857';
-            const green700 = '#065f46';
-            showToaster('Booking is completed, thank you so much!', 'check', green600, green700);
+            showToaster('Booking is completed, thank you so much!', 'check', '#047857', '#065f46');
 
             const feedbackForm = document.getElementById('feedback-form');
             const submitFeedbackBtn = document.getElementById('submit-review');

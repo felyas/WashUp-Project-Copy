@@ -115,7 +115,7 @@ if ($_SESSION['role'] !== 'user') {
                 </div>
               </div>
 
-              <div class="h-full flex flex-col items-center jsutify-center relative">
+              <div class="h-full flex flex-col items-center relative">
                 <button id="js-setting-button" class="cursor-pointer px-4 py-2">
                   <img src="./img/icons/setting.svg" alt="setting" class="w-5 h-5">
                 </button>

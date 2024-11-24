@@ -55,9 +55,13 @@ if (isset($_POST['save'])) {
       $mailed = $util->sendEmail($receiver, $subject, $body);
 
       if ($mailed) {
-        $_SESSION['email'] = $email;
-        echo json_encode(['redirect' => './verify.php']);
-        exit();
+        $session_destroy = session_destroy();
+        if ($session_destroy) {
+          session_start();
+          $_SESSION['email'] = $email;
+          echo json_encode(['redirect' => './verify.php']);
+          exit();
+        }
       } else {
         echo json_encode(['error' => 'Unable to send OTP,   Please try again']);
         exit();

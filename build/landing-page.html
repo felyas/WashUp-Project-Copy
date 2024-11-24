@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="sm:scroll-smooth">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,26 +12,33 @@
   <link rel="stylesheet" href="./css/palette.css">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
 
 </head>
 
 <body class="bg-seasalt min-h-screen font-poppins">
-  
+
   <header class="bg-federal text-seasalt sticky top-0 z-10">
     <section class="max-w-5xl mx-auto p-4 flex justify-between items-center">
       <a href="#home">
         <div class="flex items-center justify-center hover:opacity-90">
           <div class="flex justify-center items-center w-[180px]">
             <img src="./img/logo-white.png" alt="" class="w-12 h-10 mr-1">
-          <h1 class="text-base font-bold text-wrap leading-4">
-            WASHUP LAUNDRY
-          </h1>
+            <h1 class="text-base font-bold text-wrap leading-4">
+              WASHUP LAUNDRY
+            </h1>
           </div>
         </div>
       </a>
-      
+
+      <!-- Toaster -->
+      <div id="toaster" class="fixed top-4 hidden right-4 ml-4 text-white shadow-lg z-50">
+        <!-- Dynamic Toaster Content -->
+      </div>
+
       <div>
         <div>
           <button id="hamburger-button" class="text-3xl md:hidden cursor-pointer">
@@ -44,16 +52,19 @@
           </nav>
         </div>
       </div>
-      
-      <button id="signInButton1" class="hidden md:block px-5 py-2 border border-none text-base font-bold text-nowrap bg-seasalt text-federal hover:opacity-90 active:opacity-80 rounded-sm">Sign In</button>
+
+      <button id="signInButton1"
+        class="hidden md:block px-5 py-2 border border-none text-base font-bold text-nowrap bg-seasalt text-federal hover:opacity-90 active:opacity-80 rounded-sm">Sign
+        In</button>
     </section>
 
-    <section id="mobile-menu" class="absolute top-0 right-0 bg-ashblack text-seasalt text-base sm:text-xl flex-col justify-center transition-menu menu-hidden w-1/2 max-w-xs">
-      <button 
-    class="close-button text-6xl absolute top-[5px] right-[8px] cursor-pointer hover:opacity-70" id="close-button">
-      &times;
-    </button>
-    
+    <section id="mobile-menu"
+      class="absolute top-0 right-0 bg-ashblack text-seasalt text-base sm:text-xl flex-col justify-center transition-menu menu-hidden w-1/2 max-w-xs">
+      <button class="close-button text-6xl absolute top-[5px] right-[8px] cursor-pointer hover:opacity-70"
+        id="close-button">
+        &times;
+      </button>
+
       <nav class="flex flex-col min-h-screen text-nowrap items-center py-8" aria-label="mobile">
         <a href="#home" class="w-full text-center py-6 hover:opacity-70 menu-item">Home</a>
         <a href="#instruction" class="w-full text-center py-6 hover:opacity-70 menu-item">Instruction</a>
@@ -61,32 +72,39 @@
         <a href="#testimonials" class="w-full text-center py-6 hover:opacity-70 menu-item">Testimonials</a>
         <a href="#contact" class="w-full text-center py-6 hover:opacity-70 menu-item">Contact Us</a>
         <a href="#footer" class="w-full text-center py-6 hover:opacity-70 menu-item">Legal</a>
-        <button id="signInButton2"  class="px-5 py-2 border border-none text-base font-bold text-nowrap bg-seasalt text-ashblack hover:opacity-70 active:opacity-80 rounded-sm w-1/2 menu-item">Sign In</button>
+        <button id="signInButton2"
+          class="px-5 py-2 border border-none text-base font-bold text-nowrap bg-seasalt text-ashblack hover:opacity-70 active:opacity-80 rounded-sm w-1/2 menu-item">Sign
+          In</button>
       </nav>
     </section>
   </header>
 
   <main class="mx-auto">
-    <section id="home" class="home flex items-center justify-center sm:justify-normal md:pl-[145px] sm:text-left p-6 w-full h-screen sm:-mt-[72px] scroll-mt-20 mb-12 min-h-screen">
-      <div class="flex flex-col justify-center align-center text-center sm:text-left max-w-5xl text-4xl text-seasalt sm:text-5xl font-bold">
-          <p>TAMANG <span class="gradient">LABA</span></p>
-          <p>TAMANG <span class="gradient">BANGO</span></p>
-          <p>TAMANG <span class="gradient">PRESYO</span></p>
-          <p class="text-base sm:text-xl">We offer pickup & delivery services rain or shine</p>
-          <button id="signInButton3" class="schdedule-button bg-federal text-base px-5 py-4 rounded-sm mt-6 sm:w-1/2 hover:opacity-90 active:opacity-80">
-            SCHEDULE A PICKUP NOW
-          </button>
+    <section id="home"
+      class="home flex items-center justify-center sm:justify-normal md:pl-[145px] sm:text-left p-6 w-full h-screen sm:-mt-[72px] scroll-mt-20 mb-12 min-h-screen">
+      <div
+        class="flex flex-col justify-center align-center text-center sm:text-left max-w-5xl text-4xl text-seasalt sm:text-5xl font-bold">
+        <p>TAMANG <span class="gradient">LABA</span></p>
+        <p>TAMANG <span class="gradient">BANGO</span></p>
+        <p>TAMANG <span class="gradient">PRESYO</span></p>
+        <p class="text-base sm:text-xl">We offer pickup & delivery services rain or shine</p>
+        <button id="signInButton3"
+          class="schdedule-button bg-federal text-base px-5 py-4 rounded-sm mt-6 sm:w-1/2 hover:opacity-90 active:opacity-80">
+          SCHEDULE A PICKUP NOW
+        </button>
       </div>
-    </section> 
+    </section>
 
-    <section id="instruction" class="max-w-5xl p-6 my-12 flex flex-col justify-center items-center mx-auto scroll-mt-20 section-min-height widescreen:section-min-height tallscreen:section-min-height">
+    <section id="instruction"
+      class="max-w-5xl p-6 my-12 flex flex-col justify-center items-center mx-auto scroll-mt-20 section-min-height widescreen:section-min-height tallscreen:section-min-height">
       <h2 class="text-3xl font-bold sm:text-4xl mb-4 text-ashblack">
         How it works
       </h2>
-      <p class="text-base sm:text-xl font-semibold text-ashblack">Here are the step-by-step instructions for booking a laundry service with WashUp Laundry</p>
+      <p class="text-base sm:text-xl font-semibold text-ashblack">Here are the step-by-step instructions for booking a
+        laundry service with WashUp Laundry</p>
       <div class="steps grid grid-cols-1 sm:grid-cols-2 my-4 gap-4">
         <div class="step flex items-center">
-            <img class="w-[70px] mr-4"  src="./img/step-1.svg" alt="">
+          <img class="w-[70px] mr-4" src="./img/step-1.svg" alt="">
           <div class="">
             1. Start by scheduling a pickup for your laundry and provide necessary information.
           </div>
@@ -124,112 +142,120 @@
       </div>
     </section>
 
-    <section id="service" class="max-w-5xl mx-auto p-6 my-12 scroll-mt-16 section-min-height widescreen:section-min-height tallscreen:section-min-height flex flex-col items-center justify-center">
-        <h2 class="text-3xl font-bold sm:text-4xl mb-4 text-ashblack">
-          Our Services
-        </h2>
-        <p class="text-base sm:text-xl font-semibold text-ashblack mb-8">
-          Discover the services WashUp Laundry provides below
-        </p>
-      
-        <div class="cards mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <!-- Card 1: Washing -->
-          <div class="flex flex-col items-center border border-solid bg-federal shadow-lg rounded-lg">
-            <div class="relative w-full h-48 sm:h-56 lg:h-48"> <!-- Adjusted for desktop view -->
-              <img src="./img/washing.jpg" alt="Washing" class="w-full h-full object-cover brightness-50">
-              <div class="absolute inset-0 flex items-center justify-center">
-                <p class="text-3xl text-seasalt font-bold bg-opacity-50 p-2 rounded-lg">WASHING</p>
-              </div>
-            </div>
-            <div class="w-full p-4">
-              <p class="text-sm sm:text-base text-seasalt text-center">
-                Provides professional washing services, ensuring your clothes are cleaned.
-              </p>
+    <section id="service"
+      class="max-w-5xl mx-auto p-6 my-12 scroll-mt-16 section-min-height widescreen:section-min-height tallscreen:section-min-height flex flex-col items-center justify-center">
+      <h2 class="text-3xl font-bold sm:text-4xl mb-4 text-ashblack">
+        Our Services
+      </h2>
+      <p class="text-base sm:text-xl font-semibold text-ashblack mb-8">
+        Discover the services WashUp Laundry provides below
+      </p>
+
+      <div class="cards mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Card 1: Washing -->
+        <div class="flex flex-col items-center border border-solid bg-federal shadow-lg rounded-lg">
+          <div class="relative w-full h-48 sm:h-56 lg:h-48"> <!-- Adjusted for desktop view -->
+            <img src="./img/washing.jpg" alt="Washing" class="w-full h-full object-cover brightness-50">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <p class="text-3xl text-seasalt font-bold bg-opacity-50 p-2 rounded-lg">WASHING</p>
             </div>
           </div>
-        
-          <!-- Card 2: Drying -->
-          <div class="flex flex-col items-center border border-solid bg-federal shadow-lg rounded-lg overflow-hidden">
-            <div class="relative w-full h-48 sm:h-56 lg:h-48"> <!-- Adjusted for desktop view -->
-              <img src="./img/drying.jpg" alt="Drying" class="w-full h-full object-cover brightness-50">
-              <div class="absolute inset-0 flex items-center justify-center">
-                <p class="text-3xl text-seasalt font-bold bg-opacity-50 p-2 rounded-lg">DRYING</p>
-              </div>
-            </div>
-            <div class="w-full p-4">
-              <p class="text-sm sm:text-base text-seasalt text-center">
-                Offers convenient drying services, ensuring your clothes are ready-to-wear.
-              </p>
-            </div>
-          </div>
-        
-          <!-- Card 3: Folding -->
-          <div class="flex flex-col items-center border border-solid bg-federal shadow-lg rounded-lg overflow-hidden">
-            <div class="relative w-full h-48 sm:h-56 lg:h-48"> <!-- Adjusted for desktop view -->
-              <img src="./img/folding.jpg" alt="Folding" class="w-full h-full object-cover brightness-50">
-              <div class="absolute inset-0 flex items-center justify-center">
-                <p class="text-3xl text-seasalt font-bold bg-opacity-50 p-2 rounded-lg">FOLDING</p>
-              </div>
-            </div>
-            <div class="w-full p-4">
-              <p class="text-sm sm:text-base text-seasalt text-center">
-                Expertly handling your garments to ensure they are neatly folded.
-              </p>
-            </div>
-          </div>
-        
-          <!-- Card 4: Dry Cleaning -->
-          <div class="flex flex-col items-center border border-solid bg-federal shadow-lg rounded-lg overflow-hidden">
-            <div class="relative w-full h-48 sm:h-56 lg:h-48"> <!-- Adjusted for desktop view -->
-              <img src="./img/drycleaning.jpg" alt="Dry Cleaning" class="w-full h-full object-cover brightness-50">
-              <div class="absolute inset-0 flex items-center justify-center">
-                <p class="text-3xl text-seasalt font-bold bg-opacity-50 p-2 rounded-lg text-wrap text-center">DRY CLEANING</p>
-              </div>
-            </div>
-            <div class="w-full p-4">
-              <p class="text-sm sm:text-base text-seasalt text-center">
-                Offers premium dry cleaning, removing tough stains.
-              </p>
-            </div>
+          <div class="w-full p-4">
+            <p class="text-sm sm:text-base text-seasalt text-center">
+              Provides professional washing services, ensuring your clothes are cleaned.
+            </p>
           </div>
         </div>
+
+        <!-- Card 2: Drying -->
+        <div class="flex flex-col items-center border border-solid bg-federal shadow-lg rounded-lg overflow-hidden">
+          <div class="relative w-full h-48 sm:h-56 lg:h-48"> <!-- Adjusted for desktop view -->
+            <img src="./img/drying.jpg" alt="Drying" class="w-full h-full object-cover brightness-50">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <p class="text-3xl text-seasalt font-bold bg-opacity-50 p-2 rounded-lg">DRYING</p>
+            </div>
+          </div>
+          <div class="w-full p-4">
+            <p class="text-sm sm:text-base text-seasalt text-center">
+              Offers convenient drying services, ensuring your clothes are ready-to-wear.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 3: Folding -->
+        <div class="flex flex-col items-center border border-solid bg-federal shadow-lg rounded-lg overflow-hidden">
+          <div class="relative w-full h-48 sm:h-56 lg:h-48"> <!-- Adjusted for desktop view -->
+            <img src="./img/folding.jpg" alt="Folding" class="w-full h-full object-cover brightness-50">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <p class="text-3xl text-seasalt font-bold bg-opacity-50 p-2 rounded-lg">FOLDING</p>
+            </div>
+          </div>
+          <div class="w-full p-4">
+            <p class="text-sm sm:text-base text-seasalt text-center">
+              Expertly handling your garments to ensure they are neatly folded.
+            </p>
+          </div>
+        </div>
+
+        <!-- Card 4: Dry Cleaning -->
+        <div class="flex flex-col items-center border border-solid bg-federal shadow-lg rounded-lg overflow-hidden">
+          <div class="relative w-full h-48 sm:h-56 lg:h-48"> <!-- Adjusted for desktop view -->
+            <img src="./img/drycleaning.jpg" alt="Dry Cleaning" class="w-full h-full object-cover brightness-50">
+            <div class="absolute inset-0 flex items-center justify-center">
+              <p class="text-3xl text-seasalt font-bold bg-opacity-50 p-2 rounded-lg text-wrap text-center">DRY CLEANING
+              </p>
+            </div>
+          </div>
+          <div class="w-full p-4">
+            <p class="text-sm sm:text-base text-seasalt text-center">
+              Offers premium dry cleaning, removing tough stains.
+            </p>
+          </div>
+        </div>
+      </div>
     </section>
-    
-    <section id="testimonials" class="max-w-5xl p-6 my-12 flex flex-col justify-center items-center mx-auto scroll-mt-20 section-min-height widescreen:section-min-height tallscreen:section-min-height">
+
+    <section id="testimonials"
+      class="max-w-5xl p-6 my-12 flex flex-col justify-center items-center mx-auto scroll-mt-20 section-min-height widescreen:section-min-height tallscreen:section-min-height">
       <h2 class="text-3xl font-bold text-center sm:text-4xl mb-6 text-ashblack">
         Testimonials
       </h2>
       <div id="js-testimonials" class="w-full h-full">
         <div class="my-4">
-          <div class="bg-federal p-8 sm:p-12 rounded-3xl text-white h-auto flex flex-col items-center justify-center relative w-full">
+          <div
+            class="bg-federal p-8 sm:p-12 rounded-3xl text-white h-auto flex flex-col items-center justify-center relative w-full">
 
             <div class="w-full flex items-center justify-center p-4">
               <img src="./img/icons/star-rating.svg" class="w-5 h-5" alt="">
             </div>
 
             <!-- Left Quote Image -->
-            <img class="w-12 h-12 absolute top-5 left-3 -translate-y-1/2" src="./img/icons/quote-left-sunrise.svg" alt="Quote Left">
-        
+            <img class="w-12 h-12 absolute top-5 left-3 -translate-y-1/2" src="./img/icons/quote-left-sunrise.svg"
+              alt="Quote Left">
+
             <!-- Testimonial Description -->
             <p id="feedback-description" class="text-white text-center text-xl sm:text-2xl mt-2">
-              Sobrang polite at maasikaso ng staff ng WashUp Laundry Services. Bukod sa mabilis at maayos na serbisyo, palaging makakaramdam ka ng kasiyahan sa tuwing pupunta sa iyo yung delivery man nila!
+              Sobrang polite at maasikaso ng staff ng WashUp Laundry Services. Bukod sa mabilis at maayos na serbisyo,
+              palaging makakaramdam ka ng kasiyahan sa tuwing pupunta sa iyo yung delivery man nila!
             </p>
-        
+
             <!-- Right Quote Image -->
-            <img class="w-12 h-12 absolute -bottom-5 right-3 -translate-y-1/2" src="./img/icons/quote-right-sunrise.svg" alt="Quote Right">
+            <img class="w-12 h-12 absolute -bottom-5 right-3 -translate-y-1/2" src="./img/icons/quote-right-sunrise.svg"
+              alt="Quote Right">
           </div>
           <div class="w-full flex justify-end p-2 italic text-xl sm:text-2xl text-right mt-2 text-ashblack">
             <p>&#8212; Juan &amp; Rosa Dela Cruz</p>
           </div>
-        
+
         </div>
       </div>
     </section>
   </main>
 
-  <section id="contact" class="max-w-5xl p-6 my-12 flex flex-col justify-center items-center mx-auto scroll-mt-20 section-min-height widescreen:section-min-height tallscreen:section-min-height">
+  <section id="contact"
+    class="max-w-5xl p-6 my-12 flex flex-col justify-center items-center mx-auto scroll-mt-20 section-min-height widescreen:section-min-height tallscreen:section-min-height">
     <h2 class="text-3xl font-bold text-center sm:text-4xl mb-6 text-ashblack">
-        Contact Us
+      Contact Us
     </h2>
 
     <div class="border border-solid grid grid-cols-1 gap-4 w-full">
@@ -237,81 +263,130 @@
       <div class="grid grid-cols-1 md:grid-cols-2">
         <!-- Contact Information Div -->
         <div class="contact-left w-full flex flex-col items-center justify-center p-4 space-y-4">
-            <h3 class="text-xl text-seasalt font-semibold text-center">Business Contact Information</h3>
-            <p class="text-center text-seasalt">
-                Address: Blk 1 lot 2 morales subdivision.<br>
-                Calamba, Laguna, 4027<br>
-                Phone: (123) 456-7890<br>
-                Email: info@yourbusiness.com
-            </p>
+          <h3 class="text-xl text-seasalt font-semibold text-center">Business Contact Information</h3>
+          <p class="text-center text-seasalt">
+            Address: Blk 1 lot 2 morales subdivision.<br>
+            Calamba, Laguna, 4027<br>
+            Phone: (123) 456-7890<br>
+            Email: info@yourbusiness.com
+          </p>
         </div>
 
         <!-- Contact Form Div -->
         <div class="w-full flex flex-col items-center p-4 space-y-4">
-            <h3 class="text-xl font-semibold text-center">Send Us a Message</h3>
-            <form action=" " method="POST" class="w-full max-w-md space-y-4">
-                <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                <input type="text" id="name" name="name" class="w-full p-2 border border-gray-300 rounded-md" required>
+          <h3 class="text-xl font-semibold text-center">Send Us a Message</h3>
 
-                <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
-                <input type="email" id="email" name="email" class="w-full p-2 border border-gray-300 rounded-md" required>
+          <!-- Message Div -->
+          <div id="error-msg">
+            <!-- <p class="text-red-700">Error</p> -->
+          </div>
 
-                <label for="message" class="block text-sm font-medium text-gray-700">Message</label>
-                <textarea id="message" name="message" rows="4" class="w-full p-2 border border-gray-300 rounded-md" required></textarea>
+          <form id="contact-us-form" novalidate class="w-full max-w-md space-y-4">
+            <div class="mb-4">
+              <label for="customer-name" class="block text-sm font-medium text-gray-500">Customer Name</label>
+              <input type="text" id="customer-name" name="customer-name"
+                class="w-full p-2 border border-gray-300 rounded-md" required>
+              <div class="text-red-500 text-sm hidden">Name is required!</div>
+            </div>
 
-                <button type="submit" class="w-full py-2 px-4 bg-federal text-seasalt rounded-sm hover:opacity-90">Send</button>
-            </form>
+            <div class="mb-4">
+              <label for="customer-email" class="block text-sm font-medium text-gray-700">Email</label>
+              <input type="email" id="customer-email" name="customer-email"
+                class="w-full p-2 border border-gray-300 rounded-md" required>
+              <div class="text-red-500 text-sm hidden">Email is required!</div>
+            </div>
+
+            <div class="mb-4">
+              <label for="customer-email" class="block text-sm font-medium text-gray-700">Message</label>
+              <textarea id="customer-message" name="customer-message" rows="4"
+                class="w-full p-2 border border-gray-300 rounded-md" required></textarea>
+              <div class="text-red-500 text-sm hidden">Message is required!</div>
+            </div>
+
+            <input type="submit" id="submit-button"
+              class="w-full py-2 px-4 bg-federal text-seasalt rounded-sm hover:opacity-90" value="Send">
+          </form>
         </div>
       </div>
 
       <div>
         <!-- Google Map Embed Div -->
         <div class="w-full flex flex-col items-center">
-          <iframe
-              class="w-full h-64 lg:h-[100%] border-0"
-              src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3867.5927690423355!2d121.13271047323651!3d14.218606886318529!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bd63258a925b73%3A0xce108b61cebe5d67!2sWASH%20UP%20LAUNDRY!5e0!3m2!1sen!2sus!4v1721318608954!5m2!1sen!2sus"
-              allowfullscreen=""
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade">
+          <iframe class="w-full h-64 lg:h-[100%] border-0"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3867.5927690423355!2d121.13271047323651!3d14.218606886318529!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x33bd63258a925b73%3A0xce108b61cebe5d67!2sWASH%20UP%20LAUNDRY!5e0!3m2!1sen!2sus!4v1721318608954!5m2!1sen!2sus"
+            allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade">
           </iframe>
         </div>
       </div>
     </div>
-</section>
+  </section>
 
-<footer id="footer" class="bg-federal text-seasalt text-base">
-  <section class="max-w-5xl mx-auto p-4 flex flex-col sm:flex-row sm:justify-between">
-    <div class="flex flex-col text-left w-3/4 sm:w-1/2">
-      <a href="#home">
+  <footer id="footer" class="bg-federal text-seasalt text-base">
+    <section class="max-w-5xl mx-auto p-4 flex flex-col sm:flex-row sm:justify-between">
+      <div class="flex flex-col text-left w-3/4 sm:w-1/2">
+        <a href="#home">
           <div class="flex justify-center items-center w-[180px] hover:opacity-90">
             <img src="./img/logo-white.png" alt="" class="w-12 h-10 mr-1">
-          <h1 class="text-base font-bold text-wrap leading-4">
-            WASHUP LAUNDRY
-          </h1>
+            <h1 class="text-base font-bold text-wrap leading-4">
+              WASHUP LAUNDRY
+            </h1>
           </div>
-      </a>
-        
-      <p>
-        We offer pickup & delivery services rain or shine. 
-        Experience the convenience of pristine laundry 
-        with WashUp Laundry—where your clothes get the 
-        care they deserve.        
-      </p>
+        </a>
+
+        <p>
+          We offer pickup & delivery services rain or shine.
+          Experience the convenience of pristine laundry
+          with WashUp Laundry—where your clothes get the
+          care they deserve.
+        </p>
+      </div>
+      <nav class="hidden md:flex flex-col gap-1" aria-label="footer">
+        <a href="#instruction" class="hover:opacity-90">Instruction</a>
+        <a href="#service" class="hover:opacity-90">Service</a>
+        <a href="#testimonials" class="hover:opacity-90">Testimonials</a>
+        <a href="#contact" class="hover:opacity-90">Contact Us</a>
+      </nav>
+      <div class="flex flex-col sm:gap-1">
+        <p class="text-right">Copyright &copy; <span id="year"></span></p>
+        <p class="text-right">All Rights Reserved</p>
+      </div>
+    </section>
+  </footer>
+
+
+  <!-- Error Modal Overlay -->
+  <div id="error-modal"
+    class="hidden p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+    <div class="bg-white px-4 py-4 rounded-md shadow-lg w-full max-w-sm flex items-center flex-col">
+      <div class="grid grid-cols-4 mb-4">
+        <!-- First child taking 1/4 of the parent's width -->
+        <div class="col-span-1 flex items-center">
+          <div class="flex justify-center items-center col-span-1 bg-red-500 rounded-full w-16 h-16">
+            <img class="w-8 h-8" src="./img/icons/circle-error.svg" alt="">
+          </div>
+        </div>
+        <!-- Second child taking 3/4 of the parent's width -->
+        <div class="col-span-3">
+          <h1 id="modal-title" class="text-lg font-bold mb-2 text-red-600">Error !</h1>
+          <p id="modal-message" class="text-md text-gray-500 text-wrap">Please complete all required fields !</p>
+        </div>
+      </div>
+
+      <div class="w-full flex justify-end items-center space-x-2 text-sm font-semibold">
+        <button id="error-confirm-modal"
+          class="hidden bg-red-600 border-2 border-solid border-red-600 text-white hover:bg-red-700 hover:border-red-700 py-2 px-4 rounded transition">
+          Yes
+        </button>
+        <button id="error-close-modal"
+          class="bg-red-600 border-2 border-solid border-red-600 text-white hover:bg-red-700 hover:border-red-700 py-2 px-4 rounded transition">
+          Ok
+        </button>
+      </div>
     </div>
-    <nav class="hidden md:flex flex-col gap-1" aria-label="footer">
-      <a href="#instruction" class="hover:opacity-90">Instruction</a>
-      <a href="#service" class="hover:opacity-90">Service</a>
-      <a href="#testimonials" class="hover:opacity-90">Testimonials</a>
-      <a href="#contact" class="hover:opacity-90">Contact Us</a>
-    </nav>
-    <div class="flex flex-col sm:gap-1">
-      <p class="text-right">Copyright &copy; <span id="year"></span></p>
-      <p class="text-right">All Rights Reserved</p>
-    </div>
-  </section>
-</footer>
+  </div>
 
 
   <script type="module" src="./js/landing_page.js" defer></script>
 </body>
+
 </html>

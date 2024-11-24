@@ -87,6 +87,7 @@ if ($_SESSION['role'] !== 'user') {
           </button>
 
           <!--Notifications-->
+          <!--Notifications & Logout Section-->
           <div class="flex items-center justify-between lg:space-x-4 text-sm">
             <p class="js-current-time text-white"></p>
             <div class="flex items-center justify-between">
@@ -118,11 +119,36 @@ if ($_SESSION['role'] !== 'user') {
                 </div>
               </div>
 
-              <form action="./backend/handle_logout.php" method="POST" class="p-0 m-0">
-                <button type="submit" class="flex items-center justify-center px-4 py-2">
-                  <img src="./img/icons/logout.svg" alt="Logout Icon" class="w-5 h-5">
+              <div class="h-full flex flex-col items-center relative">
+                <button id="js-setting-button" class="cursor-pointer px-4 py-2">
+                  <img src="./img/icons/setting.svg" alt="setting" class="w-5 h-5">
                 </button>
-              </form>
+
+                <div id="js-setting" class="absolute hidden top-[54px] -right-4 w-32 h-auto bg-white border border-solid border-gray-200 z-30">
+                  <div class="flex flex-col">
+                    <div class="flex items-center justify-start w-full hover:bg-gray-200 p-1">
+                      <button type="button" id="js-account-setting" class="flex items-center justify-center px-2 py-2">
+                        <div class="flex space-x-2">
+                          <img src="./img/icons/user-black.svg" alt="Logout Icon" class="w-5 h-5">
+                          <p>Account</p>
+                        </div>
+                      </button>
+                    </div>
+
+                    <div class="justify-start w-full hover:bg-gray-200 p-1">
+                      <form action="./backend/handle_logout.php" method="POST" class="p-0 m-0">
+                        <button type="submit" class="flex items-center justify-center px-2 py-2">
+                          <div class="flex space-x-2">
+                            <img src="./img/icons/logout-black.svg" alt="Logout Icon" class="w-5 h-5">
+                            <p>Log out</p>
+                          </div>
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
         </div>

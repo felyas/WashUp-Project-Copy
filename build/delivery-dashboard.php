@@ -516,7 +516,7 @@ if ($_SESSION['role'] !== 'delivery') {
           </button>
         </div>
 
-        <div id="js-camera-parent" class="w-full h-full mt-8">
+        <div id="js-camera-parent" class="w-full h-full mt-10">
           <video id="js-camera" autoplay playsinline></video>
         </div>
         <div class="flex items-center justify-center p-4 z-50">

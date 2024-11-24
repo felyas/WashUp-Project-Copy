@@ -32,6 +32,9 @@ if ($_SESSION['role'] !== 'admin') {
   <!-- Include Chart.js from CDN -->
   <script src="../node_modules/chart.js/dist/chart.umd.js" defer></script>
 
+  <!-- Include QuaggaJs CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -288,23 +291,45 @@ if ($_SESSION['role'] !== 'admin') {
         <input type="hidden" name="id" id="id">
         <div class="mb-4">
           <label for="product" class="block text-sm font-medium text-gray-500">Product Name</label>
-          <input required type="text" id="product" name="product" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Product Name: ">
+          <input required type="text" id="add-product" name="product" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" Product Name: ">
           <div class="text-red-500 text-sm hidden">Product Name is required!</div>
         </div>
         <div class="mb-4">
           <label for="bar-code" class="block text-sm font-medium text-gray-500">Bar Code</label>
-          <input required type="text" id="bar-code" name="bar_code" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Bar Code: ">
+          <div class="w-full relative">
+            <input required type="text" id="bar-code-input" name="bar_code" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" Bar Code: ">
+            <button id="start-scanning-button" type="button" class="openBarcodeScannerModal absolute top-0 right-0 p-2 px-4 bg-gray-200 border border-solid border-federal  h-full flex items-center justify-center">
+              <img src="./img/icons/barcode.svg" alt="bar code" class="cursor-pointer w-5 h-5 ">
+            </button>
+          </div>
           <div class="text-red-500 text-sm hidden">Bar Code is required!</div>
         </div>
         <div class="mb-4">
           <label for="quantity" class="block text-sm font-medium text-gray-500">Quantity</label>
-          <input required type="text" id="quantity" name="quantity" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" 99">
+          <input required type="text" id="add-quantity" name="quantity" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid" placeholder=" 99">
           <div class="text-red-500 text-sm hidden">Quantity is required!</div>
         </div>
 
 
         <input type="submit" id="add-item-btn" value="Add" class="px-4 py-2 w-full bg-polynesian text-white font-semibold rounded-md cursor-pointer">
       </form>
+    </div>
+  </div>
+
+  <!-- Modal for Scanner -->
+  <div id="scanner-modal" class="toScanBarcodeModal fixed hidden inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+    <div class="bg-white shadow-lg sm:h-auto sm:rounded-3xl w-full h-full sm:m-2 sm:w-[300px] flex flex-col items-center justify-center">
+      <div id="" class="w-full h-72 bg-gray-200 flex flex-col justify-end relative">
+        <div class="absolute right-4 top-4 z-50">
+          <button type="button" id="stop-scanning-button" class=" closeScannerModal text-gray-700">
+            <img src="./img/icons/x-gray-700.svg" class="w-5 h-5" alt="">
+          </button>
+        </div>
+
+        <div id="js-camera-parent" class=" w-full h-full">
+          <div id="scanner-container" class="h-full w-full"></div>
+        </div>
+      </div>
     </div>
   </div>
 

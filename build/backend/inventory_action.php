@@ -22,7 +22,35 @@ if (isset($_POST['add'])) {
   $result = $db->addItem($product_name, $bar_code, $quantity, $max_quantity);
 
   // Check the result and return a JSON response
-  if ($result === true) {
+  if ($result) {
+    echo json_encode([
+      'status' => 'success',
+      'message' => 'Item added successfully.'
+    ]);
+  } else {
+    echo json_encode([
+      'status' => 'error',
+      'message' => 'Failed to add item.'
+    ]);
+  }
+  exit();
+}
+
+// Add Quantity Ajax Request
+if (isset($_POST['add-quantity'])) {
+  $product_name = $util->testInput($_POST['product']);
+  $bar_code = $util->testInput($_POST['bar_code']);
+  $quantity = $util->testInput($_POST['quantity']);
+  $newMaxQuantity;
+
+  $item = $db->productExist($bar_code);
+  if ($item) {
+    $current_quantity = $item['quantity'];
+    $newMaxQuantity = $current_quantity +  $quantity;
+  }
+
+  $result = $db->addQuantity($newMaxQuantity, $bar_code);
+  if ($result) {
     echo json_encode([
       'status' => 'success',
       'message' => 'Item added successfully.'
@@ -52,7 +80,7 @@ if (isset($_GET['get-current-critical-point'])) {
 }
 
 $data = json_decode(file_get_contents("php://input"), true);
-if(isset($data['criticalPoint'])) {
+if (isset($data['criticalPoint'])) {
   $newCriticalPoint = (int) $data['criticalPoint'];
 
   // echo json_encode([
@@ -60,7 +88,7 @@ if(isset($data['criticalPoint'])) {
   // ]);
 
   $result = $db->updateCriticalPoint($newCriticalPoint);
-  if($result) {
+  if ($result) {
     echo json_encode([
       'status' => 'success',
     ]);
@@ -135,7 +163,7 @@ if (isset($_GET['readAll'])) {
                     </div>
                   </td>
                   <td class="min-w-[100px] h-auto flex items-center justify-start space-x-2 flex-grow">
-                      <a href="#" id="' . htmlspecialchars($row['product_id']) . '" class="editModalTrigger px-3 py-2 bg-blue-600 hover:bg-blue-700 rounded-md transition editLink">
+                      <a href="#" id="' . htmlspecialchars($row['product_id']) . '" class="editModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition editLink">
                           <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
                       </a>
                       <a href="#" id="' . htmlspecialchars($row['product_id']) . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
@@ -225,4 +253,22 @@ if (isset($_GET['delete'])) {
     ]);
   }
   exit();
+}
+
+/// Handle Product Checking If Already Exist Ajax Request
+if (isset($_GET['isExist'])) {
+  $barcode = $_GET['barcode'];
+
+  $exist = $db->productExist($barcode);
+
+  if ($exist) {
+    echo json_encode([
+      'status' => 'success',
+      'item' => $exist,
+    ]);
+  } else {
+    echo json_encode([
+      'status' => 'item not found',
+    ]);
+  }
 }

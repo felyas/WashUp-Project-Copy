@@ -6,6 +6,7 @@ handleDisplayCurrentTime();
 handleDropdown();
 openModal('editModalTrigger', 'toEditItemModal', 'closeEditItemModal', 'closeEditItemModal2');
 openModal('addModalTrigger', 'toAddItemModal', 'closeAddItemModal', 'closeAddItemModal2');
+openModal('openBarcodeScannerModal', 'toScanBarcodeModal', 'closeScannerModal', 'closeScannerModal2');
 
 const addItemForm = document.getElementById('add-items-form');
 const editItemForm = document.getElementById('update-items-form');
@@ -16,17 +17,21 @@ const editItemBtn = document.getElementById('edit-booking-btn');
 function validateForm(form) {
   form.addEventListener('input', (e) => {
     const target = e.target;
-    const feedback = target.nextElementSibling;
 
     if (target.tagName === 'INPUT') {
+      // Locate the closest parent `.mb-4` container
+      const parentContainer = target.closest('.mb-4');
+      // Find the feedback message inside the parent container
+      const feedback = parentContainer.querySelector('.text-red-500');
+
       if (target.checkValidity()) {
         target.classList.remove('border-red-500');
         target.classList.add('border-green-700'); // Change border to green
-        feedback.classList.add('hidden');
+        if (feedback) feedback.classList.add('hidden');
       } else {
         target.classList.remove('border-green-700');
         target.classList.add('border-red-500'); // Change border to red if still invalid
-        feedback.classList.remove('hidden');
+        if (feedback) feedback.classList.remove('hidden');
       }
     }
   });
@@ -144,60 +149,201 @@ document.addEventListener("DOMContentLoaded", () => {
   // Initial fetch
   fetchAll();
 
+
+  // SCANNING BARCODE SECTION
+  const scanBtn = document.getElementById('start-scanning-button');
+  const stopScanningBtn = document.getElementById('stop-scanning-button');
+  const scannerContainer = document.getElementById('scanner-container');
+  let isScanning = false;
+  let addQuantity = false;
+
+  scanBtn.addEventListener('click', () => {
+    document.getElementById('bar-code-input').value = '';
+    document.getElementById('add-product').value = '';
+    document.getElementById('add-quantity').value = '';
+    if (isScanning) return; // Prevent initializing multiple times
+    isScanning = true;
+
+    Quagga.init({
+      inputStream: {
+        name: "Live",
+        type: "LiveStream",
+        target: scannerContainer, // Use the scanner container
+        constraints: {
+          facingMode: "environment" // Use the rear camera
+        }
+      },
+      decoder: {
+        readers: ["code_128_reader", "ean_reader", "upc_reader"] // Add other barcode formats as needed
+      }
+    }, (err) => {
+      if (err) {
+        console.error("Quagga initialization failed:", err);
+        return;
+      }
+      Quagga.start();
+    });
+
+    Quagga.onDetected((result) => {
+      const scannerModal = document.getElementById('scanner-modal');
+      scannerModal.classList.add('hidden');
+      const code = result.codeResult.code;
+
+      const scanResult = document.getElementById('bar-code-input');
+      scanResult.value = code;
+
+      if (scanResult) {
+        itsExist(code);
+        addItemBtn.value = 'Update';
+        addQuantity = true;
+      }
+
+      // Stop scanning after detection
+      Quagga.stop();
+      isScanning = false;
+    });
+  });
+
+  stopScanningBtn.addEventListener('click', () => {
+    Quagga.stop();
+    isScanning = false;
+  });
+
+  const itsExist = async (scanResult) => {
+    const data = await fetch(`./backend/inventory_action.php?isExist=1&barcode=${scanResult}`, {
+      method: 'GET',
+    });
+
+    const response = await data.json();
+
+    if (response.status === 'success') {
+      // Update the input fields with product response
+      document.getElementById('add-product').value = response.item.product_name;
+      document.getElementById('add-quantity').value = response.item.quantity;
+    } else if (response.status === 'item not found') {
+      // Clear the input fields
+      document.getElementById('add-product').value = '';
+      document.getElementById('add-quantity').value = '';
+    }
+  };
+
   // Add New Booking Ajax Request
   addItemForm.addEventListener('submit', async (e) => {
     e.preventDefault();
 
-    const formData = new FormData(addItemForm);
-    formData.append('add', 1);
+    if (addQuantity) {
 
-    // Form validation
-    if (addItemForm.checkValidity() === false) {
-      e.stopPropagation();
+      const formData = new FormData(addItemForm);
+      formData.append('add-quantity', 1);
 
-      // Add validation error handling
-      [...addItemForm.elements].forEach((input) => {
-        const feedback = input.nextElementSibling;
+      // Form validation
+      if (addItemForm.checkValidity() === false) {
+        e.stopPropagation();
 
-        if (input.tagName === 'INPUT' && (input.type === 'text')) {
-          if (!input.checkValidity()) {
-            input.classList.add('border-red-500');
-            feedback.classList.remove('hidden');
-          } else {
-            input.classList.remove('border-red-500');
-            feedback.classList.add('hidden');
-          }
-        }
-      });
-      const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
-      errorWarningModal.show();
-      return false;
-
-    } else {
-      addItemBtn.value = 'Please Wait...';
-      const data = await fetch('./backend/inventory_action.php', {
-        method: 'POST',
-        body: formData,
-      });
-
-      const response = await data.text();
-
-      // Handle success or error response
-      if (response.includes('success')) {
-        fetchAll();
-        showToaster('Item added successfully!', 'check', '#047857', '#065f46');
-        addItemBtn.value = 'Add';
-        addItemForm.reset();
-        document.querySelector('.toAddItemModal').classList.add('hidden');
-
-        // Remove validation classes after reset
+        // Add validation error handling
         [...addItemForm.elements].forEach((input) => {
-          if (input.tagName === 'INPUT') {
-            input.classList.remove('border-green-700', 'border-red-500');
+          if (input.tagName === 'INPUT' && input.type === 'text') {
+            // Locate the closest parent `.mb-4` container
+            const parentContainer = input.closest('.mb-4');
+            // Find the feedback message inside the parent container
+            const feedback = parentContainer.querySelector('.text-red-500');
+
+            if (!input.checkValidity()) {
+              input.classList.add('border-red-500');
+              if (feedback) feedback.classList.remove('hidden');
+            } else {
+              input.classList.remove('border-red-500');
+              if (feedback) feedback.classList.add('hidden');
+            }
           }
         });
+        const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
+        errorWarningModal.show();
+        return false;
+
       } else {
-        showToaster('Something went wrong !', 'exclamation-error', '#dc2626', '#b91c1c');
+        addItemBtn.value = 'Please Wait...';
+        const data = await fetch('./backend/inventory_action.php', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const response = await data.text();
+
+        // Handle success or error response
+        if (response.includes('success')) {
+          fetchAll();
+          showToaster('Item added successfully!', 'check', '#047857', '#065f46');
+          addItemBtn.value = 'Add';
+          addItemForm.reset();
+          document.querySelector('.toAddItemModal').classList.add('hidden');
+
+          // Remove validation classes after reset
+          [...addItemForm.elements].forEach((input) => {
+            if (input.tagName === 'INPUT') {
+              input.classList.remove('border-green-700', 'border-red-500');
+            }
+          });
+        } else {
+          showToaster('Something went wrong !', 'exclamation-error', '#dc2626', '#b91c1c');
+        }
+      }
+    } else {
+
+      const formData = new FormData(addItemForm);
+      formData.append('add', 1);
+
+      // Form validation
+      if (addItemForm.checkValidity() === false) {
+        e.stopPropagation();
+
+        // Add validation error handling
+        [...addItemForm.elements].forEach((input) => {
+          if (input.tagName === 'INPUT' && input.type === 'text') {
+            // Locate the closest parent `.mb-4` container
+            const parentContainer = input.closest('.mb-4');
+            // Find the feedback message inside the parent container
+            const feedback = parentContainer.querySelector('.text-red-500');
+
+            if (!input.checkValidity()) {
+              input.classList.add('border-red-500');
+              if (feedback) feedback.classList.remove('hidden');
+            } else {
+              input.classList.remove('border-red-500');
+              if (feedback) feedback.classList.add('hidden');
+            }
+          }
+        });
+        const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
+        errorWarningModal.show();
+        return false;
+
+      } else {
+        addItemBtn.value = 'Please Wait...';
+        const data = await fetch('./backend/inventory_action.php', {
+          method: 'POST',
+          body: formData,
+        });
+
+        const response = await data.text();
+
+        // Handle success or error response
+        if (response.includes('success')) {
+          fetchAll();
+          showToaster('Item added successfully!', 'check', '#047857', '#065f46');
+          addItemBtn.value = 'Add';
+          addItemForm.reset();
+          document.querySelector('.toAddItemModal').classList.add('hidden');
+
+          // Remove validation classes after reset
+          [...addItemForm.elements].forEach((input) => {
+            if (input.tagName === 'INPUT') {
+              input.classList.remove('border-green-700', 'border-red-500');
+            }
+          });
+        } else {
+          showToaster('Something went wrong !', 'exclamation-error', '#dc2626', '#b91c1c');
+        }
       }
     }
   });

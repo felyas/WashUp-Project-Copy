@@ -144,4 +144,30 @@ class Database extends Config
 
     return true;
   }
+
+  // CHECK IF PRODUCT IS ALREADY IN THE DATABASE
+  public function productExist($barcode)
+  {
+    $sql = 'SELECT product_name, quantity FROM inventory WHERE bar_code = :barcode';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute(['barcode' => $barcode]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $result;
+  }
+
+  // ADD QUANTITY TO THE PRODUCT IN DATABASE
+  public function addQuantity($newMaxQuantity, $bar_code) {
+    $sql = 'UPDATE inventory
+            SET quantity = :newQuantity, max_quantity = :newMaxQuantity
+            WHERE bar_code = :bar_code';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'newQuantity' => $newMaxQuantity,
+      'newMaxQuantity' => $newMaxQuantity,
+      'bar_code' => $bar_code
+    ]);
+
+    return true;
+  }
 }

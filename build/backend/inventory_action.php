@@ -255,7 +255,7 @@ if (isset($_GET['delete'])) {
   exit();
 }
 
-/// Handle Product Checking If Already Exist Ajax Request
+// Handle Product Checking If Already Exist Ajax Request
 if (isset($_GET['isExist'])) {
   $barcode = $_GET['barcode'];
 

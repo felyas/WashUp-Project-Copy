@@ -300,7 +300,7 @@ class Database extends Config
   {
     $sql = "
         SELECT * FROM booking 
-        WHERE (status = 'for pick-up' OR status = 'for delivery')
+        WHERE (status = 'for pick-up')
           AND pickup_date = CURDATE() -- Only today's bookings
           AND TIMESTAMPDIFF(
               MINUTE,

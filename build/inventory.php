@@ -318,7 +318,7 @@ if ($_SESSION['role'] !== 'admin') {
 
   <!-- Modal for Scanner -->
   <div id="scanner-modal" class="toScanBarcodeModal fixed hidden inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
-    <div class="bg-white shadow-lg sm:h-auto sm:rounded-3xl w-full h-full sm:m-2 sm:w-[300px] flex flex-col items-center justify-center">
+    <div class="bg-white shadow-lg h-auto sm:rounded-3xl w-full h-auto sm:m-2 sm:w-[300px] flex flex-col items-center justify-center">
       <div id="" class="w-full h-72 bg-gray-200 flex flex-col justify-end relative">
         <div class="absolute right-4 top-4 z-50">
           <button type="button" id="stop-scanning-button" class=" closeScannerModal text-gray-700">

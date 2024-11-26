@@ -164,6 +164,11 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isScanning) return; // Prevent initializing multiple times
     isScanning = true;
 
+    // Ensure the scanner container's size is appropriate on mobile
+    const scannerContainer = document.getElementById('scanner-container');
+    scannerContainer.style.width = '100%';
+    scannerContainer.style.height = '100%';
+
     Quagga.init({
       inputStream: {
         name: "Live",
@@ -194,7 +199,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (scanResult) {
         itsExist(code);
-        addItemBtn.value = 'Update';
         addQuantity = true;
       }
 
@@ -220,17 +224,24 @@ document.addEventListener("DOMContentLoaded", () => {
       // Update the input fields with product response
       document.getElementById('add-product').value = response.item.product_name;
       document.getElementById('add-quantity').value = response.item.quantity;
+      // Set `addQuantity` to true and update the button to 'Update'
+      addItemBtn.value = 'Update';
+      addQuantity = true;
+
     } else if (response.status === 'item not found') {
       // Clear the input fields
       document.getElementById('add-product').value = '';
       document.getElementById('add-quantity').value = '';
+      // Set `addQuantity` to false and set the button to 'Add'
+      addItemBtn.value = 'Add';
+      addQuantity = false;
     }
   };
 
   // Add New Booking Ajax Request
   addItemForm.addEventListener('submit', async (e) => {
-    e.preventDefault();
 
+    e.preventDefault();
     if (addQuantity) {
 
       const formData = new FormData(addItemForm);
@@ -289,6 +300,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
     } else {
+      e.preventDefault();
 
       const formData = new FormData(addItemForm);
       formData.append('add', 1);

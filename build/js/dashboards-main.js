@@ -73,6 +73,7 @@ function handleDisplayCurrentTime() {
   setInterval(handleDisplayCurrentTime, 1000);
 }
 
+
 // Function to open and close modals using classes
 function openModal(modalTriggerClass, modalClass, closeModalClass, closeModalClass2) {
   // Open modal when element with modalTriggerClass is clicked
@@ -159,12 +160,13 @@ const showToaster = (function () {
 
 
 class Modal {
-  constructor(modalId, confirmBtnId, closeBtnId) {
+  constructor(modalId, confirmBtnId, closeBtnId, messageId) {
     this.modal = document.getElementById(modalId);
     this.confirmBtn = document.getElementById(confirmBtnId);
     this.closeBtn = document.getElementById(closeBtnId);
     this.currentAction = null;
     this.bookingId = null;
+    this.messageElement = document.getElementById(messageId);
 
     this.init();
   }
@@ -174,9 +176,14 @@ class Modal {
     this.confirmBtn.addEventListener('click', () => this.confirm());
   }
 
-  show(callback, id) {
+  show(callback, id, message) {
+    this.messageElement.innerText = message;
     this.currentAction = callback;
     this.bookingId = id;
+    this.modal.classList.remove('hidden');
+  }
+
+  showWithoutMessage() {
     this.modal.classList.remove('hidden');
   }
 

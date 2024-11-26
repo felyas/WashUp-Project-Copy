@@ -147,16 +147,28 @@ if (isset($_GET['readAll'])) {
           </td>
 
           <td class="min-w-[100px] h-auto flex items-center justify-start space-x-2 flex-grow">
-            <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
-              <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
-            </a>';
+            <div class="flex relative group">
+              <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
+                <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
+              </a>
+              <!-- Tooltip -->
+              <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                View
+              </span>
+            </div>';
 
       // Only display the delete link for 'admin' and 'delivery' roles
       if ($row['role'] === 'admin' || $row['role'] === 'delivery') {
         $output .= '
-          <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
-            <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
-          </a>';
+          <div class="flex relative group">
+            <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
+              <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
+            </a>
+            <!-- Tooltip -->
+            <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+              Delete User
+            </span>
+          </div>';
       }
 
       $output .= '</td>

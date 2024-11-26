@@ -9,11 +9,11 @@ $util = new Util();
 
 
 // HANDLE CUSTOMER ADDRESS AJAX REQUEST
-if(isset($_GET['customer-address'])) {
+if (isset($_GET['customer-address'])) {
   $user_id = $_SESSION['user_id'];
 
   $address = $db->customerAddress($user_id);
-  if($address) {
+  if ($address) {
     echo json_encode($address);
   } else {
     echo json_encode(['status' => 'error']);
@@ -21,11 +21,11 @@ if(isset($_GET['customer-address'])) {
 }
 
 // HANDLE CUSTOMER DATA AJAX REQUEST
-if(isset($_GET['customer-data'])) {
+if (isset($_GET['customer-data'])) {
   $user_id = $_SESSION['user_id'];
 
   $data = $db->customerData($user_id);
-  if($data) {
+  if ($data) {
     echo json_encode($data);
   } else {
     echo json_encode([
@@ -155,19 +155,38 @@ if (isset($_GET['read'])) {
           </td>
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
             <div class="flex justify-start space-x-2 min-w-[150px]">
-              <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
-                <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-              </a>';
+            <div class="relative group flex">
+              <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink relative">
+               <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+              </a>
+              <!-- Tooltip -->
+              <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                View
+              </span>
+            </div>
+              ';
 
       // Action buttons based on status
       if ($row['status'] == 'pending') {
         $output .= '
-          <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
+          <div class="flex relative group">
+            <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition editLink">
             <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
+            <!-- Tooltip -->
+            <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+              Edit
+            </span>
           </a>
-          <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
-            <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
-          </a>';
+          </div>
+          <div class="flex relative group">
+            <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
+              <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
+            </a>
+            <!-- Tooltip -->
+            <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+              Delete
+            </span>
+          </div>';
       }
 
       $output .= '
@@ -337,7 +356,7 @@ if (isset($_POST['new-feedback'])) {
   $rating = $util->testInput($_POST['rating']);
   $description = $util->testInput($_POST['description']);
   $booking_id = $util->testInput($_POST['booking_id']);
-  
+
   // Fetch email and phone number from the latest booking
   $booking_phone = $db->getEmailPhone($user_id);
   $phone_number = $booking_phone['phone_number'];

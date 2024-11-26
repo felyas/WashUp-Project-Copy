@@ -269,7 +269,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
         const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
-        errorWarningModal.show();
+        errorWarningModal.showWithoutMessage();
         return false;
 
       } else {
@@ -327,7 +327,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }
         });
         const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
-        errorWarningModal.show();
+        errorWarningModal.showWithoutMessage();
         return false;
 
       } else {
@@ -369,13 +369,13 @@ document.addEventListener("DOMContentLoaded", () => {
       itemDetail(id);
     }
 
-    // Delete Booking Ajax Request
+    // Delete Item Ajax Request
     if (e.target && (e.target.matches('a.deleteLink') || e.target.closest('a.deleteLink'))) {
       e.preventDefault();
       let targetElement = e.target.matches('a.deleteLink') ? e.target : e.target.closest('a.deleteLink');
       let id = targetElement.getAttribute('id');
-      const deleteWarningModal = new Modal('delete-modal', 'delete-confirm-modal', 'delete-close-modal');
-      deleteWarningModal.show(deleteItem, id);
+      const deleteWarningModal = new Modal('delete-modal', 'delete-confirm-modal', 'delete-close-modal', 'modal-message');
+      deleteWarningModal.show(deleteItem, id, 'Do you really want to delete this item?');
     }
   });
 

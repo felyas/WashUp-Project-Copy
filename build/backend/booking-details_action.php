@@ -135,40 +135,72 @@ if (isset($_GET['readAll'])) {
           </td>
           <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
             <div class="flex justify-start space-x-2 min-w-[150px]">
-              <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800   rounded-md transition viewLink">
-                <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-              </a>';
+              <div class="flex relative group">
+                <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800   rounded-md transition viewLink">
+                  <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+                </a>
+                <!-- Tooltip -->
+                <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                  View
+                </span>
+              </div> ';
 
       // If status is 'pending', append admitLink and deniedLink
       if ($row['status'] === 'pending') {
         $output .= '
-            <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition admitLink">
-              <img class="w-4 h-4" src="./img/icons/check.svg" alt="admit">
-            </a>
-            <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deniedLink">
-              <img class="w-4 h-4" src="./img/icons/decline.svg" alt="deny">
-            </a>';
+            <div class="flex relative group">
+              <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition admitLink">
+                <img class="w-4 h-4" src="./img/icons/check.svg" alt="admit">
+              </a>
+              <!-- Tooltip -->
+                <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                  Admit
+                </span>
+              </div>
+
+              <div class="flex relative group">
+                <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deniedLink">
+                  <img class="w-4 h-4" src="./img/icons/decline.svg" alt="deny">
+                </a>
+                <!-- Tooltip -->
+                <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                  Denied
+                </span>
+              </div>';
       }
 
       // If status is 'on process', append the doneProcessLink
       if ($row['status'] === 'on process') {
         $output .= '
-            <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-[#0E4483] hover:bg-[#0C376A] rounded-md transition doneProcessLink">
-              <div class="relative">
-                <!-- Circle-check icon, positioned at the top -->
-                <img class="absolute -top-1 -right-3 transform -translate-x-1/2 w-3 h-3" src="./img/icons/circle-check-solid.svg" alt="process done">
-                <!-- Hourglass icon -->
-                <img class="w-4 h-4" src="./img/icons/hourglass-end-solid.svg" alt="edit">
-              </div>
-            </a>
-            <a href="#" id="' . $row['id'] . '" class="kiloModalTrigger px-3 py-2 bg-[#090f4d] hover:bg-[#1a2479] rounded-md transition kiloLink">
-              <div class="relative">
-                <!-- Circle-check icon, positioned at the top -->
-                <img class="absolute -top-1 -right-3 transform -translate-x-1/2 w-3 h-3" src="./img/icons/circle-check-solid.svg" alt="process done">
-                <!-- Hourglass icon -->
-                <img class="w-4 h-4" src="./img/icons/jug-detergent.svg" alt="edit">
-              </div>
-            </a>';
+            <div class="flex relative group">
+              <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-[#0E4483] hover:bg-[#0C376A] rounded-md transition doneProcessLink">
+                <div class="relative">
+                  <!-- Circle-check icon, positioned at the top -->
+                  <img class="absolute -top-1 -right-3 transform -translate-x-1/2 w-3 h-3" src="./img/icons/circle-check-solid.svg" alt="process done">
+                  <!-- Hourglass icon -->
+                  <img class="w-4 h-4" src="./img/icons/hourglass-end-solid.svg" alt="edit">
+                </div>
+              </a>
+              <!-- Tooltip -->
+              <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 -right-4 transform -translate-x-1/2 whitespace-nowrap z-50">
+                Done Processing
+              </span>
+            </div>
+
+            <div class="flex relative group">
+              <a href="#" id="' . $row['id'] . '" class="kiloModalTrigger px-3 py-2 bg-[#090f4d] hover:bg-[#1a2479] rounded-md transition kiloLink">
+                <div class="relative">
+                  <!-- Circle-check icon, positioned at the top -->
+                  <img class="absolute -top-1 -right-3 transform -translate-x-1/2 w-3 h-3" src="./img/icons/circle-check-solid.svg" alt="process done">
+                  <!-- Hourglass icon -->
+                  <img class="w-4 h-4" src="./img/icons/jug-detergent.svg" alt="edit">
+                </div>
+              </a>
+              <!-- Tooltip -->
+              <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                Used Items
+              </span>
+            </div>';
       }
 
 

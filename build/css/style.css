@@ -740,6 +740,10 @@ video {
   top: 1.25rem;
 }
 
+.top-9 {
+  top: 2.25rem;
+}
+
 .top-\[40\%\] {
   top: 40%;
 }
@@ -914,10 +918,6 @@ video {
   margin-top: 1.5rem;
 }
 
-.mt-8 {
-  margin-top: 2rem;
-}
-
 .box-border {
   box-sizing: border-box;
 }
@@ -1052,10 +1052,6 @@ video {
 
 .h-screen {
   height: 100vh;
-}
-
-.h-56 {
-  height: 14rem;
 }
 
 .max-h-12 {
@@ -1433,6 +1429,10 @@ video {
   overflow-y: auto;
 }
 
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+
 .text-wrap {
   text-wrap: wrap;
 }
@@ -1650,16 +1650,6 @@ video {
   background-color: rgb(219 234 254 / var(--tw-bg-opacity, 1));
 }
 
-.bg-blue-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(59 130 246 / var(--tw-bg-opacity, 1));
-}
-
-.bg-blue-600 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(37 99 235 / var(--tw-bg-opacity, 1));
-}
-
 .bg-blue-700 {
   --tw-bg-opacity: 1;
   background-color: rgb(29 78 216 / var(--tw-bg-opacity, 1));
@@ -1671,11 +1661,6 @@ video {
 
 .bg-federal {
   background-color: var(--federal);
-}
-
-.bg-gray-100 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(243 244 246 / var(--tw-bg-opacity, 1));
 }
 
 .bg-gray-200 {
@@ -1994,6 +1979,10 @@ video {
   font-weight: 700;
 }
 
+.font-extrabold {
+  font-weight: 800;
+}
+
 .font-medium {
   font-weight: 500;
 }
@@ -2068,11 +2057,6 @@ video {
 .text-gray-700 {
   --tw-text-opacity: 1;
   color: rgb(55 65 81 / var(--tw-text-opacity, 1));
-}
-
-.text-gray-800 {
-  --tw-text-opacity: 1;
-  color: rgb(31 41 55 / var(--tw-text-opacity, 1));
 }
 
 .text-green-700 {
@@ -2250,16 +2234,6 @@ video {
   background-color: rgb(204 132 0 / var(--tw-bg-opacity, 1));
 }
 
-.hover\:bg-blue-600:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(37 99 235 / var(--tw-bg-opacity, 1));
-}
-
-.hover\:bg-blue-700:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(29 78 216 / var(--tw-bg-opacity, 1));
-}
-
 .hover\:bg-blue-800:hover {
   --tw-bg-opacity: 1;
   background-color: rgb(30 64 175 / var(--tw-bg-opacity, 1));
@@ -2395,6 +2369,10 @@ video {
 
 .active\:opacity-90:active {
   opacity: 0.9;
+}
+
+.group:hover .group-hover\:block {
+  display: block;
 }
 
 .peer:checked ~ .peer-checked\:text-federal {

@@ -57,26 +57,46 @@ if (isset($_GET['readAll'])) {
                     </td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle min-w-[150px]">
                       <div class="flex justify-start space-x-2">
-                        <a href="#" id="' . $row['complaint_id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
-                          <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                        </a>';
+                        <div class="flex relative group">
+                          <a href="#" id="' . $row['complaint_id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
+                            <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+                          </a>
+                          <!-- Tooltip -->
+                          <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                            View
+                          </span>
+                        </div>';
 
       // Check if the status is not "resolved"
       if ($row['status'] !== 'resolved') {
         // Show delete or resolved link based on the current status
         if ($row['status'] === 'received') {
           // Show delete link if the status is "received"
-          $output .= '<a href="#" id="' . $row['complaint_id'] . '" class="px-3 py-2 bg-[#3b7da3] hover:bg-[#316988] rounded-md transition resolvedLink">
+          $output .= '
+                    <div class="flex relative group">
+                      <a href="#" id="' . $row['complaint_id'] . '" class="px-3 py-2 bg-[#3b7da3] hover:bg-[#316988] rounded-md transition resolvedLink">
                         <div class="relative h-auto w-auto">
                           <img class="h-4 w-4" src="./img/icons/recycle.svg" alt="">
                           <img src="./img/icons/circle-check-solid.svg" class="absolute -top-[4px] -right-[4px] h-3 w-3" alt="">
                         </div>
-                      </a>';
+                      </a>
+                      <!-- Tooltip -->
+                      <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                        Resolved
+                      </span>
+                    </div>';
         } else {
           // Show resolved link if the status is not "received"
-          $output .= '<a href="#" id="' . $row['complaint_id'] . '" class="px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition receivedLink">
-                        <img class="w-4 h-4" src="./img/icons/check.svg" alt="resolved">
-                      </a>';
+          $output .= '
+                  <div class="flex relative group">
+                    <a href="#" id="' . $row['complaint_id'] . '" class="px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition receivedLink">
+                      <img class="w-4 h-4" src="./img/icons/check.svg" alt="resolved">
+                    </a>
+                    <!-- Tooltip -->
+                    <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                      Take Action
+                    </span>
+                  </div>';
         }
       }
 

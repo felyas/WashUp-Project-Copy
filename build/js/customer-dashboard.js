@@ -238,8 +238,8 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       let targetElement = e.target.matches('a.deleteLink') ? e.target : e.target.closest('a.deleteLink');
       let id = targetElement.getAttribute('id');
-      const deleteWarningModal = new Modal('delete-modal', 'delete-confirm-modal', 'delete-close-modal');
-      deleteWarningModal.show(deleteBooking, id);
+      const deleteWarningModal = new Modal('delete-modal', 'delete-confirm-modal', 'delete-close-modal', 'modal-message');
+      deleteWarningModal.show(deleteBooking, id, 'Do you want to cancel the booking?');
       // deleteBooking(id);
     }
   });
@@ -346,7 +346,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Show modal if there are errors
     if (hasError) {
       const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
-      errorWarningModal.show();
+      errorWarningModal.showWithoutMessage();
       return;
     } else {
       document.getElementById('edit-booking-btn').value = 'Please Wait...';
@@ -358,7 +358,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const response = await data.text();
       if (response.includes('success')) {
         const successModal = new Modal('success-modal', 'success-confirm-modal', 'success-close-modal');
-        successModal.show();
+        successModal.showWithoutMessage();
         document.getElementById('edit-booking-btn').value = 'Save';
         editBookingForm.reset();
         fetchAllBookings();
@@ -399,7 +399,6 @@ document.addEventListener("DOMContentLoaded", () => {
       const green700 = '#065f46'; // Hex value for green-700
       showToaster('Booking deleted successfully!', 'check', green600, green700);
       fetchAllBookings();
-      fetchForPickUpCount();
     } else {
       // Example: Trigger the toaster with hex values
       const red600 = '#dc2626'; // Hex value for green-600
@@ -688,7 +687,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (hasError) {
       document.querySelector('#top').scrollIntoView({ behavior: 'smooth' });
       const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
-      errorWarningModal.show();
+      errorWarningModal.showWithoutMessage();
       return;
     } else {
       addComplaintBtn.value = "Please wait...";

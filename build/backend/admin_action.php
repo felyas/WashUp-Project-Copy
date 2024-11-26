@@ -30,15 +30,36 @@ if (isset($_GET['readPending'])) {
           <td class="px-4 py-2 text-nowrap">' . $row['fname'] . ' ' . $row['lname'] . '</td>
           <td class="px-4 py-2 text-nowrap">' . $row['address'] . '</td>
           <td class="min-w-[150px] flex items-center justify-start space-x-2 align-middle flex-grow">
-            <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
-              <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
-            </a>
-            <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition admitLink">
-              <img class="w-4 h-4" src="./img/icons/check.svg" alt="edit">
-            </a>
-            <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deniedLink">
-              <img class="w-4 h-4" src="./img/icons/decline.svg" alt="edit">
-            </a>
+            <div class="flex relative group">
+              <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
+                <img class="w-4 h-4" src="./img/icons/view.svg" alt="edit">
+              </a>
+              <!-- Tooltip -->
+              <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                View
+              </span>
+            </div>
+            
+            <div class="flex relative group">
+              <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition admitLink">
+                <img class="w-4 h-4" src="./img/icons/check.svg" alt="edit">
+              </a>
+              <!-- Tooltip -->
+              <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                Admit
+              </span>
+            </div>
+            
+            <div class="flex relative group">
+              <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deniedLink">
+                <img class="w-4 h-4" src="./img/icons/decline.svg" alt="edit">
+              </a>
+              <!-- Tooltip -->
+              <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                Denied
+              </span>
+            </div>
+            
           </td>
         </tr>
       ';
@@ -254,18 +275,37 @@ if (isset($_GET['readAllFeedback'])) {
       if ($row['page-display'] == 1) {
         // Display only the view link button
         $output .= '
-                <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition feedbackView">
+                <div class="flex relative group">
+                  <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition feedbackView">
                     <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                </a>';
+                  </a>
+                  <!-- Tooltip -->
+                  <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                    View
+                  </span>
+                </div>';
       } else {
         // Display both view link and toDisplayLink buttons
         $output .= '
-                <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition feedbackView">
+                <div class="flex relative group">
+                  <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition feedbackView">
                     <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                </a>
-                <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-[#0E4483] hover:bg-[#0C376A] rounded-md transition toDisplayLink">
+                  </a>
+                  <!-- Tooltip -->
+                  <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                    View
+                  </span>
+                </div>
+                
+                <div class="flex relative group">
+                  <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-[#0E4483] hover:bg-[#0C376A] rounded-md transition toDisplayLink">
                     <img class="w-4 h-4" src="./img/icons/feedback-display.svg" alt="display">
-                </a>';
+                  </a>
+                  <!-- Tooltip -->
+                  <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                   To display
+                  </span>
+                </div>';
       }
 
       // Close the table cell and row

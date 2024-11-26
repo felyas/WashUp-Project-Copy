@@ -253,8 +253,8 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         let targetElement = e.target.matches('a.admitLink') ? e.target : e.target.closest('a.admitLink');
         let id = targetElement.getAttribute('id');
-        const admitWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
-        admitWarningModal.show(admitBooking, id);
+        const admitWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal', 'modal-message')
+        admitWarningModal.show(admitBooking, id, 'Do you really want to admit this booking?');
       }
 
       // Target DeniedLink
@@ -262,8 +262,8 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         let targetElement = e.target.matches('a.deniedLink') ? e.target : e.target.closest('a.deniedLink');
         let id = targetElement.getAttribute('id');
-        const deniedWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
-        deniedWarningModal.show(deniedBooking, id);
+        const deniedWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal', 'modal-message');
+        deniedWarningModal.show(deniedBooking, id, 'Do you really want to denied this booking?');
       }
 
       // Target EditLink
@@ -570,7 +570,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!isValid) {
       const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
-      errorWarningModal.show();
+      errorWarningModal.showWithoutMessage();
       return false;
     } else {
       // Show confirmation modal before proceeding with the submission
@@ -617,72 +617,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('display-full-name-forProof').innerText = response.fname + ' ' + response.lname;
     document.getElementById('display-phone-number-forProof').innerText = response.phone_number;
   }
-
-  // const openCameraBtnProof = document.getElementById('js-open-camera-proof');
-  // const openCameraBtnReceipt = document.getElementById('js-open-camera-receipt');
-  // let activeInputId; //
-
-  // // Open Camera for Proof of Delivery
-  // openCameraBtnProof.addEventListener('click', () => {
-  //   Webcam.set({
-  //     width: 300,
-  //     height: 300,
-  //     image_format: 'jpeg',
-  //     jpeg_quality: 90,
-  //     constraints: {
-  //       video: { facingMode: { exact: "environment" } } // Back camera
-  //     }
-  //   });
-  //   Webcam.attach('#js-camera');
-  //   document.querySelector('video').classList.add('w-full', 'h-full');
-
-  //   activeInputId = 'file-proof-upload'; // Set active input to proof
-  //   cameraModal.classList.remove('hidden'); // Open camera modal
-  // });
-
-  // // Open Camera for Receipt
-  // openCameraBtnReceipt.addEventListener('click', () => {
-  //   Webcam.set({
-  //     width: 300,
-  //     height: 300,
-  //     image_format: 'jpeg',
-  //     jpeg_quality: 90,
-  //     constraints: {
-  //       video: { facingMode: { exact: "environment" } } // Back camera
-  //     }
-  //   });
-  //   Webcam.attach('#js-camera');
-  //   document.querySelector('video').classList.add('w-full', 'h-full');
-
-  //   activeInputId = 'file-receipt-upload'; // Set active input to receipt
-  //   cameraModal.classList.remove('hidden'); // Open camera modal
-  // });
-
-  // // Capture Image
-  // takePhotoBtn.addEventListener('click', () => {
-  //   Webcam.snap(function (dataUri) {
-  //     Webcam.reset();
-  //     cameraModal.classList.add('hidden');
-  //     console.log(dataUri);
-
-
-  //     // Show the preview of the captured image
-  //     if (activeInputId === 'file-proof-upload') {
-  //       document.getElementById('image-preview-delivery-proof').innerHTML = '<img src="' + dataUri + '" alt="Captured Proof Image" />';
-  //     } else if (activeInputId === 'file-receipt-upload') {
-  //       document.getElementById('image-preview-receipt').innerHTML = '<img src="' + dataUri + '" alt="Captured Receipt Image" />';
-  //     }
-
-  //     // Convert the data URI to a File object
-  //     capturedImageFile = dataURItoFile(dataUri, 'captured-image.jpg');
-
-  //     // Set the captured File object to the respective hidden file input
-  //     const fileInput = document.getElementById(activeInputId);
-  //     const dataTransfer = new DataTransfer();
-  //     dataTransfer.items.add(capturedImageFile); // Add the file to the DataTransfer object
-  //     fileInput.files = dataTransfer.files; // Assign the files to the input element
-  //   });
-  // });
 
   const ProofAndReceiptForm = document.getElementById('upload-proofAndReceipt-form');
   validateForm(ProofAndReceiptForm);

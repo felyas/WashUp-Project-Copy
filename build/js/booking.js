@@ -247,7 +247,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // Show modal if there are errors
     if (hasError) {
       const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
-      errorWarningModal.show();
+      errorWarningModal.showWithoutMessage();
       return;
     } else {
       // If no errors, proceed to submit

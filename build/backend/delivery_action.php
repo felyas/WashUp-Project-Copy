@@ -60,29 +60,47 @@ if (isset($_GET['readAll'])) {
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['pickup_date'] . '</td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle min-w-[150px]">
                       <div class="flex justify-center space-x-2">
-                        <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
-                          <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                        </a>';
+                        <div class="flex relative group">
+                          <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
+                            <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+                          </a>
+                          <!-- Tooltip -->
+                          <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                            View
+                          </span>
+                        </div>';
       // If status is 'for pick-up', append pickupLink
       if ($row['status'] === 'for pick-up') {
         $output .= '
-            <a href="#" id="' . $row['id'] . '" class="updateKiloTrigger px-3 py-2 bg-[#3b7da3] hover:bg-[#316988] rounded-md transition pickupLink">
-              <div class="relative">
-                <img class="absolute -top-1 -right-3 transform -translate-x-1/2 w-3 h-3" src="./img/icons/circle-check-solid.svg" alt="process done">
-                <img class="w-4 h-4" src="./img/icons/box.svg" alt="edit">
-              </div>
-            </a>';
+            <div class="flex relative group">
+              <a href="#" id="' . $row['id'] . '" class="updateKiloTrigger px-3 py-2 bg-[#3b7da3] hover:bg-[#316988] rounded-md transition pickupLink">
+                <div class="relative">
+                  <img class="absolute -top-1 -right-3 transform -translate-x-1/2 w-3 h-3" src="./img/icons/circle-check-solid.svg" alt="process done">
+                  <img class="w-4 h-4" src="./img/icons/box.svg" alt="edit">
+                </div>
+              </a>
+              <!-- Tooltip -->
+              <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                Update Kilo
+              </span>
+            </div>';
       }
 
       // If status is 'for for delivery', append deliveryLink
       if ($row['status'] === 'for delivery') {
         $output .= '
-            <a href="#" id="' . $row['id'] . '" class="updateProofOfDeliveryTrigger px-3 py-2 bg-[#0E4483] hover:bg-[#0C376A] rounded-md transition deliveryLink">
-              <div class="relative">
-                <img class="absolute -top-1 -right-3 transform -translate-x-1/2 w-3 h-3" src="./img/icons/circle-check-solid.svg" alt="process done">
-                <img class="w-4 h-4" src="./img/icons/pickup.svg" alt="edit">
-              </div>
-            </a>';
+            <div class="flex relative group">
+              <a href="#" id="' . $row['id'] . '" class="updateProofOfDeliveryTrigger px-3 py-2 bg-[#0E4483] hover:bg-[#0C376A] rounded-md transition deliveryLink">
+                <div class="relative">
+                  <img class="absolute -top-1 -right-3 transform -translate-x-1/2 w-3 h-3" src="./img/icons/circle-check-solid.svg" alt="process done">
+                  <img class="w-4 h-4" src="./img/icons/pickup.svg" alt="edit">
+                </div>
+              </a>
+              <!-- Tooltip -->
+              <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                Proof of Delivery
+              </span>
+            </div>';
       }
       $output .= '
           </td>
@@ -326,18 +344,46 @@ if (isset($_GET['read-pending'])) {
           <td class="px-4 py-2 text-nowrap">' . $row['fname'] . ' ' . $row['lname'] . '</td>
           <td class="px-4 py-2 text-nowrap">' . $row['address'] . '</td>
           <td class="min-w-[180px] flex items-center justify-start space-x-2 flex-grow">
-            <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
-              <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-            </a>
-            <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition editLink">
-              <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-            </a>
-            <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition admitLink">
-              <img class="w-4 h-4" src="./img/icons/check.svg" alt="admit">
-            </a>
-            <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deniedLink">
-              <img class="w-4 h-4" src="./img/icons/decline.svg" alt="denied">
-            </a>
+            <div class="flex relative group">
+              <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
+                <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+              </a>
+              <!-- Tooltip -->
+              <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                View
+              </span>
+            </div>
+            
+            <div class="flex relative group">
+              <a href="#" id="' . $row['id'] . '" class="editModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition editLink">
+                <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
+              </a>
+              <!-- Tooltip -->
+              <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                Edit
+              </span>
+            </div>
+            
+            <div class="flex relative group">
+              <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition admitLink">
+                <img class="w-4 h-4" src="./img/icons/check.svg" alt="admit">
+              </a>
+              <!-- Tooltip -->
+              <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                Admit
+              </span>
+            </div>
+            
+            <div class="flex relative group">
+              <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deniedLink">
+                <img class="w-4 h-4" src="./img/icons/decline.svg" alt="denied">
+              </a>
+              <!-- Tooltip -->
+              <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                Denied
+              </span>
+            </div>
+            
           </td>
         </tr>
       ';

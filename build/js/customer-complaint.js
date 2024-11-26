@@ -90,8 +90,8 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       let targetElement = e.target.matches('a.receivedLink') ? e.target : e.target.closest('a.receivedLink');
       let id = targetElement.getAttribute('id');
-      const resolvedWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
-      resolvedWarningModal.show(toResolved, id);
+      const resolvedWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal', 'modal-message');
+      resolvedWarningModal.show(toResolved, id, 'Do you really want to solve this complaint now ?');
     }
 
     // Target Delete Link
@@ -99,8 +99,8 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       let targetElement = e.target.matches('a.resolvedLink') ? e.target : e.target.closest('a.resolvedLink');
       let id = targetElement.getAttribute('id');
-      const resolvedWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
-      resolvedWarningModal.show(closed, id);
+      const resolvedWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal', 'modal-message');
+      resolvedWarningModal.show(closed, id,  'Do you really want to mark this complaint as resolved?');
     }
 
 

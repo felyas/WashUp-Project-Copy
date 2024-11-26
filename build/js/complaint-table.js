@@ -111,8 +111,8 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       let targetElement = e.target.matches('a.deleteLink') ? e.target : e.target.closest('a.deleteLink');
       let id = targetElement.getAttribute('id');
-      const deleteWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
-      deleteWarningModal.show(deleteComplaint, id);
+      const deleteWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal', 'modal-message');
+      deleteWarningModal.show(deleteComplaint, id, 'Do you really want to delete this complaint?');
     }
 
 

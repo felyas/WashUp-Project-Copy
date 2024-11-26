@@ -59,15 +59,29 @@ if (isset($_GET['readAll'])) {
                     </td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle min-w-[120px]">
                       <div class="flex justify-start space-x-2">
-                        <a href="#" id="' . $row['complaint_id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
-                          <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                        </a>';
+                        <div class="flex relative group">
+                            <a href="#" id="' . $row['complaint_id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
+                              <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
+                            </a>
+                            <!-- Tooltip -->
+                            <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                              View
+                            </span>
+                        </div>';
 
       // Check if the status is not "resolved"
       if ($row['status'] === 'resolved') {
-        $output .= '<a href="#" id="' . $row['complaint_id'] . '" class="px-3 py-2 bg-red-500 hover:bg-red-600 rounded-md transition deleteLink">
-                          <img class="h-4 w-4" src="./img/icons/trash.svg" alt="">
-                      </a>';
+        $output .= '
+        <div class="flex relative group">
+          <a href="#" id="' . $row['complaint_id'] . '" class="px-3 py-2 bg-red-500 hover:bg-red-600 rounded-md transition deleteLink">
+            <img class="h-4 w-4" src="./img/icons/trash.svg" alt="">
+          </a>
+          <!-- Tooltip -->
+          <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+            Delete
+          </span>
+        </div>
+        ';
       }
 
       $output .= '</div></td></tr>';

@@ -347,8 +347,6 @@ if ($_SESSION['role'] !== 'delivery') {
     </div>
   </div>
 
-  <?php include('./modal.php')  ?>
-
 
   <!-- Warning Modal Overlay -->
   <div id="warning-modal" class="hidden p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
@@ -377,6 +375,8 @@ if ($_SESSION['role'] !== 'delivery') {
       </div>
     </div>
   </div>
+
+  <?php include('./modal.php')  ?>
 
   <!-- Modal for View -->
   <div class="toViewBookingModal p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">

@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
-      errorWarningModal.show();
+      errorWarningModal.showWithoutMessage();
 
       return false;
     } else {

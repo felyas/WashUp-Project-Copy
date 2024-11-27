@@ -7,6 +7,7 @@ openModal('updateKiloTrigger', 'toUpdateKiloModal', 'closeUpdateKiloModal', 'clo
 openModal('updateProofOfDeliveryTrigger', 'toUpdateDeliveryProofModal', 'closeUpdateDeliveryProofModal', 'closeUpdateDeliveryProofModal2');
 openModal('editModalTrigger', 'toEditBookingModal', 'closeEditBookingModal', 'closeEditBookingModal2');
 openModal('openCameraModalTrigger', 'toOpenCameraModal', 'closeCameraModal', 'closeCameraModal2');
+openModal('showModalTrigger', 'toShowMapModal', 'closeMapModal', 'closeMapModal2');
 
 // Function to set the minimum and maximum dates for the pick-up date input
 function setMinDate() {
@@ -232,6 +233,14 @@ document.addEventListener("DOMContentLoaded", () => {
         viewSummary(id);
       }
 
+      if (e.target && (e.target.matches('a.mapLink') || e.target.closest('a.mapLink'))) {
+        e.preventDefault();
+        let targetElement = e.target.matches('a.mapLink') ? e.target : e.target.closest('a.mapLink');
+        let address = targetElement.getAttribute('data-address').trim();
+        // console.log(address);
+        mapInitialize(address);
+      }
+
       // Target Pickup Link
       if (e.target && (e.target.matches('a.pickupLink') || e.target.closest('a.pickupLink'))) {
         e.preventDefault();
@@ -277,6 +286,126 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
   })
+
+  let customerAddress;
+  let isMapOpen = false;
+  let map = null;
+  let marker = null;
+  let routeControl = null;
+
+  // Call Map API function
+  const mapInitialize = async (address) => {
+    customerAddress = address.trim();
+    if (!customerAddress) {
+      alert('Address not found!');
+      return;
+    }
+    console.log(customerAddress);
+
+    isMapOpen = true;
+
+    try {
+      const coords = await geocodeWithNominatim(customerAddress);
+      if (!coords) return;
+
+      const mapDiv = document.getElementById("map");
+      mapDiv.style.display = "block";
+      document.querySelector(".toShowMapModal").classList.remove('hidden');
+
+      // Check if map is already initialized, and reset it if needed
+      if (map) {
+        map.remove();
+        map = null;
+        marker = null;
+        routeControl = null;
+      }
+
+      // Initialize new map
+      map = L.map("map").setView([coords.lat, coords.lng], 15);
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "&copy; OpenStreetMap contributors"
+      }).addTo(map);
+
+      // Add marker
+      marker = L.marker([coords.lat, coords.lng]).addTo(map);
+      marker.bindPopup(`<b>${address}</b>`).openPopup();
+
+      // Add routing from a fixed starting location to the destination
+      const startingCoords = { lat: 14.218783702814525, lng: 121.13533904418206 }; // Washup Laundry location
+      try {
+        routeControl = L.Routing.control({
+          waypoints: [
+            L.latLng(startingCoords.lat, startingCoords.lng), // Starting point
+            L.latLng(coords.lat, coords.lng) // Destination
+          ],
+          lineOptions: {
+            styles: [{ color: 'blue', weight: 4 }]
+          },
+          show: false,
+          routeWhileDragging: false,
+          steps: false,
+          collapsible: false,
+        }).addTo(map);
+      } catch (error) {
+        document.getElementById('map')
+          .innerHTML = "<p class='text-gray-500 text-sm font-medium'> Address can't read, we're so sorry! </p>";
+      }
+    } catch (error) {
+      document.getElementById('map')
+        .innerHTML = "<p class='text-gray-500 text-sm font-medium'> Address can't read, we're so sorry! </p>";
+    }
+  };
+
+  const geocodeWithNominatim = async (address) => {
+    const geocodeUrl = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(address)}&format=json&limit=1`;
+
+    try {
+      const response = await fetch(geocodeUrl, {
+        headers: { "User-Agent": "YourApp/1.0" }
+      });
+      const data = await response.json();
+
+      if (data.length === 0) {
+        throw new Error("Location not found. Please try a different address.");
+      }
+      const location = data[0];
+      return { lat: parseFloat(location.lat), lng: parseFloat(location.lon) };
+    } catch (error) {
+      document.getElementById('map')
+        .innerHTML = "<p class='text-gray-500 text-sm font-medium'> Address can't read, we're so sorry! </p>";
+    }
+  };
+
+  // Clear Address Everytime We Close the Map Modal
+  const exitMapBtn = document.getElementById('js-close-map');
+  exitMapBtn.addEventListener('click', () => {
+    customerAddress = null;
+    if (map) {
+      map.remove(); // Remove the map instance from the DOM
+      map = null; // Reset the map object
+      marker = null; // Remove the marker
+      routeControl = null; // Remove the route control
+    }
+  });
+
+  const mapContainer = document.getElementById('map-container');
+  document.addEventListener('click', (event) => {
+    if ((!mapContainer.contains(event.target) && event.target !== exitMapBtn)) {
+      customerAddress = null;
+      if (map) {
+        console.log('clear');
+
+        map.remove(); // Remove the map instance from the DOM
+        map = null; // Reset the map object
+        marker = null; // Remove the marker
+        routeControl = null; // Remove the route control
+      }
+      document.querySelector(".toShowMapModal").classList.add('hidden');
+    }
+  });
+
+
 
   // View edit info Ajax Request
   const viewEditInfo = async (id) => {
@@ -527,7 +656,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
-  const warningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
+  const warningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal', 'modal-message');
   const updateKiloInp = document.querySelector('.update-kilo');
   // Add Kilo and Proof of Kilo Ajax Request
   updateKiloForm.addEventListener('submit', async (e) => {
@@ -647,7 +776,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
-      errorWarningModal.show();
+      errorWarningModal.showWithoutMessage();
       return false;
     } else {
       // Show confirmation modal before proceeding with the submission
@@ -680,7 +809,7 @@ document.addEventListener("DOMContentLoaded", () => {
         } else {
           showToaster('Something went wrong!', 'exclamation-error', '#dc2626', '#b91c1c');
         }
-      }, document.getElementById('display-id-forProof').textContent); // Pass the booking ID if needed
+      }, document.getElementById('display-id-forProof').textContent, 'Do you really want to send the proof of kilo?'); // Pass the booking ID if needed
     }
   });
 

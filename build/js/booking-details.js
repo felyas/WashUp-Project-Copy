@@ -137,8 +137,8 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       let targetElement = e.target.matches('a.doneProcessLink') ? e.target : e.target.closest('a.doneProcessLink');
       let id = targetElement.getAttribute('id');
-      const confirmationWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal');
-      confirmationWarningModal.show(done, id);
+      const confirmationWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal', 'modal-message');
+      confirmationWarningModal.show(done, id, 'Are you sure that this laundry is ready for delivery ?');
     }
 
 
@@ -558,7 +558,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
       // Show error modal if validation fails
       const errorWarningModal = new Modal('error-modal', 'error-confirm-modal', 'error-close-modal');
-      errorWarningModal.show();
+      errorWarningModal.showWithoutMessage();
       return false; // Stop form submission
 
     } else {

@@ -58,7 +58,7 @@ if (isset($_GET['readAll'])) {
                       </div>
                     </td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['pickup_date'] . '</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle min-w-[150px]">
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle min-w-[200px]">
                       <div class="flex justify-center space-x-2">
                         <div class="flex relative group">
                           <a href="#" id="' . $row['id'] . '" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
@@ -67,6 +67,16 @@ if (isset($_GET['readAll'])) {
                           <!-- Tooltip -->
                           <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
                             View
+                          </span>
+                        </div>
+                        
+                        <div class="flex relative group">
+                          <a href="#" id="' . $row['id'] . '" data-address=" ' . $row['address'] . ' " class="showModalTrigger show-map-btn px-3 py-2 bg-[#0E4483] hover:bg-[#0C376A] rounded-md transition mapLink">
+                            <img class="w-4 h-4" src="./img/icons/map-location-white.svg" alt="edit">
+                          </a>
+                          <!-- Tooltip -->
+                          <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
+                            Map
                           </span>
                         </div>';
       // If status is 'for pick-up', append pickupLink

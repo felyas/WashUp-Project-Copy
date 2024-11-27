@@ -29,15 +29,19 @@ if ($_SESSION['role'] !== 'delivery') {
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/palette.css">
 
+  <!-- Leaflet CSS -->
+  <!-- Add this to the <head> section of your HTML file -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+
+
   <!-- FullCalendar CDN -->
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
   <link rel="stylesheet" href="./css/customer-calendar.css">
 
-  <!-- Include Chart.js from CDN -->
-  <script src="../node_modules/chart.js/dist/chart.umd.js" defer></script>
-
   <!-- Include WebCamJs from CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/webcamjs/1.0.25/webcam.min.js"></script>
+
+
 
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -688,6 +692,27 @@ if ($_SESSION['role'] !== 'delivery') {
     </div>
   </div>
 
+  <!-- Modal for Map -->
+  <div class="toShowMapModal fixed hidden inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-20">
+    <div id="map-container" class="bg-white shadow-lg m-2 w-full md:w-1/2">
+      <div class="relative">
+        <div class="absolute right-4 top-2 z-50">
+          <button type="button" id="js-close-map" class=" closeMapModal text-gray-700">
+            <img src="./img/icons/x-gray-700.svg" class="w-5 h-5" alt="">
+          </button>
+        </div>
+      </div>
+
+      <div id="map" class="w-full h-[400px] flex items-center justify-center">
+        <!-- Map Here -->
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Include Leaflet script -->
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" defer></script>
+  <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js" defer></script>
   <script type="module" src="./js/delivery-dashboard.js"></script>
 </body>
 

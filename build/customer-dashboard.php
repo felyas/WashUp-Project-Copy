@@ -61,8 +61,12 @@ if ($_SESSION['role'] !== 'user') {
           <img class="h-4 w-4 mr-4" src="./img/icons/report-white.svg" alt="">
           <p>Customer Complaints</p>
         </a>
+        <a href="./user-archive.php" class="flex items-center p-2 rounded hover:bg-gray-700">
+          <img class="h-4 w-4 mr-4" src="./img/icons/archive.svg" alt="">
+          <p>Archive</p>
+        </a>
 
-        <div class="flex items-center justify-center pt-72">
+        <div class="flex items-center justify-center pt-52">
           <!-- Close Button -->
           <button id="close-sidebar" class="lg:hidden p-6 text-white rounded-full bg-gray-900 hover:bg-gray-700">
             <img class="h-6 w-6 mx-auto" src="./img/icons/close-button.svg" alt="">

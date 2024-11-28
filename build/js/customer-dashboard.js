@@ -233,14 +233,17 @@ document.addEventListener("DOMContentLoaded", () => {
       bookingSummary(id);
     }
 
-    // Delete Booking Ajax Request
-    if (e.target && (e.target.matches('a.deleteLink') || e.target.closest('a.deleteLink'))) {
+    // Archive Booking Ajax Request
+    if (e.target && (e.target.matches('a.archiveLink') || e.target.closest('a.archiveLink'))) {
       e.preventDefault();
-      let targetElement = e.target.matches('a.deleteLink') ? e.target : e.target.closest('a.deleteLink');
+      let targetElement = e.target.matches('a.archiveLink') ? e.target : e.target.closest('a.archiveLink');
       let id = targetElement.getAttribute('id');
+      let origin = targetElement.getAttribute('data-origin');
+      let key = targetElement.getAttribute('data-key');
+      let value = targetElement.getAttribute('data-value');
       const deleteWarningModal = new Modal('delete-modal', 'delete-confirm-modal', 'delete-close-modal', 'modal-message');
-      deleteWarningModal.show(deleteBooking, id, 'Do you want to cancel the booking?');
-      // deleteBooking(id);
+      deleteWarningModal.show(archiveBooking, {id, origin, key, value}, 'Do you want to cancel the booking?');
+      // archiveBooking(id, origin, key, value);
     }
   });
 
@@ -388,24 +391,20 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // Deleting Booking Ajax Request
-  const deleteBooking = async (id) => {
-    const data = await fetch(`./backend/customer_action.php?delete=1&id=${id}`, {
+  const archiveBooking = async (dataset) => {
+    const {id, origin, key, value} = dataset;
+    const data = await fetch(`./backend/user-archive_action.php?archive=1&id=${id}&origin_table=${origin}&key=${key}&value=${value}`, {
       method: 'GET',
     });
-    const response = await data.text();
-    if (response.includes('success')) {
-      // Example: Trigger the toaster with hex values
-      const green600 = '#047857'; // Hex value for green-600
-      const green700 = '#065f46'; // Hex value for green-700
-      showToaster('Booking deleted successfully!', 'check', green600, green700);
+
+    const response = await data.json();
+
+    if (response.status === 'success') {
+      showToaster(response.message, 'check', '#047857', '#065f46');
       fetchAllBookings();
+      fetchBookingCounts();
     } else {
-      // Example: Trigger the toaster with hex values
-      const red600 = '#dc2626'; // Hex value for green-600
-      const red700 = '#b91c1c'; // Hex value for green-700
-      showToaster('Something went wrong !', 'exclamation-error', red600, red700);
-      fetchAllBookings();
-      fetchForPickUpCount();
+      showToaster(response.message, 'exclamation-error', '#dc2626', '#b91c1c');
     }
   }
 

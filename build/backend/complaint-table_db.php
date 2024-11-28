@@ -63,7 +63,7 @@ class Database extends Config
   // Deleting Complaint Record on DATABASE
   public function delete($id)
   {
-    $sql = 'DELETE from complaints WHERE complaint_id = ;complaint_id ';
+    $sql = 'DELETE from complaints WHERE complaint_id = :complaint_id ';
     $stmt = $this->conn->prepare($sql);
     $stmt->execute(['complaint_id' => $id]);
 

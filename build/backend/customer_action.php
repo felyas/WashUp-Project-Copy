@@ -179,7 +179,7 @@ if (isset($_GET['read'])) {
           </a>
           </div>
           <div class="flex relative group">
-            <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
+            <a href="#" id="' . $row['id'] . '" data-origin="booking" data-key="id" data-value="'. $row['id'] .'" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition archiveLink">
               <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
             </a>
             <!-- Tooltip -->

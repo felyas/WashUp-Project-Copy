@@ -22,31 +22,28 @@ if ($_SESSION['role'] !== 'user') {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Delivery Dashboard - WashUp Laundry</title>
+  <title>Customer Dashboard - WashUp Laundry</title>
   <link rel="icon" href="./img/logo-white.png">
 
   <!-- CSS -->
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/palette.css">
+  <link rel="stylesheet" href="./css/rating.css">
 
   <!-- FullCalendar CDN -->
   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
   <link rel="stylesheet" href="./css/customer-calendar.css">
 
-  <!-- Include Chart.js from CDN -->
-  <script src="../node_modules/chart.js/dist/chart.umd.js" defer></script>
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 
 <body class="bg-white min-h-screen font-poppins">
-  <div class="flex min-h-screen">
+  <div class="flex h-full">
     <!-- Sidebar -->
-    <div id="sidebar" class="w-64 min-h-screen z-50 bg-gray-800 text-white flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full">
+    <div id="sidebar" class="w-64 z-50 bg-gray-800 text-white flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full h-screen">
       <div class="p-4 text-lg font-bold border-b border-gray-700">
         <div class="flex justify-center items-center w-[180px]">
           <img src="./img/logo-white.png" alt="" class="w-12 h-10 mr-1">
@@ -90,7 +87,6 @@ if ($_SESSION['role'] !== 'user') {
             </svg>
           </button>
 
-          <!--Notifications-->
           <!--Notifications & Logout Section-->
           <div class="flex items-center justify-between lg:space-x-4 text-sm">
             <p class="js-current-time text-white"></p>
@@ -128,7 +124,7 @@ if ($_SESSION['role'] !== 'user') {
                   <img src="./img/icons/setting.svg" alt="setting" class="w-5 h-5">
                 </button>
 
-                <div id="js-setting" class="absolute hidden top-[54px] -right-4 w-32 h-auto bg-white border border-solid border-gray-200 z-30">
+                <div id="js-setting" class="absolute hidden top-[54px] -right-4 w-32 h-auto bg-white border border-solid border-gray-200 z-50">
                   <div class="flex flex-col">
                     <div class="flex items-center justify-start w-full hover:bg-gray-200 p-1">
                       <button type="button" id="js-account-setting" class="flex items-center justify-center px-2 py-2">
@@ -159,148 +155,61 @@ if ($_SESSION['role'] !== 'user') {
       </header>
 
       <!-- Main Content Area -->
-      <main class="flex-1 p-6 relative h-full flex items-center justify-center">
+      <!-- Toaster -->
+      <div id="toaster" class="fixed top-4 hidden right-4 ml-4 text-white shadow-lg z-50">
+        <!-- Dynamic Toaster Content -->
+      </div>
 
-        <div id="toaster" class="fixed top-4 right-4 hidden ml-4 text-white shadow-lg z-30">
-          <!-- Dynamic Toaster Content -->
-        </div>
+      <!-- Main Content Area -->
+      <main class="flex-1 p-6 relative h-auto flex flex-col justify-center">
 
         <!--List-->
-        <div class="h-auto w-full grid grid-cols-1 gap-2 text-sm mb-4">
+        <div class="h-auto w-full gap-2 text-sm mb-4">
           <!-- First div taking 3/4 of the width on large screens -->
-          <div class="w-full h-auto rounded-sm bg-white border border-solid border-gray-200 shadow-md">
-            <div class="h-auto p-2 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack py-2">CUSTOMER COMPLAINTS</p>
-              <div class="flex justify-between items-center relative">
-                <input id="js-search-bar" type="text" placeholder="Search " class="w-1/2 py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200">
-                <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
-                  <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
-                </button>
+          <div class="w-full rounded-sm bg-white border border-solid border-gray-200 shadow-md grid grid-cols-1">
+            <div class="h-auto p-2 rounded-t-sm flex flex-col sm:flex-row justify-between border-solid border-ashblack">
+              <p class="text-md font-semibold text-ashblack py-2">CUSTOMER ARCHIVE</p>
+              <div class="flex justify-between items-center">
+                <input id="js-search-bar" type="text" placeholder="Search " class="p-2 w-52 rounded-lg outline-none border border-solid border-gray-200">
               </div>
             </div>
-            <div class="overflow-x-auto min-h-72 px-2">
-              <table id="complaint-list" class="text-nowrap w-full h-full text-left text-ashblack border-collapse border border-solid border-gray-200">
+            <div class="overflow-x-auto h-auto px-2 pb-2">
+              <table id="complaint-list" class="text-nowrap w-full h-auto text-left text-ashblack border-collapse border border-solid border-gray-200">
                 <thead class="bg-gray-200">
                   <tr>
-                    <th data-column="complaint_id" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
+                    <th data-column="id" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
                       ID
                       <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
                     </th>
-                    <th data-column="first_name" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
-                      FIRST NAME
-                      <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
+                    <th class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">
+                      BOOKING ID
                     </th>
-                    <th data-column="last_name" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
-                      LAST NAME
-                      <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
-                    </th>
-                    <th data-column="phone_number" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
-                      PHONE NUMBER
-                      <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
-                    </th>
-                    <th data-column="email" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
-                      EMAIL
-                      <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
+                    <th class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">
+                      CUSTOMER NAME
                     </th>
                     <!-- Adding the status dropdown filter -->
                     <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">
-                      <select id="status-filter" class="ml-2 px-2 py-1 text-sm border border-gray-300 rounded">
-                        <option value="">Status: All</option>
-                        <option value="submitted">Pending</option>
-                        <option value="received">On Action</option>
-                        <option value="resolved">Resolved</option>
+                      <select id="origin-filter" class="ml-2 px-2 py-1 text-sm border border-gray-300 rounded">
+                        <option value="">Origin: All</option>
+                        <option value="booking">Booking</option>
                       </select>
                     </th>
                     <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 text-center">ACTION</th>
                   </tr>
                 </thead>
-                <tbody id="customer-complaint-list">
+                <tbody id="customer-archive-list">
                   <!-- Dynamic List -->
-                  <tr>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">1</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Felix</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Bragais</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">09691026692</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">Address Example</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle font-semibold">pending</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle min-w-[100px]">
-                      <div class="flex justify-center space-x-2">
-                        <a href="#" class="viewModalTrigger px-3 py-2 bg-blue-700 hover:bg-blue-800 rounded-md transition viewLink">
-                          <img class="w-4 h-4" src="./img/icons/view.svg" alt="view">
-                        </a>
-                        <a href="#" class="px-3 py-2 bg-green-700 hover:bg-green-800 rounded-md transition deliveryLink">
-                          <img class="w-4 h-4" src="./img/icons/edit.svg" alt="edit">
-                        </a>
-                        <a href="#" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition pickupLink">
-                          <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
-                        </a>
-                      </div>
-                    </td>
-                  </tr>
                 </tbody>
               </table>
             </div>
 
-            <!-- Pagination Container -->
-            <div id="pagination-container" class="w-full py-2 justify-center items-center flex text-sm">
-            </div>
+
+          </div>
+          <!-- Pagination Container -->
+          <div id="pagination-container" class="w-full py-2 justify-center items-center flex text-sm">
           </div>
         </div>
       </main>
-    </div>
-  </div>
-
-
-
-
-
-  <!-- Modal for View -->
-  <div class="toViewBookingModal p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden z-20">
-    <div class="bg-white shadow-lg p-6 w-full max-w-lg rounded-3xl m-2 max-h-96 overflow-y-auto">
-      <div class="w-full h-auto py-2 flex flex-col items-center text-nowrap text-gray-500">
-        <h4 class="text-lg font-bold">CUSTOMER COMPLAINT</h4>
-      </div>
-
-      <div class="grid grid-cols-2 gap-2 mb-4 text-gray-500">
-        <div class="flex justify-start">
-          <p class="text-sm">Date: </p>
-        </div>
-        <div class="flex justify-end">
-          <p id="created_at" class="text-sm"><!-- Dynamic Date --></p>
-        </div>
-      </div>
-      <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
-        <div class="grid grid-cols-2 gap-2">
-          <p>ID:</p>
-          <p id="display-id" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <p>Customer Name:</p>
-          <p id="display-full-name" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <p>Phone Number:</p>
-          <p id="display-phone-number" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <p>Email:</p>
-          <p id="display-email" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <p>Reason:</p>
-          <p id="display-reason" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-        <div class="grid grid-cols-2 gap-2 mt-4">
-          <p>Description:</p>
-          <p id="display-description" class="justify-end flex"><!-- dynamic data --></p>
-        </div>
-
-
-      </div>
-
-      <div class="flex justify-center items-center w-full">
-        <button type="button" class="closeViewBookingModal2 px-4 py-2 bg-gray-500 hover:bg-gray-700 text-white rounded-md mr-2">Close</button>
-      </div>
     </div>
   </div>
 
@@ -332,7 +241,7 @@ if ($_SESSION['role'] !== 'user') {
     </div>
   </div>
 
-  <script type="module" src="./js/complaint-table.js"></script>
+  <script type="module" src="./js/user-archive.js"></script>
 </body>
 
 

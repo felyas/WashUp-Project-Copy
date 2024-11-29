@@ -90,7 +90,11 @@ if ($_SESSION['role'] !== 'admin') {
             </a>
           </div>
         </div>
-        <div class="flex items-center justify-center py-24">
+        <a href="./admin-archive.php" class="flex items-center p-2 rounded hover:bg-gray-700">
+          <img class="h-4 w-4 mr-4" src="./img/icons/Archive.svg" alt="">
+          <p>Archive</p>
+        </a>
+        <div class="flex items-center justify-center pt-12">
           <!-- Close Button -->
           <button id="close-sidebar" class="lg:hidden p-6 text-white rounded-full bg-gray-900 hover:bg-gray-700">
             <img class="h-6 w-6 mx-auto" src="./img/icons/close-button.svg" alt="">
@@ -125,7 +129,7 @@ if ($_SESSION['role'] !== 'admin') {
                 </button>
 
                 <!-- Notification Dropdown -->
-                <div class="js-notification hidden h-auto w-96 z-10000 absolute top-[52px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
+                <div class="js-notification hidden h-auto min-w-72 sm:w-96 z-10000 absolute top-[52px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
                   <div class="w-full p-4 flex items-center justify-between">
                     <h1 class="text- text-lg font-semibold">Notification</h1>
                     <p class="js-total-notifications"><!-- Dynamic Total Notification  -->0</p>

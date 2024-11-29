@@ -271,8 +271,12 @@ document.addEventListener("DOMContentLoaded", () => {
         e.preventDefault();
         let targetElement = e.target.matches('a.deniedLink') ? e.target : e.target.closest('a.deniedLink');
         let id = targetElement.getAttribute('id');
+        let origin = targetElement.getAttribute('data-origin');
+        let key = targetElement.getAttribute('data-key');
+        let value = targetElement.getAttribute('data-value');
+        // console.log(id, origin, key, value);
         const deniedWarningModal = new Modal('warning-modal', 'confirm-modal', 'close-modal', 'modal-message');
-        deniedWarningModal.show(deniedBooking, id, 'Do you really want to denied this booking?');
+        deniedWarningModal.show(deniedBooking, {id, origin, key, value}, 'Do you really want to denied this booking?');
       }
 
       // Target EditLink
@@ -497,13 +501,16 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // DENIED BOOKING AJAX REQUEST
-  const deniedBooking = async (id) => {
-    const data = await fetch(`./backend/delivery_action.php?denied=1&id=${id}`, {
+  const deniedBooking = async (datasets) => {
+    const { id, origin, key, value } = datasets;
+    const data = await fetch(`./backend/delivery-archive_action.php?archive=1&id=${id}&origin_table=${origin}&key=${key}&value=${value}`, {
       method: 'GET',
     });
     const response = await data.json();
+    console.log(response);
+    
     if (response.status === 'success') {
-      showToaster(response.message, 'check', '#047857', '#065f46');
+      showToaster(response.message, 'archive', '#047857', '#065f46');
       fetchAll();
       fetchAllPendingBooking();
       fetchBookingCounts();

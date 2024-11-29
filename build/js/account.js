@@ -117,8 +117,11 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       let targetElement = e.target.matches('a.deleteLink') ? e.target : e.target.closest('a.deleteLink');
       let id = targetElement.getAttribute('id');
+      let origin = targetElement.getAttribute('data-origin');
+      let key = targetElement.getAttribute('data-key');
+      let value = targetElement.getAttribute('data-value');
       const deleteWarningModal = new Modal('delete-user-modal', 'deleteUser-confirm-modal', 'deleteUser-close-modal', 'modal-message');
-      deleteWarningModal.show(deleteUser, id, 'Do you really want to delete this user?');
+      deleteWarningModal.show(deleteUser, {id, origin, key, value}, 'Do you really want to delete this user?');
     }
   });
 
@@ -136,20 +139,17 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById('display-role').textContent = response.role;
   }
 
-  const deleteUser = async (id) => {
-    const data = await fetch(`./backend/account_action.php?delete=1&id=${id}`, {
+  const deleteUser = async (datasets) => {
+    const {id, origin, key, value} = datasets
+    const data = await fetch(`./backend/admin-archive_action.php?archive=1&id=${id}&origin_table=${origin}&key=${key}&value=${value}`, {
       method: 'GET',
     });
-    const response = await data.text();
-    if (response.includes('success')) {
-      const green600 = '#047857';
-      const green700 = '#065f46';
-      showToaster('User deleted successfully!', 'check', green600, green700);
+    const response = await data.json();
+    if (response.status === 'success') {
+      showToaster(response.message , 'archive', '#047857', '#065f46');
       fetchAll();
     } else {
-      const red600 = '#dc2626'; // Hex value for green-600
-      const red700 = '#b91c1c'; // Hex value for green-700
-      showToaster('Something went wrong !', 'exclamation-error', red600, red700);
+      showToaster('Something went wrong !', 'exclamation-error', '#dc2626', '#b91c1c');
     }
   }
 

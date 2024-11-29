@@ -161,7 +161,7 @@ if (isset($_GET['readAll'])) {
       if ($row['role'] === 'admin' || $row['role'] === 'delivery') {
         $output .= '
           <div class="flex relative group">
-            <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
+            <a href="#" data-origin="users" data-key="id" data-value="' . $row['id'] .'" id="' . $row['id'] . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
               <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
             </a>
             <!-- Tooltip -->

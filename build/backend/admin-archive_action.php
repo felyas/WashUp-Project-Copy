@@ -5,7 +5,7 @@ ini_set('display_errors', 1);
 
 session_start();
 
-require_once './user-archive_db.php';
+require_once './admin-archive_db.php';
 require_once './utils/util.php';
 
 $db = new Database();
@@ -53,6 +53,7 @@ if (isset($_GET['recover'])) {
   }
 }
 
+// READ ALL DATA AJAX REQUEST
 if (isset($_GET['readAll'])) {
   $user_id = $_SESSION['user_id'];
   $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -61,7 +62,7 @@ if (isset($_GET['readAll'])) {
 
   $column = isset($_GET['column']) ? $_GET['column'] : 'id';
   $order = isset($_GET['order']) ? $_GET['order'] : 'desc';
-  $query = isset($_GET['query']);
+  $query = isset($_GET['query']) ? $_GET['query'] : '';
   $origin = isset($_GET['origin']) ? $_GET['origin'] : '';
 
   $archiveList = $db->readAll($user_id, $start, $limit, $column, $order, $query, $origin);
@@ -72,23 +73,50 @@ if (isset($_GET['readAll'])) {
   if ($archiveList) {
     foreach ($archiveList as $row) {
       $data = json_decode($row['data'], true);
-      $booking_id = $data['id'];
+      // $data_id = $data['id'];
+      $origin = $row['origin_table'];
 
       $originClasses = '';
       switch ($row['origin_table']) {
         case 'booking':
-          $originClasses = 'bg-[#FFB000] text-white';
+          $originClasses = 'bg-sky-600 text-white';
           break;
-        case 'complaints':
-          $originClasses = 'bg-green-800 text-white';
+        case 'inventory':
+          $originClasses = 'bg-[#316988] text-white';
+          break;
+        case 'users':
+          $originClasses = 'bg-[#0E4483] text-white';
           break;
       }
+
+      // Dynamic display of data based on origin_table
+      $id_column = '';
+      if ($row['origin_table'] === 'users' || $row['origin_table'] === 'booking') {
+        $id_column = $data['id'];
+      } elseif ($row['origin_table'] === 'inventory') {
+        $id_column = $data['product_id'];
+      }
+
+      $dataColumn = '';
+      if ($row['origin_table'] === 'booking') {
+        $fname = isset($data['fname']) ? $data['fname'] : 'Unknown';
+        $lname = isset($data['lname']) ? $data['lname'] : 'Name';
+        $dataColumn = $fname . ' ' . $lname;
+      } elseif($row['origin_table'] === 'users') {
+        $fname = isset($data['first_name']) ? $data['first_name'] : 'Unknown';
+        $lname = isset($data['last_name']) ? $data['last_name'] : 'Name';
+        $dataColumn = $fname . ' ' . $lname;
+      } elseif ($row['origin_table'] === 'inventory') {
+        $dataColumn = isset($data['product_name']) ? $data['product_name'] : 'Unnamed Product';
+      }
+
+      // ' . $dataColumn . '
 
       $output .= '
                   <tr>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $row['id'] . '</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $data['id'] . '</td>
-                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $data['fname'] . ' ' . $data['lname'] . '</td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $id_column . '</td>
+                    <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">' . $dataColumn . '</td>
                     <td class="px-4 py-2 border-b text-sm border-gray-300 align-middle">
                     <div class="w-auto py-1 px-2 text-xs ' . $originClasses . ' font-bold rounded-lg text-center">
                         ' . strtoupper($row['origin_table']) . '
@@ -111,9 +139,10 @@ if (isset($_GET['readAll'])) {
                           </a>
                           <!-- Tooltip -->
                           <span class="absolute hidden group-hover:block bg-gray-800 text-white text-xs px-2 py-1 rounded shadow-md top-9 right-0 transform -translate-x-1/2 whitespace-nowrap z-50">
-                            Recover
+                            Delete
                           </span>
                         </div>
+                        
                       </div>
                     </td>
                   </tr>
@@ -151,12 +180,13 @@ if (isset($_GET['readAll'])) {
   exit();
 }
 
-if (isset($_GET['delete'])) {
+// DELETE RECORD AJAX REQUEST
+if(isset($_GET['delete'])) {
   $id = $_GET['id'];
 
   $result = $db->deleteRecord($id);
 
-  if ($result) {
+  if($result) {
     echo json_encode([
       'status' => 'success',
       'message' => 'Record deleted successfully',
@@ -167,4 +197,5 @@ if (isset($_GET['delete'])) {
       'message' => 'Something went wrong'
     ]);
   }
+
 }

@@ -374,8 +374,11 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       let targetElement = e.target.matches('a.deleteLink') ? e.target : e.target.closest('a.deleteLink');
       let id = targetElement.getAttribute('id');
+      let origin = targetElement.getAttribute('data-origin');
+      let key = targetElement.getAttribute('data-key');
+      let value = targetElement.getAttribute('data-value');
       const deleteWarningModal = new Modal('delete-modal', 'delete-confirm-modal', 'delete-close-modal', 'modal-message');
-      deleteWarningModal.show(deleteItem, id, 'Do you really want to delete this item?');
+      deleteWarningModal.show(deleteItem, {id, origin, key, value}, 'Do you really want to delete this item?');
     }
   });
 
@@ -430,16 +433,16 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Delete Item Ajax Request
-  const deleteItem = async (id) => {
-    const data = await fetch(`./backend/inventory_action.php?delete=1&product_id=${id}`, {
+  const deleteItem = async (dataset) => {
+    const {id, origin, key, value} = dataset;
+    const data = await fetch(`./backend/admin-archive_action.php?archive=1&id=${id}&origin_table=${origin}&key=${key}&value=${value}`, {
       method: 'GET',
     });
-    const response = await data.text();
-
-    if (response.includes('success')) {
+    const response = await data.json();
+    if (response.status === 'success') {
       const green600 = '#047857';
       const green700 = '#065f46';
-      showToaster('Item deleted successfully!', 'check', green600, green700);
+      showToaster(response.message, 'archive', green600, green700);
       fetchAll();
     } else {
       const red600 = '#dc2626';

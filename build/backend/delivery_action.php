@@ -385,7 +385,7 @@ if (isset($_GET['read-pending'])) {
             </div>
             
             <div class="flex relative group">
-              <a href="#" id="' . $row['id'] . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deniedLink">
+              <a href="#" data-origin="booking" data-key="id" data-value=" '.$row['id'].' " id="' . $row['id'] . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deniedLink">
                 <img class="w-4 h-4" src="./img/icons/decline.svg" alt="denied">
               </a>
               <!-- Tooltip -->

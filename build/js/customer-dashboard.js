@@ -400,7 +400,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const response = await data.json();
 
     if (response.status === 'success') {
-      showToaster(response.message, 'check', '#047857', '#065f46');
+      showToaster(response.message, 'archive', '#047857', '#065f46');
       fetchAllBookings();
       fetchBookingCounts();
     } else {

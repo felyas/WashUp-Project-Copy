@@ -43,7 +43,7 @@ if ($_SESSION['role'] !== 'admin') {
 <body class="bg-seasalt min-h-screen font-poppins">
   <div class="flex min-h-screen">
     <!-- Sidebar -->
-    <div id="sidebar" class="w-64 bg-gray-800 text-seasalt flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full z-10">
+    <div id="sidebar" class="w-64 z-50 bg-gray-800 text-white flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full">
       <div class="p-4 text-lg font-bold border-b border-gray-700">
         <div class="flex justify-center items-center w-[180px]">
           <img src="./img/logo-white.png" alt="" class="w-12 h-10 mr-1">
@@ -52,7 +52,7 @@ if ($_SESSION['role'] !== 'admin') {
           </h1>
         </div>
       </div>
-      <nav class="flex flex-col flex-1 p-4 space-y-4">
+      <nav class="flex flex-col flex-1 p-4 space-y-4 text-md">
         <a href="./admin-dashboard.php" class="flex items-center p-2 rounded hover:bg-gray-700">
           <img class="h-4 w-4 mr-4" src="./img/icons/dashboard.svg" alt="">
           <p>Dashboard</p>
@@ -86,9 +86,13 @@ if ($_SESSION['role'] !== 'admin') {
             </a>
           </div>
         </div>
-        <div class="flex items-center justify-center py-24">
+        <a href="./admin-archive.php" class="flex items-center p-2 rounded hover:bg-gray-700">
+          <img class="h-4 w-4 mr-4" src="./img/icons/Archive.svg" alt="">
+          <p>Archive</p>
+        </a>
+        <div class="flex items-center justify-center pt-12">
           <!-- Close Button -->
-          <button id="close-sidebar" class="lg:hidden p-6 text-seasalt rounded-full bg-gray-900 hover:bg-gray-700">
+          <button id="close-sidebar" class="lg:hidden p-6 text-white rounded-full bg-gray-900 hover:bg-gray-700">
             <img class="h-6 w-6 mx-auto" src="./img/icons/close-button.svg" alt="">
           </button>
         </div>

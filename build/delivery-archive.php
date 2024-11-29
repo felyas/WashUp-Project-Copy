@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 // Check if the user is an admin
-if ($_SESSION['role'] !== 'user') {
+if ($_SESSION['role'] !== 'delivery') {
   header("Location: ./404.php"); // Redirect to the 404 page
   exit();
 }
@@ -22,7 +22,7 @@ if ($_SESSION['role'] !== 'user') {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Archive - WashUp Laundry</title>
+  <title>Customer Dashboard - WashUp Laundry</title>
   <link rel="icon" href="./img/logo-white.png">
 
   <!-- CSS -->
@@ -53,15 +53,15 @@ if ($_SESSION['role'] !== 'user') {
         </div>
       </div>
       <nav class="flex flex-col flex-1 p-4 space-y-4 text-md">
-        <a href="./customer-dashboard.php" class="flex items-center p-2 rounded hover:bg-gray-700">
+        <a href="./delivery-dashboard.php" class="flex items-center p-2 rounded hover:bg-gray-700">
           <img class="h-4 w-4 mr-4" src="./img/icons/dashboard.svg" alt="">
           <p>Dashboard</p>
         </a>
-        <a href="./complaint-table.php" class="flex items-center p-2 rounded hover:bg-gray-700">
+        <a href="./customer-complaints.php" class="flex items-center p-2 rounded hover:bg-gray-700">
           <img class="h-4 w-4 mr-4" src="./img/icons/report-white.svg" alt="">
           <p>Customer Complaints</p>
         </a>
-        <a href="./user-archive.php" class="flex items-center p-2 rounded hover:bg-gray-700">
+        <a href="./delivery-archive.php" class="flex items-center p-2 rounded hover:bg-gray-700">
           <img class="h-4 w-4 mr-4" src="./img/icons/Archive.svg" alt="">
           <p>Archive</p>
         </a>
@@ -87,7 +87,7 @@ if ($_SESSION['role'] !== 'user') {
             </svg>
           </button>
 
-          <!--Notifications & Logout Section-->
+          <!--Notifications-->
           <div class="flex items-center justify-between lg:space-x-4 text-sm">
             <p class="js-current-time text-white"></p>
             <div class="flex items-center justify-between">
@@ -101,7 +101,7 @@ if ($_SESSION['role'] !== 'user') {
                 </button>
 
                 <!-- Notification Dropdown -->
-                <div class="js-notification hidden h-auto min-w-72 sm:w-96 z-50 absolute top-[54px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
+                <div class="js-notification hidden min-w-72 sm:w-96 z-50 absolute top-[54px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack max-h-72 overflow-y-auto">
                   <div class="w-full p-4 flex items-center justify-between">
                     <h1 class="text- text-lg font-semibold">Notification</h1>
                     <p class="js-total-notifications"><!-- Dynamic Total Notification  -->0</p>
@@ -119,36 +119,11 @@ if ($_SESSION['role'] !== 'user') {
                 </div>
               </div>
 
-              <div class="h-full flex flex-col items-center relative">
-                <button id="js-setting-button" class="cursor-pointer px-4 py-2">
-                  <img src="./img/icons/setting.svg" alt="setting" class="w-5 h-5">
+              <form action="./backend/handle_logout.php" method="POST" class="p-0 m-0">
+                <button type="submit" class="flex items-center justify-center px-4 py-2">
+                  <img src="./img/icons/logout.svg" alt="Logout Icon" class="w-5 h-5">
                 </button>
-
-                <div id="js-setting" class="absolute hidden top-[54px] -right-4 w-32 h-auto bg-white border border-solid border-gray-200 z-50">
-                  <div class="flex flex-col">
-                    <div class="flex items-center justify-start w-full hover:bg-gray-200 p-1">
-                      <button type="button" id="js-account-setting" class="flex items-center justify-center px-2 py-2">
-                        <div class="flex space-x-2">
-                          <img src="./img/icons/user-black.svg" alt="Logout Icon" class="w-5 h-5">
-                          <p>Account</p>
-                        </div>
-                      </button>
-                    </div>
-
-                    <div class="justify-start w-full hover:bg-gray-200 p-1">
-                      <form action="./backend/handle_logout.php" method="POST" class="p-0 m-0">
-                        <button type="submit" class="flex items-center justify-center px-2 py-2">
-                          <div class="flex space-x-2">
-                            <img src="./img/icons/logout-black.svg" alt="Logout Icon" class="w-5 h-5">
-                            <p>Log out</p>
-                          </div>
-                        </button>
-                      </form>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
+              </form>
             </div>
           </div>
         </div>
@@ -168,7 +143,7 @@ if ($_SESSION['role'] !== 'user') {
           <!-- First div taking 3/4 of the width on large screens -->
           <div class="w-full rounded-sm bg-white border border-solid border-gray-200 shadow-md grid grid-cols-1">
             <div class="h-auto p-2 rounded-t-sm flex flex-col sm:flex-row justify-between border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack py-2">CUSTOMER ARCHIVE</p>
+              <p class="text-md font-semibold text-ashblack py-2">ARCHIVE</p>
               <div class="flex justify-between items-center">
                 <input id="js-search-bar" type="text" placeholder="Search " class="p-2 w-52 rounded-lg outline-none border border-solid border-gray-200">
               </div>
@@ -197,7 +172,7 @@ if ($_SESSION['role'] !== 'user') {
                     <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 text-center">ACTION</th>
                   </tr>
                 </thead>
-                <tbody id="customer-archive-list">
+                <tbody id="delivery-archive-list">
                   <!-- Dynamic List -->
                 </tbody>
               </table>
@@ -241,7 +216,7 @@ if ($_SESSION['role'] !== 'user') {
     </div>
   </div>
 
-  <script type="module" src="./js/user-archive.js"></script>
+  <script type="module" src="./js/delivery-archive.js"></script>
 </body>
 
 

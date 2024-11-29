@@ -24,7 +24,7 @@ class Database extends Config
 
     // Constructing the SQL query to search and order results
     $sql = "SELECT * FROM booking 
-        WHERE (fname LIKE :query OR lname LIKE :query OR phone_number LIKE :query OR address LIKE :query)
+        WHERE status != 'pending' AND (fname LIKE :query OR lname LIKE :query OR phone_number LIKE :query OR address LIKE :query)
         $statusCondition 
         $serviceCondition
         ORDER BY $column $order 
@@ -60,7 +60,7 @@ class Database extends Config
 
     // SQL to count the total number of matching rows
     $sql = "SELECT COUNT(*) as total FROM booking 
-            WHERE (fname LIKE :query OR lname LIKE :query OR phone_number LIKE :query OR address LIKE :query)
+            WHERE status != 'pending' AND (fname LIKE :query OR lname LIKE :query OR phone_number LIKE :query OR address LIKE :query)
             $statusCondition
             $serviceCondition";
 

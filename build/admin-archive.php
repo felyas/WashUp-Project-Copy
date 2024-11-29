@@ -13,31 +13,37 @@ if ($_SESSION['role'] !== 'admin') {
 }
 ?>
 
+
+
+
 <!DOCTYPE html>
 <html lang="en" class="sm:scroll-smooth">
 
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Account - WashUp Laundry</title>
+  <title>Archive - WashUp Laundry</title>
   <link rel="icon" href="./img/logo-white.png">
 
   <!-- CSS -->
   <link rel="stylesheet" href="./css/style.css">
   <link rel="stylesheet" href="./css/palette.css">
+  <link rel="stylesheet" href="./css/rating.css">
+
+  <!-- FullCalendar CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.15/index.global.min.js"></script>
+  <link rel="stylesheet" href="./css/customer-calendar.css">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
   <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 </head>
 
 <body class="bg-white min-h-screen font-poppins">
-  <div class="flex min-h-screen">
+  <div class="flex h-full">
     <!-- Sidebar -->
-    <div id="sidebar" class="w-64 z-50 bg-gray-800 text-white flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full">
+    <div id="sidebar" class="w-64 z-50 bg-gray-800 text-white flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full h-screen">
       <div class="p-4 text-lg font-bold border-b border-gray-700">
         <div class="flex justify-center items-center w-[180px]">
           <img src="./img/logo-white.png" alt="" class="w-12 h-10 mr-1">
@@ -94,7 +100,7 @@ if ($_SESSION['role'] !== 'admin') {
     </div>
 
     <!-- Main Content -->
-    <div class="flex-1 flex flex-col min-h-screen">
+    <div class="flex-1 flex flex-col">
       <!-- Header -->
       <header class="bg-federal shadow p-4">
         <div class="flex justify-between items-center lg:justify-end">
@@ -119,10 +125,10 @@ if ($_SESSION['role'] !== 'admin') {
                 </button>
 
                 <!-- Notification Dropdown -->
-                <div class="js-notification hidden h-auto min-w-72 sm:w-96 z-50 absolute top-[54px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
+                <div class="js-notification hidden h-auto w-96 z-10000 absolute top-[52px] -right-[68px] text-nowrap border border-gray-200 border-solid bg-white flex flex-col items-center shadow-lg text-ashblack">
                   <div class="w-full p-4 flex items-center justify-between">
                     <h1 class="text- text-lg font-semibold">Notification</h1>
-                    <p class="js-total-notifications"><!-- Dynamic Total Notification  --></p>
+                    <p class="js-total-notifications"><!-- Dynamic Total Notification  -->0</p>
                   </div>
                   <hr class="w-full py-0">
 
@@ -148,123 +154,95 @@ if ($_SESSION['role'] !== 'admin') {
       </header>
 
       <!-- Main Content Area -->
-      <main class="flex-1 p-6 flex items-center justify-center">
-        <!-- Toaster -->
-        <div id="toaster" class="fixed top-4 right-4 hidden ml-4 text-white shadow-lg z-50">
-          <!-- Dynamic Toaster Content -->
-        </div>
+      <!-- Toaster -->
+      <div id="toaster" class="fixed top-4 hidden right-4 ml-4 text-white shadow-lg z-50">
+        <!-- Dynamic Toaster Content -->
+      </div>
 
-        <div class="flex flex-col box-border text-ashblack p-4 items-center border border-solid border-gray-200 shadow-lg">
-          <p class="text-3xl my-4 font-semibold">Create an Account</p>
+      <!-- Main Content Area -->
+      <main class="flex-1 p-6 relative h-auto flex flex-col items-center">
 
-          <!-- Div to display success and errors. -->
-          <div id="error-div" class="w-full hidden flex items-center justify-center py-2 px-4 text-sm text-red-800 rounded-lg">
-            <p id='js-error-message'><!-- Dynamic Error --></p>
+        <!--List-->
+        <div class="h-auto w-full gap-2 text-sm mb-4">
+          <!-- First div taking 3/4 of the width on large screens -->
+          <div class="w-full rounded-sm bg-white border border-solid border-gray-200 shadow-md grid grid-cols-1">
+            <div class="h-auto p-2 rounded-t-sm flex flex-col sm:flex-row justify-between border-solid border-ashblack">
+              <p class="text-md font-semibold text-ashblack py-2">ARCHIVE</p>
+              <div class="flex justify-between items-center">
+                <input id="js-search-bar" type="text" placeholder="Search " class="p-2 w-52 rounded-lg outline-none border border-solid border-gray-200">
+              </div>
+            </div>
+            <div class="overflow-x-auto min-h-52 px-2 pb-2">
+              <table id="complaint-list" class="text-nowrap w-full h-auto text-left text-ashblack border-collapse border border-solid border-gray-200">
+                <thead class="bg-gray-200">
+                  <tr>
+                    <th data-column="id" data-order="desc" class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 cursor-pointer relative">
+                      ID
+                      <span class="sort-icon absolute top-[40%] right-1"><img class="h-[8px] w-[8px]" src="./img/icons/caret-down.svg" alt=""></span>
+                    </th>
+                    <th class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">
+                      ITEM ID
+                    </th>
+                    <th class="sortable px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">
+                      NAME
+                    </th>
+                    <!-- Adding the status dropdown filter -->
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">
+                      <select id="origin-filter" class="ml-2 px-2 py-1 text-sm border border-gray-300 rounded">
+                        <option value="">Origin: All</option>
+                        <option value="booking">Booking</option>
+                        <option value="inventory">Inventory</option>
+                        <option value="users">Users</option>
+                      </select>
+                    </th>
+                    <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200 text-center">ACTION</th>
+                  </tr>
+                </thead>
+                <tbody id="admin-archive-list">
+                  <!-- Dynamic List -->
+                </tbody>
+              </table>
+            </div>
+
+
           </div>
-
-          <!-- Div to display success and errors. -->
-          <div id="success-div" class=" w-full hidden flex items-center justify-center py-2 px-4 rounded-lg text-green-700 text-sm">
-            <p id='js-success-message'><!-- Dynamic Error --></p>
+          <!-- Pagination Container -->
+          <div id="pagination-container" class="w-full py-2 justify-center items-center flex text-sm">
           </div>
-
-          <form id="add-user-form" class="mt-4" novalidate>
-            <input type="hidden" name="id" id="id">
-            <div class="grid grid-cols-2 gap-2 mb-4">
-              <div>
-                <label for="fname" class="block text-sm font-medium text-gray-500">First Name</label>
-                <input required type="text" id="fname" name="fname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" First Name: ">
-                <div class="text-red-500 text-sm hidden">First Name is required!</div>
-              </div>
-              <div>
-                <label for="lname" class="block text-sm font-medium text-gray-500">Last Name</label>
-                <input required type="text" id="lname" name="lname" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Last Name: ">
-                <div class="text-red-500 text-sm hidden">Last Name is required!</div>
-              </div>
-            </div>
-            <div class="grid grid-cols-2 gap-2 mb-4">
-              <div class="flex flex-col">
-                <label for="email" class="block text-sm font-medium text-gray-500">Email</label>
-                <input required type="text" id="email" name="email" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder=" Email: ">
-                <div class="text-red-500 text-sm hidden">Email is required!</div>
-              </div>
-              <div class="flex flex-col">
-                <label for="Role" class="block text-sm font-medium text-gray-500">Role</label>
-                <select id="status-filter" name="role" class="top-0 mt-1 px-2 py-1 w-full text-sm border h-full border-gray-300 rounded">
-                  <option value="admin">Admin</option>
-                  <option value="delivery">Delivery Man</option>
-                </select>
-              </div>
-            </div>
-            <div class="mb-4">
-              <label for="password" class="block text-sm font-medium text-gray-500">Password</label>
-              <div class="w-full relative">
-                <input required type="password" id="js-password" name="password" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Password: ">
-                <div class="text-red-500 text-sm hidden">Password is required!</div>
-                <div class="flex items-center justify-center space-x-3 absolute top-2 right-2">
-                  <button type="button" id="generate-password" class="w-auto h-auto">
-                    <div class="flex flex-col items-center justify-center h-auto w-auto ">
-                      <img src="./img/icons/lock.svg" alt="" class="w-4 h-4">
-                      <div class="flex w-full items-center justify-between h-3">
-                        <img src="./img/icons/asterisk.svg" alt="" class="w-2 h-2">
-                        <img src="./img/icons/asterisk.svg" alt="" class="w-2 h-2">
-                        <img src="./img/icons/asterisk.svg" alt="" class="w-2 h-2">
-                      </div>
-                    </div>
-                  </button>
-
-                  <img src="./img/icons/eye-close.svg" alt="Toggle Password Visibility" class="show-password w-5 h-5 cursor-pointer">
-                </div>
-              </div>
-            </div>
-            <div class="mb-4">
-              <label for="cpassword" class="block text-sm font-medium text-gray-500">Confirm Password</label>
-              <div class="w-full relative">
-                <input required type="password" id="js-cpassword" name="cpassword" class="mt-1 block w-full border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack" placeholder="Confirm Password: ">
-                <div class="text-red-500 text-sm hidden">Confirm Password is required!</div>
-
-                <img src="./img/icons/eye-close.svg" alt="Toggle Password Visibility" class="show-password w-5 h-5 absolute top-3 right-2 cursor-pointer">
-              </div>
-            </div>
-
-
-
-
-            <input type="submit" id="add-user-btn" value="Add" class="px-4 py-2 w-full bg-polynesian text-white font-semibold rounded-md cursor-pointer">
-          </form>
         </div>
       </main>
     </div>
   </div>
 
-  <!-- Error Modal Overlay -->
-  <div id="error-modal" class="hidden p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
+  <!-- Warning Modal Overlay -->
+  <div id="warning-modal" class="hidden p-2 fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
     <div class="bg-white px-4 py-4 rounded-md shadow-lg w-full max-w-sm flex items-center flex-col">
       <div class="grid grid-cols-4 mb-4">
         <!-- First child taking 1/4 of the parent's width -->
         <div class="col-span-1 flex items-center">
-          <div class="flex justify-center items-center col-span-1 bg-red-500 rounded-full w-16 h-16">
-            <img class="w-8 h-8" src="./img/icons/circle-error.svg" alt="">
+          <div class="flex justify-center items-center col-span-1 bg-[#f9d6a0] rounded-full w-16 h-16">
+            <img class="w-8 h-8" src="./img/icons/triangle-warning.svg" alt="">
           </div>
         </div>
         <!-- Second child taking 3/4 of the parent's width -->
         <div class="col-span-3">
-          <h1 id="modal-title" class="text-lg font-bold mb-2 text-red-600">Error !</h1>
-          <p id="modal-message" class="text-md text-gray-500 text-wrap">Please complete all required fields !</p>
+          <h1 id="modal-title" class="text-lg font-bold mb-2">Warning!</h1>
+          <p id="modal-message" class="text-md text-gray-500 text-wrap">Do you really want to perform this action?</p>
         </div>
       </div>
 
       <div class="w-full flex justify-end items-center space-x-2 text-sm font-semibold">
-        <button id="error-confirm-modal" class="hidden bg-red-600 border-2 border-solid border-red-600 text-white hover:bg-red-700 hover:border-red-700 py-2 px-4 rounded transition">
+        <button id="confirm-modal" class="bg-[#e69500] border-2 border-solid border-[#e69500] text-white hover:bg-[#cc8400] hover:border-[#cc8400] py-2 px-4 rounded transition">
           Yes
         </button>
-        <button id="error-close-modal" class="bg-red-600 border-2 border-solid border-red-600 text-white hover:bg-red-700 hover:border-red-700 py-2 px-4 rounded transition">
-          Ok
+        <button id="close-modal" class="bg-white border-2 border-solid border-gray-600 text-gray-600 hover:bg-gray-600 hover:text-white py-2 px-4 rounded transition">
+          No
         </button>
       </div>
     </div>
   </div>
 
-  <script type="module" src="./js/add_account.js"></script>
+  <script type="module" src="./js/admin-archive.js"></script>
 </body>
 
 

@@ -174,7 +174,9 @@ if (isset($_GET['readAll'])) {
                     </div>
                       
                       <div class="flex relative group">
-                        <a href="#" id="' . htmlspecialchars($row['product_id']) . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
+                        <a href="#" data-origin="inventory" 
+                        data-key="product_id" data-value="'.$row['product_id'].'"
+                        id="' . htmlspecialchars($row['product_id']) . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
                           <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
                         </a>
                         <!-- Tooltip -->

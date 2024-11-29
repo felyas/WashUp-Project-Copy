@@ -39,7 +39,7 @@ if ($_SESSION['role'] !== 'admin') {
 <body class="bg-white min-h-screen font-poppins">
   <div class="flex min-h-screen">
     <!-- Sidebar -->
-    <div id="sidebar" class="w-64 bg-gray-800 text-white flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full z-10">
+    <div id="sidebar" class="w-64 z-50 bg-gray-800 text-white flex-col flex lg:flex lg:w-64 fixed lg:relative top-0 bottom-0 transition-transform transform lg:translate-x-0 -translate-x-full">
       <div class="p-4 text-lg font-bold border-b border-gray-700">
         <div class="flex justify-center items-center w-[180px]">
           <img src="./img/logo-white.png" alt="" class="w-12 h-10 mr-1">
@@ -48,7 +48,7 @@ if ($_SESSION['role'] !== 'admin') {
           </h1>
         </div>
       </div>
-      <nav class="flex flex-col flex-1 p-4 space-y-4">
+      <nav class="flex flex-col flex-1 p-4 space-y-4 text-md">
         <a href="./admin-dashboard.php" class="flex items-center p-2 rounded hover:bg-gray-700">
           <img class="h-4 w-4 mr-4" src="./img/icons/dashboard.svg" alt="">
           <p>Dashboard</p>
@@ -82,7 +82,11 @@ if ($_SESSION['role'] !== 'admin') {
             </a>
           </div>
         </div>
-        <div class="flex items-center justify-center py-24">
+        <a href="./admin-archive.php" class="flex items-center p-2 rounded hover:bg-gray-700">
+          <img class="h-4 w-4 mr-4" src="./img/icons/Archive.svg" alt="">
+          <p>Archive</p>
+        </a>
+        <div class="flex items-center justify-center pt-12">
           <!-- Close Button -->
           <button id="close-sidebar" class="lg:hidden p-6 text-white rounded-full bg-gray-900 hover:bg-gray-700">
             <img class="h-6 w-6 mx-auto" src="./img/icons/close-button.svg" alt="">
@@ -151,23 +155,14 @@ if ($_SESSION['role'] !== 'admin') {
         <div id="toaster" class="fixed top-4 right-4 hidden ml-4 text-white shadow-lg z-50 max-w-72 sm:max-w-max text-wrap sm:text-nowrap">
           <!-- Dynamic Toaster Content -->
         </div>
-
-        <div class="flex items-center justify-between mb-2 w-full relative ">
-          <div class="relative w-1/2">
-            <input type="text" id="js-search-bar" class="w-full py-2 rounded-lg pl-14 outline-none border border-solid border-gray-200" placeholder="Search">
-            <button class="absolute left-0 top-0 h-full px-4 bg-federal rounded-l-lg">
-              <img src="./img/icons/search.svg" class="w-4 h-4" alt="search">
-            </button>
-          </div>
-        </div>
-
         <!--List-->
         <div class="h-auto w-full grid grid-cols-1 text-sm">
           <!-- List of On Pick-up Booking -->
           <div class="w-full grid grid-cols-1 text-sm">
             <div class="h-auto w-full rounded-sm bg-white shadow-lg border border-solid border-gray-200">
-              <div class="h-auto px-2 py-4 rounded-t-sm flex flex-col justify-center border-solid border-ashblack">
+              <div class="h-auto p-2 rounded-t-sm flex justify-between items-center border-solid border-ashblack">
                 <p class="text-md font-semibold text-ashblack">MANAGE BOOKING</p>
+                <input type="text" id="js-search-bar" class="p-2 w-24 sm:w-52 rounded-lg outline-none border border-solid border-gray-200" placeholder="Search">
               </div>
               <div class="overflow-x-auto h-auto min-h-72 p-2 pt-0">
                 <table class="text-nowrap w-full text-left text-ashblack  border-collapse border border-solid border-gray-200">

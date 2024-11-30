@@ -451,7 +451,7 @@ if ($_SESSION['role'] !== 'admin') {
           <div class="w-full grid grid-cols-2 mb-2 text-gray-500">
             <div>Current Date: </div>
             <div class="flex justify-end">
-              <p class="js-today-date">11/11/2024</p>
+              <p class="js-today-date-report">11/11/2024</p>
             </div>
           </div>
 

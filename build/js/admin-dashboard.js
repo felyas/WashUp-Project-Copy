@@ -9,6 +9,26 @@ document.addEventListener("DOMContentLoaded", () => {
   openModal('openGenerateReportModalTrigger', 'toOpenGenerateReportModal', 'closeGenerateReport', 'closeGenerateReport2');
 
 
+  function setTime() {
+    // Get the element
+    const todayDateElement = document.querySelector('.js-today-date-report');
+
+    // Get the current date
+    const today = new Date();
+
+    // Format the date as MM/DD/YYYY
+    const formattedDate = today.toLocaleDateString('en-US', {
+      month: '2-digit',
+      day: '2-digit',
+      year: 'numeric',
+    });
+
+    // Set the formatted date in the element
+    todayDateElement.textContent = formattedDate;
+  }
+  setTime();
+
+
 
   const feedbackTbody = document.getElementById('js-pending-tbody');
   const paginationContainer = document.getElementById('pagination-container');

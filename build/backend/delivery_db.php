@@ -445,4 +445,13 @@ class Database extends Config
     $stmt->execute();
     return $stmt->fetch(PDO::FETCH_ASSOC);
   }
+
+  public function getTotalBookingsToday() {
+    $sql = 'SELECT COUNT(*) AS currentTotalBooking FROM booking';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result['currentTotalBooking'];
+}
+
 }

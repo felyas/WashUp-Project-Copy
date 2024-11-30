@@ -12,6 +12,7 @@ $period = $_POST['period'] ?? 'today';
 $bookingData = $db->getTotalBookings($period);
 $complaints = $db->getTotalComplaints($period);
 $users = $db->getTotalUsers($period);
+$currentTotalBooking = $db->getTotalBookingsToday();
 
 $options = new Options();
 $options->set('isHtml5ParserEnabled', true);
@@ -50,7 +51,7 @@ $htmlContent = '
     .report-table {
       width: 100%;
       max-width: 800px;
-      margin: 0 auto;
+      margin: 8px auto;
       border-collapse: collapse;
     }
     .report-table th, .report-table td {
@@ -89,12 +90,16 @@ $htmlContent = '
       <th>Total</th>
     </tr>
     <tr>
-      <td>Total Bookings</td>
+      <td>Total Bookings ' . $periodLabel . '</td>
       <td>' . $bookingData['total'] . '</td>
     </tr>
     <tr>
       <td>Complete Bookings</td>
       <td>' . $bookingData['complete'] . '</td>
+    </tr>
+    <tr>
+      <td>Current Total Bookings</td>
+      <td>' . $currentTotalBooking . '</td>
     </tr>
   </table>
 

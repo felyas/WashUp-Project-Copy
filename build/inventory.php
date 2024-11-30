@@ -176,21 +176,36 @@ if ($_SESSION['role'] !== 'admin') {
         <div class="h-auto grid grid-cols-1 text-sm border border-solid border-gray-200">
           <!-- List of On Pick-up Booking -->
           <div class="h-auto w-full rounded-sm bg-white shadow-lg">
-            <div class="h-12 px-2 py-4 rounded-t-sm flex items-center justify-between border-solid border-ashblack">
+            <div class="h-auto px-2 py-4 rounded-t-sm flex items-center justify-between border-solid border-ashblack">
               <p class="text-md font-semibold text-ashblack">LIST OF ITEMS</p>
 
-              <div class="flex h-auto items-center justify-center">
-                <p class="text-xs text-gray-500 mr-2">Critical Point:</p>
-                <select name="critical-point" id="critical-point-dropdown" class="border border-solid border-gray-500">
-                  <option value="10">10%</option>
-                  <option value="15">15%</option>
-                  <option value="20">20%</option>
-                  <option value="30">30%</option>
-                </select>
+              <div class="flex flex-col w-auto h-auto items-end space-y-1">
+                <div class="flex h-auto items-center justify-center">
+                  <p class="text-xs text-gray-500 mr-2">Target Category</p>
+                  <select name="target-category" id="target-category-dropdown" class="border border-solid border-gray-500">
+                    <option value="All">All</option>
+                    <option value="Bleach">Bleach</option>
+                    <option value="Stain Removers">Stain Removers</option>
+                    <option value="Fabcon">Fabcon</option>
+                    <option value="Detergents">Detergent</option>
+                  </select>
+                </div>
+
+
+                <div class="flex h-auto items-center justify-center">
+                  <p class="text-xs text-gray-500 mr-2">Critical Point:</p>
+                  <select name="critical-point" id="critical-point-dropdown" class="border border-solid border-gray-500">
+                    <option value="10">10%</option>
+                    <option value="15">15%</option>
+                    <option value="20">20%</option>
+                    <option value="30">30%</option>
+                  </select>
+                </div>
               </div>
 
+
             </div>
-            <div class="overflow-x-auto h-auto min-h-72x p-2 pt-0">
+            <div class="overflow-x-auto h-auto min-h-72 p-2 pt-0">
               <table class="text-nowrap w-full text-left text-ashblack border-collapse border border-solid border-gray-200">
                 <thead class="bg-gray-200">
                   <tr>
@@ -250,7 +265,7 @@ if ($_SESSION['role'] !== 'admin') {
           </svg>
         </button>
       </div>
-      <form id="update-items-form" class="mt-4">
+      <form id="update-items-form" class="mt-4" novalidate>
         <input type="hidden" name="product_id" id="product_id">
         <div class="w-full text-gray-500 text-sm flex flex-col mb-6 space-y-2">
           <div class="grid grid-cols-2 gap-2">
@@ -266,7 +281,7 @@ if ($_SESSION['role'] !== 'admin') {
               <label for="quantity" class="block text-sm font-medium text-gray-500">Max Qty</label>
               <p id="display-max-qty" class="flex text-sm">100<!-- dynamic data --></p>
             </div>
-            <div>
+            <div class="validate-quantity-input">
               <label for="quantity" class="block text-sm font-medium text-gray-500">Quantity</label>
               <input required type="number" id="quantity" name="quantity" class="mt-1 block border-gray-300 rounded-sm py-2 px-2 border border-solid border-ashblack w-full" placeholder=" 99">
               <div class="text-red-500 text-sm hidden">Quantity is required!</div>

@@ -36,6 +36,25 @@ if (isset($_POST['add'])) {
   exit();
 }
 
+// HANDLE THE CHANGES TO TARGET CATERGORY AJAX REQUEST
+if (isset($_POST['target-category'])) {
+  $newTargetCategory = $_POST['new-target-category'];
+
+  $result = $db->setNewTargetCategory($newTargetCategory);
+
+  if ($result) {
+    echo json_encode([
+      'status' => 'success',
+      'message' => 'Target category was updated successfully',
+    ]);
+  } else {
+    echo json_encode([
+      'status' => 'error',
+      'message' => 'Something went wrong',
+    ]);
+  }
+}
+
 // Add Quantity Ajax Request
 if (isset($_POST['add-quantity'])) {
   $product_name = $util->testInput($_POST['product']);
@@ -75,6 +94,22 @@ if (isset($_GET['get-current-critical-point'])) {
   } else {
     echo json_encode([
       'status' => 'error',
+      'message' => 'Something went wrong',
+    ]);
+  }
+}
+
+if (isset($_GET['get-current-target-category'])) {
+  $currentTargetCategory = $db->getCurrentTargetCategory();
+  if ($currentTargetCategory) {
+    echo json_encode([
+      'status' => 'success',
+      'current_target_category' => $currentTargetCategory['setting_value'],
+    ]);
+  } else {
+    echo json_encode([
+      'status' => 'error',
+      'message' => 'Something went wrong',
     ]);
   }
 }
@@ -82,10 +117,6 @@ if (isset($_GET['get-current-critical-point'])) {
 $data = json_decode(file_get_contents("php://input"), true);
 if (isset($data['criticalPoint'])) {
   $newCriticalPoint = (int) $data['criticalPoint'];
-
-  // echo json_encode([
-  //   'new_critical_point' => $newCriticalPoint,
-  // ]);
 
   $result = $db->updateCriticalPoint($newCriticalPoint);
   if ($result) {
@@ -101,6 +132,8 @@ if (isset($data['criticalPoint'])) {
 
 // Fetch critical point from settings table
 $criticalPoint = $db->getSettingValue('critical_point') / 100;
+$targetCategoryData = $db->getTargetCategory('category');
+$targetCategory = $targetCategoryData['setting_value'] ?? null;
 
 if (isset($_GET['readAll'])) {
   $page = isset($_GET['page']) ? (int)$_GET['page'] : 1;
@@ -124,20 +157,60 @@ if (isset($_GET['readAll'])) {
       $quantity = $row['quantity'];
       $currentStatus = $row['status']; // Get current status
 
-      // Check if the quantity is less than 15% of the max quantity
-      if ($quantity < $criticalPoint * $maxQuantity) {
-        // Update status to 'critical' in the database
-        if ($currentStatus !== 'critical') {
-          $db->updateItemStatus($row['product_id'], 'critical'); // Update to 'critical'
-          $row['status'] = 'critical'; // Update status for display
+      // Check if the quantity is less than CRITICAL POINT of the max quantity AND IF IT MATCHES THE TARGET CATEGORY
+      // Check if the quantity is less than CRITICAL POINT of the max quantity AND IF IT MATCHES THE TARGET CATEGORY
+      if ($targetCategory !== 'All') {
+        if ($row['category'] === $targetCategory) {
+          // Apply specific critical level for the target category
+          if ($quantity < $criticalPoint * $maxQuantity) {
+            // Update status to 'critical' in the database
+            if ($currentStatus !== 'critical') {
+              $db->updateItemStatus($row['product_id'], 'critical'); // Update to 'critical'
+              $row['status'] = 'critical'; // Update status for display
+            }
+          } else {
+            // Update status back to 'good' in the database
+            if ($currentStatus !== 'good') {
+              $db->updateItemStatus($row['product_id'], 'good'); // Update to 'good'
+              $row['status'] = 'good'; // Update status for display
+            }
+          }
+        } else {
+          // Apply default critical level for non-target categories
+          $defaultCriticalLevel = 0.20; // Default critical level (20%)
+          if ($quantity < $defaultCriticalLevel * $maxQuantity) {
+            // Update status to 'critical' in the database
+            if ($currentStatus !== 'critical') {
+              $db->updateItemStatus($row['product_id'], 'critical'); // Update to 'critical'
+              $row['status'] = 'critical'; // Update status for display
+            }
+          } else {
+            // Update status back to 'good' in the database
+            if ($currentStatus !== 'good') {
+              $db->updateItemStatus($row['product_id'], 'good'); // Update to 'good'
+              $row['status'] = 'good'; // Update status for display
+            }
+          }
         }
       } else {
-        // Update status back to 'good' in the database
-        if ($currentStatus !== 'good') {
-          $db->updateItemStatus($row['product_id'], 'good'); // Update to 'good'
-          $row['status'] = 'good'; // Update status for display
+        // Apply critical level for all categories
+        if ($quantity < $criticalPoint * $maxQuantity) {
+          // Update status to 'critical' in the database
+          if ($currentStatus !== 'critical') {
+            $db->updateItemStatus($row['product_id'], 'critical'); // Update to 'critical'
+            $row['status'] = 'critical'; // Update status for display
+          }
+        } else {
+          // Update status back to 'good' in the database
+          if ($currentStatus !== 'good') {
+            $db->updateItemStatus($row['product_id'], 'good'); // Update to 'good'
+            $row['status'] = 'good'; // Update status for display
+          }
         }
       }
+
+
+
 
       // Determine the color classes based on the status
       switch ($row['status']) {
@@ -175,7 +248,7 @@ if (isset($_GET['readAll'])) {
                       
                       <div class="flex relative group">
                         <a href="#" data-origin="inventory" 
-                        data-key="product_id" data-value="'.$row['product_id'].'"
+                        data-key="product_id" data-value="' . $row['product_id'] . '"
                         id="' . htmlspecialchars($row['product_id']) . '" class="px-3 py-2 bg-red-700 hover:bg-red-800 rounded-md transition deleteLink">
                           <img class="w-4 h-4" src="./img/icons/trash.svg" alt="delete">
                         </a>

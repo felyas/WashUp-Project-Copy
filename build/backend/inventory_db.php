@@ -120,6 +120,17 @@ class Database extends Config
     return $result ? (int)$result['setting_value'] : null;
   }
 
+  // Get the Target Category on Database
+  public function getTargetCategory($key)
+  {
+    $sql = "SELECT setting_value FROM settings WHERE setting_key = :key";
+    $stmt = $this->conn->prepare($sql);
+    $stmt->bindValue(':key', $key, PDO::PARAM_STR);
+    $stmt->execute();
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result;
+  }
+
   // Get the current critical point value from the database
   public function getCurrentCriticalPoint()
   {
@@ -143,6 +154,37 @@ class Database extends Config
     ]);
 
     return true;
+  }
+
+  public function setNewTargetCategory($newTargetCategory) {
+    $sql = 'UPDATE settings SET setting_value = :setting_value WHERE setting_key = :setting_key';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([
+      'setting_value' => $newTargetCategory,
+      'setting_key' => 'category',
+    ]);
+
+    return true;
+  }
+
+  public function getDefaultCriticalLeve() {
+    $sql = 'SELECT * FROM settings WHERE setting_key = :setting_key';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([ 'setting_key' => 'default_critical_level' ]);
+    $result = $stmt->fetch();
+
+    return $result;
+  }
+
+
+
+  // GET THE CURRENT TARGET CATEGORY ON DATABASE
+  public function getCurrentTargetCategory(){
+    $sql = 'SELECT * FROM settings WHERE setting_key = :setting_key LIMIT 1';
+    $stmt = $this->conn->prepare($sql);
+    $stmt->execute([ 'setting_key' => 'category' ]);
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    return $result;
   }
 
   // CHECK IF PRODUCT IS ALREADY IN THE DATABASE

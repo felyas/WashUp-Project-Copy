@@ -20,7 +20,7 @@ function validateForm(form) {
 
     if (target.tagName === 'INPUT') {
       // Locate the closest parent `.mb-4` container
-      const parentContainer = target.closest('.mb-4');
+      const parentContainer = target.closest('.validate-quantity-input');
       // Find the feedback message inside the parent container
       const feedback = parentContainer.querySelector('.text-red-500');
 
@@ -45,14 +45,13 @@ document.addEventListener("DOMContentLoaded", () => {
   const searchInput = document.getElementById('js-search-bar');
   const statusFilter = document.getElementById('status-filter');
 
+  // GETTING CURRENT CRITICAL POINT AJAX REQUEST
   const currentCriticalPoint = async () => {
-    // Fetch current critical point value from the server on page load
     const data = await fetch(`./backend/inventory_action.php?get-current-critical-point=1`, {
       method: 'GET',
     });
     const response = await data.json();
     if (response.status === 'success') {
-      // Set the dropdown's selected option to the current critical point
       document.getElementById('critical-point-dropdown').value = response.current_critical_point;
       fetchAll();
     } else {
@@ -61,14 +60,26 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   currentCriticalPoint();
 
+  // GETTING CURRENT TARGET CATEGORY AJAX REQUEST
+  const currentTargetCategory = async () => {
+    const data = await fetch(`./backend/inventory_action.php?get-current-target-category=1`, {
+      method: 'GET',
+    });
+    const response = await data.json();
+    if (response.status === 'success') {
+      document.getElementById('target-category-dropdown').value = response.current_target_category;
+      fetchAll();
+    } else {
+      showToaster('Something went wrong !', 'exclamation-error', '#dc2626', '#b91c1c');
+    }
+  }
+  currentTargetCategory();
 
 
-  // Event listener to handle dropdown change and update critical point in database
+  // CHANGING CRITICAL POINT AJAX REQUEST
   const criticalPointDropdown = document.getElementById('critical-point-dropdown');
   criticalPointDropdown.addEventListener('change', async () => {
     const newCriticalPoint = criticalPointDropdown.value;
-
-    // Send AJAX request to update the critical point in the database
     const data = await fetch('./backend/inventory_action.php', {
       method: 'POST',
       headers: {
@@ -85,6 +96,27 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  const targetCategoryDropdown = document.getElementById('target-category-dropdown');
+  targetCategoryDropdown.addEventListener('change', async () => {
+    const newTargetCategory = targetCategoryDropdown.value;
+    const formData = new FormData();
+    formData.append('target-category', 1);
+    formData.append('new-target-category', newTargetCategory);
+
+    const data = await fetch('./backend/inventory_action.php', {
+      method: 'POST',
+      body: formData,
+    })
+    const response = await data.json();
+    if(response.status === 'success') {
+      showToaster(response.message, 'check', '#047857', '#065f46');
+      currentTargetCategory();
+    } else {
+      showToaster('Something went wrong !', 'exclamation-error', '#dc2626', '#b91c1c');
+    }
+    
+  })
+ 
   // Function to toggle sorting icons
   const toggleSortIcon = (th, order) => {
     const allIcons = document.querySelectorAll('.sort-icon img');

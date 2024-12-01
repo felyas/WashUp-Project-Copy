@@ -29,9 +29,6 @@ if ($_SESSION['role'] !== 'admin') {
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <!-- Include Chart.js from CDN -->
-  <script src="../node_modules/chart.js/dist/chart.umd.js" defer></script>
-
   <!-- Include QuaggaJs CDN -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
 

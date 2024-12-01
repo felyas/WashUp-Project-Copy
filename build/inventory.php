@@ -177,11 +177,11 @@ if ($_SESSION['role'] !== 'admin') {
           <!-- List of On Pick-up Booking -->
           <div class="h-auto w-full rounded-sm bg-white shadow-lg">
             <div class="h-auto px-2 py-4 rounded-t-sm flex items-center justify-between border-solid border-ashblack">
-              <p class="text-md font-semibold text-ashblack">LIST OF ITEMS</p>
+              <p class="text-md font-semibold text-ashblack w-16 sm:w-full">LIST OF ITEMS</p>
 
               <div class="flex flex-col w-auto h-auto items-end space-y-1">
                 <div class="flex h-auto items-center justify-center">
-                  <p class="text-xs text-gray-500 mr-2">Target Category</p>
+                  <p class="text-xs text-gray-500 mr-2">Category</p>
                   <select name="target-category" id="target-category-dropdown" class="border border-solid border-gray-500">
                     <option value="All">All</option>
                     <option value="Bleach">Bleach</option>

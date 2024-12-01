@@ -65,6 +65,10 @@ if ($_SESSION['role'] !== 'admin') {
           <img class="h-4 w-4 mr-4" src="./img/icons/table.svg" alt="">
           <p>Booking Details</p>
         </a>
+        <a href="./complete-booking.php" class="flex items-center p-2 rounded hover:bg-gray-700">
+          <img class="h-4 w-4 mr-4" src="./img/icons/check.svg" alt="">
+          <p>Complete Booking</p>
+        </a>
         <a href="./inventory.php" class="flex items-center p-2 rounded hover:bg-gray-700">
           <img class="h-4 w-4 mr-4" src="./img/icons/warehouse.svg" alt="">
           <p>Inventory</p>

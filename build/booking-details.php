@@ -57,6 +57,10 @@ if ($_SESSION['role'] !== 'admin') {
           <img class="h-4 w-4 mr-4" src="./img/icons/table.svg" alt="">
           <p>Booking Details</p>
         </a>
+        <a href="./complete-booking.php" class="flex items-center p-2 rounded hover:bg-gray-700">
+          <img class="h-4 w-4 mr-4" src="./img/icons/check.svg" alt="">
+          <p>Complete Booking</p>
+        </a>
         <a href="./inventory.php" class="flex items-center p-2 rounded hover:bg-gray-700">
           <img class="h-4 w-4 mr-4" src="./img/icons/warehouse.svg" alt="">
           <p>Inventory</p>
@@ -198,11 +202,9 @@ if ($_SESSION['role'] !== 'admin') {
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">
                         <select id="status-filter" class="ml-2 px-2 py-1 text-sm border border-gray-300 rounded">
                           <option value="">Status: All</option>
-                          <option value="pending">Pending</option>
                           <option value="for pick-up">For Pick-up</option>
                           <option value="on process">On Process</option>
                           <option value="for delivery">For Delivery</option>
-                          <option value="complete">Complete</option>
                         </select>
                       </th>
                       <th class="px-4 py-2 font-medium text-sm text-ashblack border-b border-gray-200">ACTION</th>
